@@ -31,7 +31,7 @@ class SyncProviderUseCase @Inject constructor(
                 ?: throw IllegalArgumentException("Provider not found")
             
             when (provider.type) {
-                "xtream" -> syncXtreamCodes(providerId, provider.serverUrl, provider.username, provider.password, this)
+                "xtream" -> syncXtreamCodes(providerId, provider.serverUrl, provider.username, provider.password)
                 "m3u_url" -> emit(SyncProgress.Error("M3U URL sync not implemented yet"))
                 "m3u_local" -> emit(SyncProgress.Error("M3U Local sync not implemented yet"))
             }
@@ -42,17 +42,12 @@ class SyncProviderUseCase @Inject constructor(
         }
     }
     
-    private suspend inline fun <T> kotlinx.coroutines.flow.FlowCollector<T>.emit(value: T) {
-        this.emit(value)
-    }
-    
     private suspend fun syncXtreamCodes(
         providerId: String,
         baseUrl: String,
         username: String?,
-        password: String?,
-        collector: kotlinx.coroutines.flow.FlowCollector<SyncProgress>
-    ) {
+        password: String?
+    ) = flow {
         if (username == null || password == null) {
             throw IllegalArgumentException("Username and password required for Xtream Codes")
         }
@@ -61,7 +56,7 @@ class SyncProviderUseCase @Inject constructor(
         val api = xtreamCodesService.createApi(baseUrl)
         val apiUrl = XtreamCodesService.buildApiUrl(baseUrl)
         
-        collector.emit(SyncProgress.Progress("Verbindung wird hergestellt..."))
+        emit(SyncProgress.Progress("Verbindung wird hergestellt..."))
         
         // Test connection first
         try {
@@ -73,14 +68,14 @@ class SyncProviderUseCase @Inject constructor(
             throw IllegalStateException("Connection failed: ${e.message}")
         }
         
-        collector.emit(SyncProgress.Progress("Bereinige alte Daten..."))
+        emit(SyncProgress.Progress("Bereinige alte Daten..."))
         
         // Clear existing data
         categoryRepository.deleteCategoriesByProvider(providerId)
         streamRepository.deleteStreamsByProvider(providerId)
         
         // Sync Live Categories and Streams
-        collector.emit(SyncProgress.Progress("Synchronisiere Live TV Kategorien..."))
+        emit(SyncProgress.Progress("Synchronisiere Live TV Kategorien..."))
         val liveCategories = api.getLiveCategories(apiUrl, username, password)
         val categoryEntities = liveCategories.mapNotNull { cat ->
             cat.categoryId?.let {
@@ -94,7 +89,7 @@ class SyncProviderUseCase @Inject constructor(
         }
         categoryRepository.addCategories(categoryEntities)
         
-        collector.emit(SyncProgress.Progress("Synchronisiere Live TV Streams..."))
+        emit(SyncProgress.Progress("Synchronisiere Live TV Streams..."))
         val liveStreams = api.getLiveStreams(apiUrl, username, password)
         val streamEntities = liveStreams.mapNotNull { stream ->
             stream.streamId?.let { streamId ->
@@ -113,7 +108,7 @@ class SyncProviderUseCase @Inject constructor(
         streamRepository.addStreams(streamEntities)
         
         // Sync VOD
-        collector.emit(SyncProgress.Progress("Synchronisiere VOD..."))
+        emit(SyncProgress.Progress("Synchronisiere VOD..."))
         try {
             val vodCategories = api.getVodCategories(apiUrl, username, password)
             val vodCategoryEntities = vodCategories.mapNotNull { cat ->
@@ -146,11 +141,11 @@ class SyncProviderUseCase @Inject constructor(
             streamRepository.addStreams(vodEntities)
         } catch (e: Exception) {
             // VOD might not be available for all providers
-            collector.emit(SyncProgress.Progress("VOD nicht verfügbar oder Fehler: ${e.message}"))
+            emit(SyncProgress.Progress("VOD nicht verfügbar oder Fehler: ${e.message}"))
         }
         
         // Sync Series
-        collector.emit(SyncProgress.Progress("Synchronisiere Serien..."))
+        emit(SyncProgress.Progress("Synchronisiere Serien..."))
         try {
             val seriesCategories = api.getSeriesCategories(apiUrl, username, password)
             val seriesCatEntities = seriesCategories.mapNotNull { cat ->
@@ -166,7 +161,9 @@ class SyncProviderUseCase @Inject constructor(
             categoryRepository.addCategories(seriesCatEntities)
         } catch (e: Exception) {
             // Series might not be available
-            collector.emit(SyncProgress.Progress("Serien nicht verfügbar oder Fehler: ${e.message}"))
+            emit(SyncProgress.Progress("Serien nicht verfügbar oder Fehler: ${e.message}"))
         }
+        
+        emit(SyncProgress.Success)
     }
 }

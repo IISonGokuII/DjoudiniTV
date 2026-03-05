@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.nextgen.iptv.domain.model.ProviderType
 import com.nextgen.iptv.domain.usecase.provider.AddProviderUseCase
 import com.nextgen.iptv.domain.usecase.provider.SyncProviderUseCase
+import com.nextgen.iptv.domain.usecase.provider.SyncProgress
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -104,17 +105,22 @@ class ProviderSetupViewModel @Inject constructor(
         viewModelScope.launch {
             addProviderUseCase(state.name, providerType)
                 .onSuccess { providerId ->
-                    _uiState.update { it.copy(isLoading = false, success = true) }
-                    // Start sync
+                    // Start sync and observe progress
                     syncProviderUseCase(providerId).collect { progress ->
                         when (progress) {
-                            is SyncProviderUseCase.SyncProgress.Success -> {
+                            is SyncProgress.Success -> {
+                                _uiState.update { it.copy(isLoading = false, success = true) }
                                 onSuccess()
                             }
-                            is SyncProviderUseCase.SyncProgress.Error -> {
-                                _uiState.update { it.copy(error = progress.message) }
+                            is SyncProgress.Error -> {
+                                _uiState.update { it.copy(isLoading = false, error = progress.message) }
                             }
-                            else -> { /* Handle other progress states */ }
+                            is SyncProgress.Progress -> {
+                                // Optionally show progress message
+                            }
+                            is SyncProgress.Starting -> {
+                                // Sync is starting
+                            }
                         }
                     }
                 }
