@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    // KEIN alias(libs.plugins.kotlin.compose) — bricht Build mit Kotlin 1.9.x!
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.nextgen.iptv"
-        minSdk = 21
+        minSdk = 21          // Android TV Minimum
         targetSdk = 34
         versionCode = 1
         versionName = "1.0.0"
@@ -21,6 +21,12 @@ android {
 
     buildFeatures {
         compose = true
+    }
+
+    // PFLICHT für Kotlin 1.9.x — ersetzt das nicht existierende kotlin.compose Plugin
+    // Compose Compiler 1.5.14 ist die einzig korrekte Version für Kotlin 1.9.24
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
 
     compileOptions {
@@ -31,14 +37,21 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
 }
 
 dependencies {
-    // BOM zuerst — steuert alle Compose Versionen
+    // BOM zuerst — steuert ALLE Compose Versionen automatisch
     val composeBom = platform(libs.compose.bom)
     implementation(composeBom)
+    androidTestImplementation(composeBom)
 
-    // Core
+    // Core AndroidX
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.lifecycle.viewmodel)
@@ -46,7 +59,7 @@ dependencies {
     implementation(libs.androidx.splashscreen)
     implementation(libs.androidx.window)
 
-    // Compose
+    // Compose UI (Versionen via BOM, keine version.ref nötig!)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.tooling.preview)
@@ -57,11 +70,11 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.compose)
 
-    // TV
+    // Android TV (stable 1.0.0)
     implementation(libs.androidx.leanback)
-    implementation(libs.androidx.tv.compose)
+    implementation(libs.androidx.tv.material)
 
-    // Media3
+    // Media3 / ExoPlayer
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.exoplayer.hls)
     implementation(libs.media3.exoplayer.dash)
@@ -69,19 +82,19 @@ dependencies {
     implementation(libs.media3.session)
     implementation(libs.media3.datasource.okhttp)
 
-    // Network
+    // Network — offizieller Square Converter, kein JakeWharton!
     implementation(libs.retrofit.core)
-    implementation(libs.retrofit.kotlin.serialization)
+    implementation(libs.retrofit.converter.kotlinx)
     implementation(libs.okhttp.core)
     implementation(libs.okhttp.logging)
 
-    // Room — KSP Compiler (KEIN kapt!)
+    // Room — KSP (kein kapt!)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     implementation(libs.room.paging)
     ksp(libs.room.compiler)
 
-    // Hilt — KSP Compiler (KEIN kapt!)
+    // Hilt — KSP (kein kapt!)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
