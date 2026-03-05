@@ -12,6 +12,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check files
+        run: |
+          echo "=== Repository structure ==="
+          ls -la
+          echo "=== Gradle wrapper ==="
+          ls -la gradle/wrapper/
+          echo "=== Gradlew permissions ==="
+          ls -la gradlew
+
       - name: Setup JDK
         uses: actions/setup-java@v4
         with:
@@ -22,17 +31,21 @@ jobs:
       - name: Grant Execute Permission
         run: chmod +x gradlew
 
-      - name: Clean Build
-        run: ./gradlew clean --no-daemon
-
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
+        run: |
+          ./gradlew assembleDebug --no-daemon --stacktrace
+        continue-on-error: false
 
-      - name: List APK files
-        run: find app/build/outputs -name "*.apk" -type f
+      - name: Check build outputs
+        run: |
+          echo "=== Build directory ==="
+          ls -la app/build/outputs/ 2>/dev/null || echo "No outputs directory"
+          echo "=== APK files ==="
+          find app/build -name "*.apk" -type f 2>/dev/null || echo "No APK files found"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: debug-apk
           path: app/build/outputs/apk/debug/*.apk
