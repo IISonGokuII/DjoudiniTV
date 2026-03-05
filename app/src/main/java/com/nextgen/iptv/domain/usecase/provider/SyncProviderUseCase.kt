@@ -31,7 +31,12 @@ class SyncProviderUseCase @Inject constructor(
                 ?: throw IllegalArgumentException("Provider not found")
             
             when (provider.type) {
-                "xtream" -> syncXtreamCodes(providerId, provider.serverUrl, provider.username, provider.password)
+                "xtream" -> {
+                    if (provider.username == null || provider.password == null) {
+                        throw IllegalArgumentException("Username and password required for Xtream Codes")
+                    }
+                    syncXtreamCodes(providerId, provider.serverUrl, provider.username, provider.password)
+                }
                 "m3u_url" -> emit(SyncProgress.Error("M3U URL sync not implemented yet"))
                 "m3u_local" -> emit(SyncProgress.Error("M3U Local sync not implemented yet"))
             }
@@ -42,16 +47,12 @@ class SyncProviderUseCase @Inject constructor(
         }
     }
     
-    private suspend fun syncXtreamCodes(
+    private suspend fun kotlinx.coroutines.flow.FlowCollector<SyncProgress>.syncXtreamCodes(
         providerId: String,
         baseUrl: String,
-        username: String?,
-        password: String?
-    ) = flow {
-        if (username == null || password == null) {
-            throw IllegalArgumentException("Username and password required for Xtream Codes")
-        }
-        
+        username: String,
+        password: String
+    ) {
         // Create API with the correct base URL
         val api = xtreamCodesService.createApi(baseUrl)
         val apiUrl = XtreamCodesService.buildApiUrl(baseUrl)
@@ -141,7 +142,7 @@ class SyncProviderUseCase @Inject constructor(
             streamRepository.addStreams(vodEntities)
         } catch (e: Exception) {
             // VOD might not be available for all providers
-            emit(SyncProgress.Progress("VOD nicht verfügbar oder Fehler: ${e.message}"))
+            emit(SyncProgress.Progress("VOD nicht verfügbar"))
         }
         
         // Sync Series
@@ -161,9 +162,7 @@ class SyncProviderUseCase @Inject constructor(
             categoryRepository.addCategories(seriesCatEntities)
         } catch (e: Exception) {
             // Series might not be available
-            emit(SyncProgress.Progress("Serien nicht verfügbar oder Fehler: ${e.message}"))
+            emit(SyncProgress.Progress("Serien nicht verfügbar"))
         }
-        
-        emit(SyncProgress.Success)
     }
 }
