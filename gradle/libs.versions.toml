@@ -97,7 +97,7 @@ room-ktx                        = { module = "androidx.room:room-ktx",          
 room-paging                     = { module = "androidx.room:room-paging",                                   version.ref = "room" }
 room-compiler                   = { module = "androidx.room:room-compiler",                                 version.ref = "room" }
 
-# Hilt — via KSP (niemals kapt!)
+# DI — Hilt
 hilt-android                    = { module = "com.google.dagger:hilt-android",                              version.ref = "hilt" }
 hilt-compiler                   = { module = "com.google.dagger:hilt-compiler",                             version.ref = "hilt" }
 hilt-navigation-compose         = { module = "androidx.hilt:hilt-navigation-compose",                      version.ref = "hilt-navigation" }
