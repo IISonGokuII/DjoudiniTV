@@ -3,15 +3,27 @@ package com.nextgen.iptv.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.nextgen.iptv.presentation.dashboard.DashboardScreen
-import com.nextgen.iptv.presentation.livetv.LiveTvScreen
-import com.nextgen.iptv.presentation.vod.VodScreen
-import com.nextgen.iptv.presentation.series.SeriesScreen
-import com.nextgen.iptv.presentation.settings.SettingsScreen
-import com.nextgen.iptv.presentation.player.PlayerScreen
-import com.nextgen.iptv.presentation.providersetup.ProviderSetupScreen
+import androidx.navigation.navArgument
+import com.nextgen.iptv.ui.screen.dashboard.DashboardScreen
+import com.nextgen.iptv.ui.screen.livetv.LiveTvScreen
+import com.nextgen.iptv.ui.screen.player.PlayerScreen
+import com.nextgen.iptv.ui.screen.settings.SettingsScreen
+import com.nextgen.iptv.ui.screen.setup.ProviderSetupScreen
+
+object NavRoutes {
+    const val DASHBOARD = "dashboard"
+    const val LIVE_TV = "live_tv"
+    const val VOD = "vod"
+    const val SERIES = "series"
+    const val SETTINGS = "settings"
+    const val PLAYER = "player/{streamId}"
+    const val PROVIDER_SETUP = "provider_setup"
+    
+    fun playerRoute(streamId: String) = "player/$streamId"
+}
 
 @Composable
 fun AppNavigation(
@@ -21,71 +33,54 @@ fun AppNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.Dashboard.route,
+        startDestination = NavRoutes.DASHBOARD,
         modifier = modifier
     ) {
-        composable(NavRoutes.Dashboard.route) {
+        composable(NavRoutes.DASHBOARD) {
             DashboardScreen(
-                onNavigateToLiveTv = { navController.navigate(NavRoutes.LiveTv.route) },
-                onNavigateToVod = { navController.navigate(NavRoutes.Vod.route) },
-                onNavigateToSeries = { navController.navigate(NavRoutes.Series.route) },
-                onNavigateToSettings = { navController.navigate(NavRoutes.Settings.route) },
-                onNavigateToProviderSetup = { navController.navigate(NavRoutes.ProviderSetup.route) },
-                isTv = isTv
+                onNavigateToLiveTv = { navController.navigate(NavRoutes.LIVE_TV) },
+                onNavigateToProviderSetup = { navController.navigate(NavRoutes.PROVIDER_SETUP) },
+                onNavigateToSettings = { navController.navigate(NavRoutes.SETTINGS) }
             )
         }
         
-        composable(NavRoutes.LiveTv.route) {
+        composable(NavRoutes.LIVE_TV) {
             LiveTvScreen(
-                onNavigateBack = { navController.popBackStack() },
-                onChannelSelected = { streamId ->
-                    navController.navigate(NavRoutes.Player.createRoute(streamId))
+                onNavigateToPlayer = { streamId ->
+                    navController.navigate(NavRoutes.playerRoute(streamId))
                 },
-                isTv = isTv
+                onNavigateBack = { navController.popBackStack() }
             )
         }
         
-        composable(NavRoutes.Vod.route) {
-            VodScreen(
-                onNavigateBack = { navController.popBackStack() },
-                onMovieSelected = { streamId ->
-                    navController.navigate(NavRoutes.Player.createRoute(streamId))
-                },
-                isTv = isTv
-            )
+        composable(NavRoutes.VOD) {
+            // VOD screen - placeholder for now
         }
         
-        composable(NavRoutes.Series.route) {
-            SeriesScreen(
-                onNavigateBack = { navController.popBackStack() },
-                onSeriesSelected = { seriesId ->
-                    // Navigate to series detail
-                },
-                isTv = isTv
-            )
+        composable(NavRoutes.SERIES) {
+            // Series screen - placeholder for now
         }
         
-        composable(NavRoutes.Settings.route) {
+        composable(NavRoutes.SETTINGS) {
             SettingsScreen(
-                onNavigateBack = { navController.popBackStack() },
-                isTv = isTv
+                onNavigateBack = { navController.popBackStack() }
             )
         }
         
-        composable(NavRoutes.Player.route) { backStackEntry ->
-            val streamId = backStackEntry.arguments?.getString("streamId") ?: ""
+        composable(
+            route = NavRoutes.PLAYER,
+            arguments = listOf(
+                navArgument("streamId") { type = NavType.StringType }
+            )
+        ) {
             PlayerScreen(
-                streamId = streamId,
-                onNavigateBack = { navController.popBackStack() },
-                isTv = isTv
+                onNavigateBack = { navController.popBackStack() }
             )
         }
         
-        composable(NavRoutes.ProviderSetup.route) {
+        composable(NavRoutes.PROVIDER_SETUP) {
             ProviderSetupScreen(
-                onNavigateBack = { navController.popBackStack() },
-                onSetupComplete = { navController.popBackStack() },
-                isTv = isTv
+                onNavigateBack = { navController.popBackStack() }
             )
         }
     }
