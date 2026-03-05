@@ -6,9 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface ProviderRepository {
     fun getAllProviders(): Flow<List<ProviderEntity>>
     suspend fun getProviderById(id: String): ProviderEntity?
-    suspend fun addProvider(provider: ProviderEntity)
+    suspend fun insertProvider(provider: ProviderEntity)
     suspend fun updateProvider(provider: ProviderEntity)
-    suspend fun deleteProvider(provider: ProviderEntity)
-    suspend fun deleteProviderById(id: String)
-    suspend fun getProviderCount(): Int
+    suspend fun deleteProvider(id: String)
 }
