@@ -12,15 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check files
-        run: |
-          echo "=== Repository structure ==="
-          ls -la
-          echo "=== Gradle wrapper ==="
-          ls -la gradle/wrapper/
-          echo "=== Gradlew permissions ==="
-          ls -la gradlew
-
       - name: Setup JDK
         uses: actions/setup-java@v4
         with:
@@ -28,20 +19,33 @@ jobs:
           java-version: 17
           cache: gradle
 
-      - name: Grant Execute Permission
+      - name: Check Gradle Wrapper
+        run: |
+          echo "=== Check wrapper files ==="
+          ls -la gradle/wrapper/
+          echo "=== Check gradlew ==="
+          ls -la gradlew
+          echo "=== Check if gradlew is executable ==="
+          file gradlew
+          echo "=== Gradle wrapper properties ==="
+          cat gradle/wrapper/gradle-wrapper.properties
+
+      - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - name: Build Debug APK
-        run: |
-          ./gradlew assembleDebug --no-daemon --stacktrace
-        continue-on-error: false
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.7
+
+      - name: Build with Gradle
+        run: gradle assembleDebug --stacktrace
 
       - name: Check build outputs
         run: |
           echo "=== Build directory ==="
-          ls -la app/build/outputs/ 2>/dev/null || echo "No outputs directory"
-          echo "=== APK files ==="
-          find app/build -name "*.apk" -type f 2>/dev/null || echo "No APK files found"
+          find . -name "*.apk" -type f 2>/dev/null
+          ls -la app/build/outputs/apk/debug/ 2>/dev/null || echo "No APK directory"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
