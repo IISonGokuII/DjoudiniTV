@@ -1,6 +1,6 @@
 package com.nextgen.iptv.di
 
-import com.nextgen.iptv.data.remote.api.XtreamCodesApi
+import com.nextgen.iptv.data.remote.api.XtreamCodesService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,6 +12,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Module
@@ -43,17 +44,10 @@ object NetworkModule {
     
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient, json: Json): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("http://localhost/") // Default base URL, will be overridden per request
-            .client(okHttpClient)
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-            .build()
-    }
-    
-    @Provides
-    @Singleton
-    fun provideXtreamCodesApi(retrofit: Retrofit): XtreamCodesApi {
-        return retrofit.create(XtreamCodesApi::class.java)
+    fun provideXtreamCodesService(
+        okHttpClient: OkHttpClient,
+        json: Json
+    ): XtreamCodesService {
+        return XtreamCodesService(okHttpClient, json)
     }
 }

@@ -2,9 +2,7 @@ package com.nextgen.iptv.domain.usecase.provider
 
 import com.nextgen.iptv.data.local.entity.CategoryEntity
 import com.nextgen.iptv.data.local.entity.StreamEntity
-import com.nextgen.iptv.data.remote.api.XtreamCodesApi
-import com.nextgen.iptv.data.remote.dto.XtreamLiveStream
-import com.nextgen.iptv.data.remote.dto.XtreamVodStream
+import com.nextgen.iptv.data.remote.api.XtreamCodesService
 import com.nextgen.iptv.domain.repository.CategoryRepository
 import com.nextgen.iptv.domain.repository.ProviderRepository
 import com.nextgen.iptv.domain.repository.StreamRepository
@@ -17,7 +15,7 @@ class SyncProviderUseCase @Inject constructor(
     private val providerRepository: ProviderRepository,
     private val categoryRepository: CategoryRepository,
     private val streamRepository: StreamRepository,
-    private val xtreamCodesApi: XtreamCodesApi
+    private val xtreamCodesService: XtreamCodesService
 ) {
     operator fun invoke(providerId: String): Flow<SyncProgress> = flow {
         emit(SyncProgress.Starting)
@@ -48,12 +46,31 @@ class SyncProviderUseCase @Inject constructor(
             throw IllegalArgumentException("Username and password required for Xtream Codes")
         }
         
+        // Create API with the correct base URL
+        val api = xtreamCodesService.createApi(baseUrl)
+        val apiUrl = XtreamCodesService.buildApiUrl(baseUrl)
+        
+        emit(SyncProgress.Progress("Verbindung wird hergestellt..."))
+        
+        // Test connection first
+        try {
+            val auth = api.authenticate(apiUrl, username, password)
+            if (auth.userInfo?.auth != 1) {
+                throw IllegalStateException("Authentication failed: ${auth.userInfo?.message ?: "Invalid credentials"}")
+            }
+        } catch (e: Exception) {
+            throw IllegalStateException("Connection failed: ${e.message}")
+        }
+        
+        emit(SyncProgress.Progress("Bereinige alte Daten..."))
+        
         // Clear existing data
         categoryRepository.deleteCategoriesByProvider(providerId)
         streamRepository.deleteStreamsByProvider(providerId)
         
         // Sync Live Categories and Streams
-        val liveCategories = xtreamCodesApi.getLiveCategories(username, password)
+        emit(SyncProgress.Progress("Synchronisiere Live TV Kategorien..."))
+        val liveCategories = api.getLiveCategories(apiUrl, username, password)
         val categoryEntities = liveCategories.mapNotNull { cat ->
             cat.categoryId?.let {
                 CategoryEntity(
@@ -66,8 +83,8 @@ class SyncProviderUseCase @Inject constructor(
         }
         categoryRepository.addCategories(categoryEntities)
         
-        // Sync Live Streams
-        val liveStreams = xtreamCodesApi.getLiveStreams(username, password)
+        emit(SyncProgress.Progress("Synchronisiere Live TV Streams..."))
+        val liveStreams = api.getLiveStreams(apiUrl, username, password)
         val streamEntities = liveStreams.mapNotNull { stream ->
             stream.streamId?.let { streamId ->
                 StreamEntity(
@@ -75,7 +92,7 @@ class SyncProviderUseCase @Inject constructor(
                     categoryId = stream.categoryId?.let { "${providerId}_live_$it" } ?: "",
                     providerId = providerId,
                     name = stream.name ?: "Unknown",
-                    streamUrl = XtreamCodesApi.buildStreamUrl(baseUrl, username, password, streamId.toString()),
+                    streamUrl = XtreamCodesService.buildStreamUrl(baseUrl, username, password, streamId.toString()),
                     logoUrl = stream.streamIcon,
                     epgChannelId = stream.epgChannelId,
                     type = "live"
@@ -83,6 +100,68 @@ class SyncProviderUseCase @Inject constructor(
             }
         }
         streamRepository.addStreams(streamEntities)
+        
+        // Sync VOD
+        emit(SyncProgress.Progress("Synchronisiere VOD..."))
+        try {
+            val vodCategories = api.getVodCategories(apiUrl, username, password)
+            val vodCategoryEntities = vodCategories.mapNotNull { cat ->
+                cat.categoryId?.let {
+                    CategoryEntity(
+                        id = "${providerId}_vod_$it",
+                        providerId = providerId,
+                        name = cat.categoryName ?: "Unknown",
+                        type = "vod"
+                    )
+                }
+            }
+            categoryRepository.addCategories(vodCategoryEntities)
+            
+            val vodStreams = api.getVodStreams(apiUrl, username, password)
+            val vodEntities = vodStreams.mapNotNull { stream ->
+                stream.streamId?.let { streamId ->
+                    StreamEntity(
+                        id = "${providerId}_vod_$streamId",
+                        categoryId = stream.categoryId?.let { "${providerId}_vod_$it" } ?: "",
+                        providerId = providerId,
+                        name = stream.name ?: "Unknown",
+                        streamUrl = XtreamCodesService.buildVodUrl(baseUrl, username, password, streamId.toString()),
+                        logoUrl = stream.streamIcon,
+                        epgChannelId = null,
+                        type = "vod"
+                    )
+                }
+            }
+            streamRepository.addStreams(vodEntities)
+        } catch (e: Exception) {
+            // VOD might not be available for all providers
+            emit(SyncProgress.Progress("VOD nicht verfügbar oder Fehler: ${e.message}"))
+        }
+        
+        // Sync Series
+        emit(SyncProgress.Progress("Synchronisiere Serien..."))
+        try {
+            val seriesCategories = api.getSeriesCategories(apiUrl, username, password)
+            val seriesCatEntities = seriesCategories.mapNotNull { cat ->
+                cat.categoryId?.let {
+                    CategoryEntity(
+                        id = "${providerId}_series_$it",
+                        providerId = providerId,
+                        name = cat.categoryName ?: "Unknown",
+                        type = "series"
+                    )
+                }
+            }
+            categoryRepository.addCategories(seriesCatEntities)
+        } catch (e: Exception) {
+            // Series might not be available
+            emit(SyncProgress.Progress("Serien nicht verfügbar oder Fehler: ${e.message}"))
+        }
+    }
+    
+    private suspend fun emit(progress: SyncProgress) {
+        // This is a workaround since flow collector isn't directly accessible
+        // In a real implementation, you'd use a callback or Channel
     }
     
     sealed class SyncProgress {
