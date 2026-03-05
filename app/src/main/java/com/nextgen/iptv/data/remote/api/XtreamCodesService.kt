@@ -14,10 +14,10 @@ import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.Url
+import javax.inject.Inject
 
 /**
- * Service for making Xtream Codes API calls with dynamic base URLs.
- * Each provider can have a different server URL.
+ * Interface for Xtream Codes API calls with dynamic base URLs.
  */
 interface XtreamCodesApiDynamic {
     

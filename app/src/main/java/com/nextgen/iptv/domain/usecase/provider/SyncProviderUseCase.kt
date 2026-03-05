@@ -8,8 +8,14 @@ import com.nextgen.iptv.domain.repository.ProviderRepository
 import com.nextgen.iptv.domain.repository.StreamRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.util.UUID
 import javax.inject.Inject
+
+sealed class SyncProgress {
+    data object Starting : SyncProgress()
+    data class Progress(val message: String) : SyncProgress()
+    data object Success : SyncProgress()
+    data class Error(val message: String) : SyncProgress()
+}
 
 class SyncProviderUseCase @Inject constructor(
     private val providerRepository: ProviderRepository,
@@ -25,7 +31,7 @@ class SyncProviderUseCase @Inject constructor(
                 ?: throw IllegalArgumentException("Provider not found")
             
             when (provider.type) {
-                "xtream" -> syncXtreamCodes(providerId, provider.serverUrl, provider.username, provider.password)
+                "xtream" -> syncXtreamCodes(providerId, provider.serverUrl, provider.username, provider.password, this)
                 "m3u_url" -> emit(SyncProgress.Error("M3U URL sync not implemented yet"))
                 "m3u_local" -> emit(SyncProgress.Error("M3U Local sync not implemented yet"))
             }
@@ -36,11 +42,16 @@ class SyncProviderUseCase @Inject constructor(
         }
     }
     
+    private suspend inline fun <T> kotlinx.coroutines.flow.FlowCollector<T>.emit(value: T) {
+        this.emit(value)
+    }
+    
     private suspend fun syncXtreamCodes(
         providerId: String,
         baseUrl: String,
         username: String?,
-        password: String?
+        password: String?,
+        collector: kotlinx.coroutines.flow.FlowCollector<SyncProgress>
     ) {
         if (username == null || password == null) {
             throw IllegalArgumentException("Username and password required for Xtream Codes")
@@ -50,7 +61,7 @@ class SyncProviderUseCase @Inject constructor(
         val api = xtreamCodesService.createApi(baseUrl)
         val apiUrl = XtreamCodesService.buildApiUrl(baseUrl)
         
-        emit(SyncProgress.Progress("Verbindung wird hergestellt..."))
+        collector.emit(SyncProgress.Progress("Verbindung wird hergestellt..."))
         
         // Test connection first
         try {
@@ -62,14 +73,14 @@ class SyncProviderUseCase @Inject constructor(
             throw IllegalStateException("Connection failed: ${e.message}")
         }
         
-        emit(SyncProgress.Progress("Bereinige alte Daten..."))
+        collector.emit(SyncProgress.Progress("Bereinige alte Daten..."))
         
         // Clear existing data
         categoryRepository.deleteCategoriesByProvider(providerId)
         streamRepository.deleteStreamsByProvider(providerId)
         
         // Sync Live Categories and Streams
-        emit(SyncProgress.Progress("Synchronisiere Live TV Kategorien..."))
+        collector.emit(SyncProgress.Progress("Synchronisiere Live TV Kategorien..."))
         val liveCategories = api.getLiveCategories(apiUrl, username, password)
         val categoryEntities = liveCategories.mapNotNull { cat ->
             cat.categoryId?.let {
@@ -83,7 +94,7 @@ class SyncProviderUseCase @Inject constructor(
         }
         categoryRepository.addCategories(categoryEntities)
         
-        emit(SyncProgress.Progress("Synchronisiere Live TV Streams..."))
+        collector.emit(SyncProgress.Progress("Synchronisiere Live TV Streams..."))
         val liveStreams = api.getLiveStreams(apiUrl, username, password)
         val streamEntities = liveStreams.mapNotNull { stream ->
             stream.streamId?.let { streamId ->
@@ -102,7 +113,7 @@ class SyncProviderUseCase @Inject constructor(
         streamRepository.addStreams(streamEntities)
         
         // Sync VOD
-        emit(SyncProgress.Progress("Synchronisiere VOD..."))
+        collector.emit(SyncProgress.Progress("Synchronisiere VOD..."))
         try {
             val vodCategories = api.getVodCategories(apiUrl, username, password)
             val vodCategoryEntities = vodCategories.mapNotNull { cat ->
@@ -135,11 +146,11 @@ class SyncProviderUseCase @Inject constructor(
             streamRepository.addStreams(vodEntities)
         } catch (e: Exception) {
             // VOD might not be available for all providers
-            emit(SyncProgress.Progress("VOD nicht verfügbar oder Fehler: ${e.message}"))
+            collector.emit(SyncProgress.Progress("VOD nicht verfügbar oder Fehler: ${e.message}"))
         }
         
         // Sync Series
-        emit(SyncProgress.Progress("Synchronisiere Serien..."))
+        collector.emit(SyncProgress.Progress("Synchronisiere Serien..."))
         try {
             val seriesCategories = api.getSeriesCategories(apiUrl, username, password)
             val seriesCatEntities = seriesCategories.mapNotNull { cat ->
@@ -155,19 +166,7 @@ class SyncProviderUseCase @Inject constructor(
             categoryRepository.addCategories(seriesCatEntities)
         } catch (e: Exception) {
             // Series might not be available
-            emit(SyncProgress.Progress("Serien nicht verfügbar oder Fehler: ${e.message}"))
+            collector.emit(SyncProgress.Progress("Serien nicht verfügbar oder Fehler: ${e.message}"))
         }
-    }
-    
-    private suspend fun emit(progress: SyncProgress) {
-        // This is a workaround since flow collector isn't directly accessible
-        // In a real implementation, you'd use a callback or Channel
-    }
-    
-    sealed class SyncProgress {
-        data object Starting : SyncProgress()
-        data class Progress(val message: String) : SyncProgress()
-        data object Success : SyncProgress()
-        data class Error(val message: String) : SyncProgress()
     }
 }
