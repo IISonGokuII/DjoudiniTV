@@ -5,34 +5,48 @@ import com.nextgen.iptv.data.local.entity.CategoryEntity
 import com.nextgen.iptv.domain.repository.CategoryRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class CategoryRepositoryImpl @Inject constructor(
     private val categoryDao: CategoryDao
 ) : CategoryRepository {
     
-    override fun getAllCategories(): Flow<List<CategoryEntity>> = categoryDao.getAll()
+    override fun getAllCategories(): Flow<List<CategoryEntity>> {
+        return categoryDao.getAllCategories()
+    }
     
-    override fun getCategoriesByProvider(providerId: String): Flow<List<CategoryEntity>> = 
-        categoryDao.getByProviderId(providerId)
+    override fun getCategoriesByProvider(providerId: String): Flow<List<CategoryEntity>> {
+        return categoryDao.getCategoriesByProvider(providerId)
+    }
     
-    override fun getCategoriesByProviderAndType(providerId: String, type: String): Flow<List<CategoryEntity>> = 
-        categoryDao.getByProviderAndType(providerId, type)
+    override fun getCategoriesByType(type: String): Flow<List<CategoryEntity>> {
+        return categoryDao.getCategoriesByType(type)
+    }
     
-    override suspend fun getCategoryById(id: String): CategoryEntity? = categoryDao.getById(id)
+    override fun getCategoriesByProviderAndType(providerId: String, type: String): Flow<List<CategoryEntity>> {
+        return categoryDao.getCategoriesByProviderAndType(providerId, type)
+    }
     
-    override suspend fun addCategory(category: CategoryEntity) = categoryDao.insert(category)
+    override suspend fun getCategoryById(id: String): CategoryEntity? {
+        return categoryDao.getCategoryById(id)
+    }
     
-    override suspend fun addCategories(categories: List<CategoryEntity>) = 
-        categoryDao.insertAll(categories)
+    override suspend fun insertCategory(category: CategoryEntity) {
+        categoryDao.insertCategory(category)
+    }
     
-    override suspend fun updateCategory(category: CategoryEntity) = categoryDao.update(category)
+    override suspend fun addCategories(categories: List<CategoryEntity>) {
+        categoryDao.insertCategories(categories)
+    }
     
-    override suspend fun deleteCategory(category: CategoryEntity) = categoryDao.delete(category)
+    override suspend fun updateCategory(category: CategoryEntity) {
+        categoryDao.updateCategory(category)
+    }
     
-    override suspend fun deleteCategoriesByProvider(providerId: String) = 
-        categoryDao.deleteByProviderId(providerId)
+    override suspend fun deleteCategory(id: String) {
+        categoryDao.deleteCategoryById(id)
+    }
     
-    override suspend fun deleteAllCategories() = categoryDao.deleteAll()
+    override suspend fun deleteCategoriesByProvider(providerId: String) {
+        categoryDao.deleteCategoriesByProvider(providerId)
+    }
 }
