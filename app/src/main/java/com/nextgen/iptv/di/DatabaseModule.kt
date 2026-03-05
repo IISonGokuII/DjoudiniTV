@@ -6,10 +6,12 @@ import com.nextgen.iptv.data.local.AppDatabase
 import com.nextgen.iptv.data.repository.CategoryRepositoryImpl
 import com.nextgen.iptv.data.repository.EpgRepositoryImpl
 import com.nextgen.iptv.data.repository.ProviderRepositoryImpl
+import com.nextgen.iptv.data.repository.SettingsRepositoryImpl
 import com.nextgen.iptv.data.repository.StreamRepositoryImpl
 import com.nextgen.iptv.domain.repository.CategoryRepository
 import com.nextgen.iptv.domain.repository.EpgRepository
 import com.nextgen.iptv.domain.repository.ProviderRepository
+import com.nextgen.iptv.domain.repository.SettingsRepository
 import com.nextgen.iptv.domain.repository.StreamRepository
 import dagger.Module
 import dagger.Provides
@@ -67,4 +69,8 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideEpgRepository(impl: EpgRepositoryImpl): EpgRepository = impl
+    
+    @Provides
+    @Singleton
+    fun provideSettingsRepository(impl: SettingsRepositoryImpl): SettingsRepository = impl
 }
