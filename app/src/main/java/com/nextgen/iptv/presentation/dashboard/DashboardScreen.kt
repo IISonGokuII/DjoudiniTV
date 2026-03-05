@@ -18,9 +18,11 @@ import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.Tv
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -28,20 +30,23 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.nextgen.iptv.presentation.theme.Dimens
 
 data class DashboardTile(
     val title: String,
     val icon: ImageVector,
+    val enabled: Boolean = true,
     val onClick: () -> Unit
 )
 
@@ -53,14 +58,36 @@ fun DashboardScreen(
     onNavigateToSeries: () -> Unit,
     onNavigateToSettings: () -> Unit,
     onNavigateToProviderSetup: () -> Unit,
-    isTv: Boolean = false
+    isTv: Boolean = false,
+    viewModel: DashboardViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+    
     val tiles = listOf(
-        DashboardTile("Live TV", Icons.Default.LiveTv, onNavigateToLiveTv),
-        DashboardTile("VOD", Icons.Default.Movie, onNavigateToVod),
-        DashboardTile("Serien", Icons.Default.Tv, onNavigateToSeries),
-        DashboardTile("Anbieter", Icons.Default.Storage, onNavigateToProviderSetup),
-        DashboardTile("Einstellungen", Icons.Default.Settings, onNavigateToSettings)
+        DashboardTile(
+            title = "Live TV",
+            icon = Icons.Default.LiveTv,
+            enabled = uiState.hasProviders,
+            onClick = onNavigateToLiveTv
+        ),
+        DashboardTile(
+            title = "VOD",
+            icon = Icons.Default.Movie,
+            enabled = uiState.hasProviders,
+            onClick = onNavigateToVod
+        ),
+        DashboardTile(
+            title = "Serien",
+            icon = Icons.Default.Tv,
+            enabled = uiState.hasProviders,
+            onClick = onNavigateToSeries
+        ),
+        DashboardTile(
+            title = "Einstellungen",
+            icon = Icons.Default.Settings,
+            enabled = true,
+            onClick = onNavigateToSettings
+        )
     )
     
     Scaffold(
@@ -77,22 +104,71 @@ fun DashboardScreen(
                     titleContentColor = MaterialTheme.colorScheme.onBackground
                 )
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onNavigateToProviderSetup
+            ) {
+                Icon(Icons.Default.Storage, contentDescription = "Anbieter hinzufügen")
+            }
         }
     ) { paddingValues ->
-        LazyVerticalGrid(
-            columns = if (isTv) GridCells.Fixed(2) else GridCells.Fixed(2),
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
-            contentPadding = PaddingValues(Dimens.paddingMedium),
-            verticalArrangement = Arrangement.spacedBy(Dimens.spacingMedium),
-            horizontalArrangement = Arrangement.spacedBy(Dimens.spacingMedium)
+                .padding(paddingValues)
         ) {
-            items(tiles) { tile ->
-                DashboardTileItem(
-                    tile = tile,
-                    isTv = isTv
+            // Provider Status Card
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(Dimens.paddingMedium),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (uiState.hasProviders)
+                        MaterialTheme.colorScheme.primaryContainer
+                    else
+                        MaterialTheme.colorScheme.surfaceVariant
                 )
+            ) {
+                Column(
+                    modifier = Modifier.padding(Dimens.paddingMedium)
+                ) {
+                    Text(
+                        text = if (uiState.hasProviders)
+                            "${uiState.providers.size} Anbieter verbunden"
+                        else
+                            "Kein Anbieter verbunden",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = if (uiState.hasProviders)
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        else
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    if (!uiState.hasProviders) {
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Tippe auf das + Symbol um einen Anbieter hinzuzufügen",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+            
+            // Dashboard Grid
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(Dimens.paddingMedium),
+                verticalArrangement = Arrangement.spacedBy(Dimens.spacingMedium),
+                horizontalArrangement = Arrangement.spacedBy(Dimens.spacingMedium)
+            ) {
+                items(tiles) { tile ->
+                    DashboardTileItem(
+                        tile = tile,
+                        isTv = isTv
+                    )
+                }
             }
         }
     }
@@ -107,20 +183,19 @@ private fun DashboardTileItem(
     
     Card(
         onClick = tile.onClick,
+        enabled = tile.enabled,
         modifier = Modifier
             .fillMaxWidth()
             .height(if (isTv) Dimens.tileHeightTv else Dimens.tileHeightMobile)
-            .focusRequester(focusRequester)
-            .then(
-                if (isTv) {
-                    Modifier.onFocusChanged { /* Handle focus animation if needed */ }
-                } else Modifier
-            ),
+            .focusRequester(focusRequester),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = if (tile.enabled)
+                MaterialTheme.colorScheme.surface
+            else
+                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = Dimens.tileElevation
+            defaultElevation = if (tile.enabled) Dimens.tileElevation else 0.dp
         )
     ) {
         Box(
@@ -135,7 +210,10 @@ private fun DashboardTileItem(
                     imageVector = tile.icon,
                     contentDescription = tile.title,
                     modifier = Modifier.scale(if (isTv) 1.5f else 1.2f),
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = if (tile.enabled)
+                        MaterialTheme.colorScheme.primary
+                    else
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -143,7 +221,10 @@ private fun DashboardTileItem(
                     style = if (isTv) MaterialTheme.typography.titleLarge 
                            else MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = if (tile.enabled)
+                        MaterialTheme.colorScheme.onSurface
+                    else
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                 )
             }
         }
