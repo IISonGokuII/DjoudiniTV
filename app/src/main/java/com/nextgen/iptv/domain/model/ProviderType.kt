@@ -7,17 +7,6 @@ sealed class ProviderType {
         val password: String
     ) : ProviderType()
     
-    data class M3UUrl(
-        val url: String
-    ) : ProviderType()
-    
-    data class M3ULocal(
-        val filePath: String
-    ) : ProviderType()
-}
-
-fun ProviderType.getDisplayName(): String = when (this) {
-    is ProviderType.XtreamCodes -> "Xtream Codes API"
-    is ProviderType.M3UUrl -> "M3U URL"
-    is ProviderType.M3ULocal -> "Lokale M3U Datei"
+    data class M3uUrl(val url: String) : ProviderType()
+    data class M3uLocal(val filePath: String) : ProviderType()
 }

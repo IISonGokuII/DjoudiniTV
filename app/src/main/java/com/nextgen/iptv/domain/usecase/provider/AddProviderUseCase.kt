@@ -12,7 +12,7 @@ class AddProviderUseCase @Inject constructor(
     suspend operator fun invoke(name: String, type: ProviderType): Result<String> {
         return try {
             val id = UUID.randomUUID().toString()
-            val entity = when (type) {
+            val provider = when (type) {
                 is ProviderType.XtreamCodes -> ProviderEntity(
                     id = id,
                     name = name,
@@ -21,7 +21,7 @@ class AddProviderUseCase @Inject constructor(
                     username = type.username,
                     password = type.password
                 )
-                is ProviderType.M3UUrl -> ProviderEntity(
+                is ProviderType.M3uUrl -> ProviderEntity(
                     id = id,
                     name = name,
                     type = "m3u_url",
@@ -29,7 +29,7 @@ class AddProviderUseCase @Inject constructor(
                     username = null,
                     password = null
                 )
-                is ProviderType.M3ULocal -> ProviderEntity(
+                is ProviderType.M3uLocal -> ProviderEntity(
                     id = id,
                     name = name,
                     type = "m3u_local",
@@ -38,7 +38,7 @@ class AddProviderUseCase @Inject constructor(
                     password = null
                 )
             }
-            providerRepository.addProvider(entity)
+            providerRepository.insertProvider(provider)
             Result.success(id)
         } catch (e: Exception) {
             Result.failure(e)
