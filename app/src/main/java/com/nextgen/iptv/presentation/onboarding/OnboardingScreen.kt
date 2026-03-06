@@ -147,6 +147,8 @@ fun OnboardingScreen(
                             categories = step.categories,
                             selectedIds = step.selectedIds,
                             onToggle = { viewModel.updateLiveTvSelection(step.selectedIds.toggle(it)) },
+                            onSelectAll = { viewModel.updateLiveTvSelection(step.categories.map { it.id }.toSet()) },
+                            onDeselectAll = { viewModel.updateLiveTvSelection(emptySet()) },
                             onContinue = { viewModel.confirmLiveTvSelectionAndContinue() },
                             continueButtonText = "Weiter zu Serien"
                         )
@@ -159,6 +161,8 @@ fun OnboardingScreen(
                             categories = step.categories,
                             selectedIds = step.selectedIds,
                             onToggle = { viewModel.updateSeriesSelection(step.selectedIds.toggle(it)) },
+                            onSelectAll = { viewModel.updateSeriesSelection(step.categories.map { it.id }.toSet()) },
+                            onDeselectAll = { viewModel.updateSeriesSelection(emptySet()) },
                             onContinue = { viewModel.confirmSeriesSelectionAndContinue() },
                             continueButtonText = "Weiter zu Filmen"
                         )
@@ -171,6 +175,8 @@ fun OnboardingScreen(
                             categories = step.categories,
                             selectedIds = step.selectedIds,
                             onToggle = { viewModel.updateVodSelection(step.selectedIds.toggle(it)) },
+                            onSelectAll = { viewModel.updateVodSelection(step.categories.map { it.id }.toSet()) },
+                            onDeselectAll = { viewModel.updateVodSelection(emptySet()) },
                             onContinue = { viewModel.confirmVodSelectionAndFinish(onComplete) },
                             continueButtonText = "App starten"
                         )
@@ -871,6 +877,8 @@ private fun SequentialCategorySelectionStep(
     categories: List<CategoryEntity>,
     selectedIds: Set<String>,
     onToggle: (String) -> Unit,
+    onSelectAll: () -> Unit,
+    onDeselectAll: () -> Unit,
     onContinue: () -> Unit,
     continueButtonText: String
 ) {
@@ -912,20 +920,14 @@ private fun SequentialCategorySelectionStep(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OutlinedButton(
-                onClick = { 
-                    // Select all
-                    categories.forEach { onToggle(it.id) }
-                },
+                onClick = onSelectAll,
                 modifier = Modifier.weight(1f)
             ) {
                 Text("Alle auswählen")
             }
             
             OutlinedButton(
-                onClick = { 
-                    // Deselect all - toggle all that are selected
-                    selectedIds.forEach { onToggle(it) }
-                },
+                onClick = onDeselectAll,
                 modifier = Modifier.weight(1f)
             ) {
                 Text("Alle abwählen")

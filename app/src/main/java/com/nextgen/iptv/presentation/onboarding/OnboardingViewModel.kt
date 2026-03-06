@@ -280,40 +280,52 @@ class OnboardingViewModel @Inject constructor(
      */
     fun confirmLiveTvSelectionAndContinue() {
         viewModelScope.launch {
-            val state = _uiState.value
-            val providerId = state.providerId ?: return@launch
-            
-            // Save Live TV selection
-            settingsRepository.setSelectedLiveCategories(providerId, state.tempLiveSelection)
-            
-            // Move to Series sync
-            _uiState.update { 
-                it.copy(
-                    isLoading = true,
-                    syncMessage = "Lade Serien-Kategorien...",
-                    syncProgress = 45
-                ) 
-            }
-            
-            // Sync Series categories
-            syncProviderUseCase.syncSeriesCategoriesOnly(providerId).collect { progress ->
-                when (progress) {
-                    is SyncProgress.Progress -> {
-                        _uiState.update { 
-                            it.copy(
-                                syncMessage = progress.message,
-                                syncProgress = 45 + (progress.percent * 0.1).toInt()
-                            )
+            try {
+                val state = _uiState.value
+                val providerId = state.providerId ?: run {
+                    _uiState.update { it.copy(error = "Provider ID fehlt", isLoading = false) }
+                    return@launch
+                }
+                
+                // Save Live TV selection
+                settingsRepository.setSelectedLiveCategories(providerId, state.tempLiveSelection)
+                
+                // Move to Series sync
+                _uiState.update { 
+                    it.copy(
+                        isLoading = true,
+                        syncMessage = "Lade Serien-Kategorien...",
+                        syncProgress = 45
+                    ) 
+                }
+                
+                // Sync Series categories
+                syncProviderUseCase.syncSeriesCategoriesOnly(providerId).collect { progress ->
+                    when (progress) {
+                        is SyncProgress.Progress -> {
+                            _uiState.update { 
+                                it.copy(
+                                    syncMessage = progress.message,
+                                    syncProgress = 45 + (progress.percent * 0.1).toInt()
+                                )
+                            }
                         }
+                        is SyncProgress.Success -> {
+                            loadSeriesCategoriesForSelection(providerId)
+                        }
+                        is SyncProgress.Error -> {
+                            // Continue even if series fails - maybe user doesn't want series
+                            loadSeriesCategoriesForSelection(providerId)
+                        }
+                        else -> {}
                     }
-                    is SyncProgress.Success -> {
-                        loadSeriesCategoriesForSelection(providerId)
-                    }
-                    is SyncProgress.Error -> {
-                        // Continue even if series fails - maybe user doesn't want series
-                        loadSeriesCategoriesForSelection(providerId)
-                    }
-                    else -> {}
+                }
+            } catch (e: Exception) {
+                _uiState.update { 
+                    it.copy(
+                        isLoading = false,
+                        error = "Fehler: ${e.message}"
+                    )
                 }
             }
         }
@@ -353,42 +365,54 @@ class OnboardingViewModel @Inject constructor(
      */
     fun confirmSeriesSelectionAndContinue() {
         viewModelScope.launch {
-            val state = _uiState.value
-            val providerId = state.providerId ?: return@launch
-            
-            // Save Series selection
-            settingsRepository.setSelectedSeriesCategories(providerId, state.tempSeriesSelection)
-            
-            // If user selected series categories, sync the actual series
-            if (state.tempSeriesSelection.isNotEmpty()) {
-                _uiState.update { 
-                    it.copy(
-                        isLoading = true,
-                        syncMessage = "Synchronisiere Serien...",
-                        syncProgress = 60
-                    ) 
+            try {
+                val state = _uiState.value
+                val providerId = state.providerId ?: run {
+                    _uiState.update { it.copy(error = "Provider ID fehlt", isLoading = false) }
+                    return@launch
                 }
                 
-                syncProviderUseCase(providerId).collect { progress ->
-                    when (progress) {
-                        is SyncProgress.Progress -> {
-                            _uiState.update { 
-                                it.copy(
-                                    syncMessage = progress.message,
-                                    syncProgress = 60 + (progress.percent * 0.1).toInt()
-                                )
-                            }
-                        }
-                        is SyncProgress.Success, is SyncProgress.Error -> {
-                            // Move to VOD regardless of success
-                            startVodCategorySync(providerId)
-                        }
-                        else -> {}
+                // Save Series selection
+                settingsRepository.setSelectedSeriesCategories(providerId, state.tempSeriesSelection)
+                
+                // If user selected series categories, sync the actual series
+                if (state.tempSeriesSelection.isNotEmpty()) {
+                    _uiState.update { 
+                        it.copy(
+                            isLoading = true,
+                            syncMessage = "Synchronisiere Serien...",
+                            syncProgress = 60
+                        ) 
                     }
+                    
+                    syncProviderUseCase(providerId).collect { progress ->
+                        when (progress) {
+                            is SyncProgress.Progress -> {
+                                _uiState.update { 
+                                    it.copy(
+                                        syncMessage = progress.message,
+                                        syncProgress = 60 + (progress.percent * 0.1).toInt()
+                                    )
+                                }
+                            }
+                            is SyncProgress.Success, is SyncProgress.Error -> {
+                                // Move to VOD regardless of success
+                                startVodCategorySync(providerId)
+                            }
+                            else -> {}
+                        }
+                    }
+                } else {
+                    // No series selected, skip to VOD
+                    startVodCategorySync(providerId)
                 }
-            } else {
-                // No series selected, skip to VOD
-                startVodCategorySync(providerId)
+            } catch (e: Exception) {
+                _uiState.update { 
+                    it.copy(
+                        isLoading = false,
+                        error = "Fehler: ${e.message}"
+                    )
+                }
             }
         }
     }
@@ -457,36 +481,29 @@ class OnboardingViewModel @Inject constructor(
      */
     fun confirmVodSelectionAndFinish(onComplete: () -> Unit) {
         viewModelScope.launch {
-            val state = _uiState.value
-            val providerId = state.providerId ?: return@launch
-            
-            // Save VOD selection
-            settingsRepository.setSelectedVodCategories(providerId, state.tempVodSelection)
-            
-            // If user selected VOD categories, sync the actual movies
-            if (state.tempVodSelection.isNotEmpty()) {
-                _uiState.update { 
-                    it.copy(
-                        isLoading = true,
-                        syncMessage = "Synchronisiere Filme...",
-                        syncProgress = 90
-                    ) 
+            try {
+                val state = _uiState.value
+                val providerId = state.providerId ?: run {
+                    _uiState.update { it.copy(error = "Provider ID fehlt", isLoading = false) }
+                    return@launch
                 }
                 
-                // Note: Full sync includes VOD - or we need a VOD-only sync method
-                // For now, mark as complete - VOD will sync on-demand or via settings
+                // Save VOD selection
+                settingsRepository.setSelectedVodCategories(providerId, state.tempVodSelection)
+                
+                // Mark as complete - VOD will sync on-demand or via settings
                 _uiState.update { 
                     it.copy(
                         isLoading = false,
                         currentStep = OnboardingStep.Complete
                     ) 
                 }
-            } else {
+            } catch (e: Exception) {
                 _uiState.update { 
                     it.copy(
                         isLoading = false,
-                        currentStep = OnboardingStep.Complete
-                    ) 
+                        error = "Fehler: ${e.message}"
+                    )
                 }
             }
         }

@@ -444,38 +444,23 @@ public final class DaggerNextGenIPTVApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_nextgen_iptv_ui_viewmodel_ProviderSetupViewModel = "com.nextgen.iptv.ui.viewmodel.ProviderSetupViewModel";
-
-      static String com_nextgen_iptv_ui_viewmodel_SeriesDetailViewModel = "com.nextgen.iptv.ui.viewmodel.SeriesDetailViewModel";
-
-      static String com_nextgen_iptv_ui_viewmodel_PlayerViewModel = "com.nextgen.iptv.ui.viewmodel.PlayerViewModel";
-
-      static String com_nextgen_iptv_ui_viewmodel_SeriesListViewModel = "com.nextgen.iptv.ui.viewmodel.SeriesListViewModel";
-
-      static String com_nextgen_iptv_ui_viewmodel_SettingsViewModel = "com.nextgen.iptv.ui.viewmodel.SettingsViewModel";
-
       static String com_nextgen_iptv_ui_viewmodel_VodViewModel = "com.nextgen.iptv.ui.viewmodel.VodViewModel";
 
       static String com_nextgen_iptv_presentation_onboarding_OnboardingViewModel = "com.nextgen.iptv.presentation.onboarding.OnboardingViewModel";
+
+      static String com_nextgen_iptv_ui_viewmodel_ProviderSetupViewModel = "com.nextgen.iptv.ui.viewmodel.ProviderSetupViewModel";
+
+      static String com_nextgen_iptv_ui_viewmodel_PlayerViewModel = "com.nextgen.iptv.ui.viewmodel.PlayerViewModel";
+
+      static String com_nextgen_iptv_ui_viewmodel_SettingsViewModel = "com.nextgen.iptv.ui.viewmodel.SettingsViewModel";
+
+      static String com_nextgen_iptv_ui_viewmodel_SeriesDetailViewModel = "com.nextgen.iptv.ui.viewmodel.SeriesDetailViewModel";
 
       static String com_nextgen_iptv_ui_viewmodel_LiveTvViewModel = "com.nextgen.iptv.ui.viewmodel.LiveTvViewModel";
 
       static String com_nextgen_iptv_ui_viewmodel_DashboardViewModel = "com.nextgen.iptv.ui.viewmodel.DashboardViewModel";
 
-      @KeepFieldType
-      ProviderSetupViewModel com_nextgen_iptv_ui_viewmodel_ProviderSetupViewModel2;
-
-      @KeepFieldType
-      SeriesDetailViewModel com_nextgen_iptv_ui_viewmodel_SeriesDetailViewModel2;
-
-      @KeepFieldType
-      PlayerViewModel com_nextgen_iptv_ui_viewmodel_PlayerViewModel2;
-
-      @KeepFieldType
-      SeriesListViewModel com_nextgen_iptv_ui_viewmodel_SeriesListViewModel2;
-
-      @KeepFieldType
-      SettingsViewModel com_nextgen_iptv_ui_viewmodel_SettingsViewModel2;
+      static String com_nextgen_iptv_ui_viewmodel_SeriesListViewModel = "com.nextgen.iptv.ui.viewmodel.SeriesListViewModel";
 
       @KeepFieldType
       VodViewModel com_nextgen_iptv_ui_viewmodel_VodViewModel2;
@@ -484,10 +469,25 @@ public final class DaggerNextGenIPTVApp_HiltComponents_SingletonC {
       OnboardingViewModel com_nextgen_iptv_presentation_onboarding_OnboardingViewModel2;
 
       @KeepFieldType
+      ProviderSetupViewModel com_nextgen_iptv_ui_viewmodel_ProviderSetupViewModel2;
+
+      @KeepFieldType
+      PlayerViewModel com_nextgen_iptv_ui_viewmodel_PlayerViewModel2;
+
+      @KeepFieldType
+      SettingsViewModel com_nextgen_iptv_ui_viewmodel_SettingsViewModel2;
+
+      @KeepFieldType
+      SeriesDetailViewModel com_nextgen_iptv_ui_viewmodel_SeriesDetailViewModel2;
+
+      @KeepFieldType
       LiveTvViewModel com_nextgen_iptv_ui_viewmodel_LiveTvViewModel2;
 
       @KeepFieldType
       DashboardViewModel com_nextgen_iptv_ui_viewmodel_DashboardViewModel2;
+
+      @KeepFieldType
+      SeriesListViewModel com_nextgen_iptv_ui_viewmodel_SeriesListViewModel2;
     }
   }
 
@@ -578,41 +578,29 @@ public final class DaggerNextGenIPTVApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_nextgen_iptv_ui_viewmodel_VodViewModel = "com.nextgen.iptv.ui.viewmodel.VodViewModel";
-
-      static String com_nextgen_iptv_ui_viewmodel_PlayerViewModel = "com.nextgen.iptv.ui.viewmodel.PlayerViewModel";
-
-      static String com_nextgen_iptv_ui_viewmodel_DashboardViewModel = "com.nextgen.iptv.ui.viewmodel.DashboardViewModel";
-
       static String com_nextgen_iptv_ui_viewmodel_LiveTvViewModel = "com.nextgen.iptv.ui.viewmodel.LiveTvViewModel";
 
-      static String com_nextgen_iptv_ui_viewmodel_ProviderSetupViewModel = "com.nextgen.iptv.ui.viewmodel.ProviderSetupViewModel";
-
-      static String com_nextgen_iptv_ui_viewmodel_SettingsViewModel = "com.nextgen.iptv.ui.viewmodel.SettingsViewModel";
+      static String com_nextgen_iptv_ui_viewmodel_PlayerViewModel = "com.nextgen.iptv.ui.viewmodel.PlayerViewModel";
 
       static String com_nextgen_iptv_ui_viewmodel_SeriesDetailViewModel = "com.nextgen.iptv.ui.viewmodel.SeriesDetailViewModel";
 
       static String com_nextgen_iptv_ui_viewmodel_SeriesListViewModel = "com.nextgen.iptv.ui.viewmodel.SeriesListViewModel";
 
+      static String com_nextgen_iptv_ui_viewmodel_VodViewModel = "com.nextgen.iptv.ui.viewmodel.VodViewModel";
+
+      static String com_nextgen_iptv_ui_viewmodel_DashboardViewModel = "com.nextgen.iptv.ui.viewmodel.DashboardViewModel";
+
       static String com_nextgen_iptv_presentation_onboarding_OnboardingViewModel = "com.nextgen.iptv.presentation.onboarding.OnboardingViewModel";
 
-      @KeepFieldType
-      VodViewModel com_nextgen_iptv_ui_viewmodel_VodViewModel2;
+      static String com_nextgen_iptv_ui_viewmodel_SettingsViewModel = "com.nextgen.iptv.ui.viewmodel.SettingsViewModel";
 
-      @KeepFieldType
-      PlayerViewModel com_nextgen_iptv_ui_viewmodel_PlayerViewModel2;
-
-      @KeepFieldType
-      DashboardViewModel com_nextgen_iptv_ui_viewmodel_DashboardViewModel2;
+      static String com_nextgen_iptv_ui_viewmodel_ProviderSetupViewModel = "com.nextgen.iptv.ui.viewmodel.ProviderSetupViewModel";
 
       @KeepFieldType
       LiveTvViewModel com_nextgen_iptv_ui_viewmodel_LiveTvViewModel2;
 
       @KeepFieldType
-      ProviderSetupViewModel com_nextgen_iptv_ui_viewmodel_ProviderSetupViewModel2;
-
-      @KeepFieldType
-      SettingsViewModel com_nextgen_iptv_ui_viewmodel_SettingsViewModel2;
+      PlayerViewModel com_nextgen_iptv_ui_viewmodel_PlayerViewModel2;
 
       @KeepFieldType
       SeriesDetailViewModel com_nextgen_iptv_ui_viewmodel_SeriesDetailViewModel2;
@@ -621,7 +609,19 @@ public final class DaggerNextGenIPTVApp_HiltComponents_SingletonC {
       SeriesListViewModel com_nextgen_iptv_ui_viewmodel_SeriesListViewModel2;
 
       @KeepFieldType
+      VodViewModel com_nextgen_iptv_ui_viewmodel_VodViewModel2;
+
+      @KeepFieldType
+      DashboardViewModel com_nextgen_iptv_ui_viewmodel_DashboardViewModel2;
+
+      @KeepFieldType
       OnboardingViewModel com_nextgen_iptv_presentation_onboarding_OnboardingViewModel2;
+
+      @KeepFieldType
+      SettingsViewModel com_nextgen_iptv_ui_viewmodel_SettingsViewModel2;
+
+      @KeepFieldType
+      ProviderSetupViewModel com_nextgen_iptv_ui_viewmodel_ProviderSetupViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
