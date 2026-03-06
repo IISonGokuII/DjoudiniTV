@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.nextgen.iptv.ui.screen.dashboard.DashboardScreen
+import com.nextgen.iptv.ui.screen.favorites.FavoritesScreen
 import com.nextgen.iptv.ui.screen.livetv.LiveTvScreen
 import com.nextgen.iptv.ui.screen.player.PlayerScreen
 import com.nextgen.iptv.ui.screen.series.SeriesDetailScreen
@@ -21,6 +22,7 @@ object NavRoutes {
     const val LIVE_TV = "live_tv"
     const val VOD = "vod"
     const val SERIES = "series"
+    const val FAVORITES = "favorites"
     const val SERIES_DETAIL = "series_detail/{seriesId}"
     const val SETTINGS = "settings"
     const val PLAYER = "player/{streamUrl}"
@@ -51,8 +53,12 @@ fun AppNavigation(
                 onNavigateToLiveTv = { navController.navigate(NavRoutes.LIVE_TV) },
                 onNavigateToVod = { navController.navigate(NavRoutes.VOD) },
                 onNavigateToSeries = { navController.navigate(NavRoutes.SERIES) },
+                onNavigateToFavorites = { navController.navigate(NavRoutes.FAVORITES) },
                 onNavigateToProviderSetup = { navController.navigate(NavRoutes.PROVIDER_SETUP) },
-                onNavigateToSettings = { navController.navigate(NavRoutes.SETTINGS) }
+                onNavigateToSettings = { navController.navigate(NavRoutes.SETTINGS) },
+                onNavigateToPlayer = { streamUrl ->
+                    navController.navigate(NavRoutes.playerRoute(streamUrl))
+                }
             )
         }
         
@@ -67,6 +73,15 @@ fun AppNavigation(
         
         composable(NavRoutes.VOD) {
             VodScreen(
+                onNavigateToPlayer = { streamUrl ->
+                    navController.navigate(NavRoutes.playerRoute(streamUrl))
+                },
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        
+        composable(NavRoutes.FAVORITES) {
+            FavoritesScreen(
                 onNavigateToPlayer = { streamUrl ->
                     navController.navigate(NavRoutes.playerRoute(streamUrl))
                 },
