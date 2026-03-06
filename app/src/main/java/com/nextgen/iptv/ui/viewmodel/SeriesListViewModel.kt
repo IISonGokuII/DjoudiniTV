@@ -24,7 +24,7 @@ data class SeriesListUiState(
     val series: List<SeriesEntity> = emptyList(),
     val selectedCategoryId: String? = null,
     val error: String? = null,
-    val selectedCategoryIds: Set<String> = emptySet() // Categories selected during onboarding
+    val hasSelectedCategories: Boolean = false
 )
 
 @HiltViewModel
@@ -58,12 +58,13 @@ class SeriesListViewModel @Inject constructor(
                     allSelectedCategoryIds.addAll(selectedCats)
                 }
                 
+                // Load all series categories for display
                 val categories = categoryRepository.getCategoriesByType("series").first()
                 
-                // If no categories selected, show all series
-                // Otherwise filter by selected categories
+                // Filter series based on selected categories
                 val series = if (allSelectedCategoryIds.isEmpty()) {
-                    seriesRepository.getAllSeries().first()
+                    // No categories selected - show nothing
+                    emptyList()
                 } else {
                     seriesRepository.getSeriesByCategories(allSelectedCategoryIds.toList()).first()
                 }
@@ -72,8 +73,7 @@ class SeriesListViewModel @Inject constructor(
                     isLoading = false,
                     categories = categories,
                     series = series,
-                    selectedCategoryIds = allSelectedCategoryIds,
-                    selectedCategoryId = categories.firstOrNull()?.id
+                    hasSelectedCategories = allSelectedCategoryIds.isNotEmpty()
                 )
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(

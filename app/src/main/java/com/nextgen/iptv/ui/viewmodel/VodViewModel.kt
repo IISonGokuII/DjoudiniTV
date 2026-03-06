@@ -12,9 +12,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,7 +23,7 @@ data class VodUiState(
     val selectedCategory: String = "",
     val searchQuery: String = "",
     val isLoading: Boolean = true,
-    val selectedCategoryIds: Set<String> = emptySet() // Categories selected during onboarding
+    val hasSelectedCategories: Boolean = false
 )
 
 @HiltViewModel
@@ -40,46 +39,46 @@ class VodViewModel @Inject constructor(
     
     init {
         loadMovies()
-        loadCategories()
     }
     
     private fun loadMovies() {
         viewModelScope.launch {
-            // Get all providers
-            val providers = providerRepository.getAllProviders().first()
+            _uiState.update { it.copy(isLoading = true) }
             
-            // Collect selected VOD categories from all providers
-            val allSelectedCategoryIds = mutableSetOf<String>()
-            for (provider in providers) {
-                val selectedCats = settingsRepository.getSelectedVodCategories(provider.id).first()
-                allSelectedCategoryIds.addAll(selectedCats)
-            }
-            
-            _uiState.update { it.copy(selectedCategoryIds = allSelectedCategoryIds) }
-            
-            // If no categories selected, show all VOD
-            // Otherwise filter by selected categories
-            val moviesFlow = if (allSelectedCategoryIds.isEmpty()) {
-                streamRepository.getStreamsByType("vod")
-            } else {
-                streamRepository.getStreamsByTypeAndCategories("vod", allSelectedCategoryIds.toList())
-            }
-            
-            moviesFlow.collect { movies ->
-                _uiState.update { 
-                    it.copy(
+            try {
+                // Get all providers
+                val providers = providerRepository.getAllProviders().first()
+                
+                // Collect selected VOD categories from all providers
+                val allSelectedCategoryIds = mutableSetOf<String>()
+                for (provider in providers) {
+                    val selectedCats = settingsRepository.getSelectedVodCategories(provider.id).first()
+                    allSelectedCategoryIds.addAll(selectedCats)
+                }
+                
+                // Load all VOD categories for display
+                val allCategories = categoryRepository.getCategoriesByType("vod").first()
+                
+                // Filter movies based on selected categories
+                val movies = if (allSelectedCategoryIds.isEmpty()) {
+                    // No categories selected - show nothing
+                    emptyList()
+                } else {
+                    // Load only movies from selected categories
+                    streamRepository.getStreamsByCategories(allSelectedCategoryIds.toList()).first()
+                        .filter { it.type == "vod" }
+                }
+                
+                _uiState.update { state ->
+                    state.copy(
+                        categories = allCategories,
                         movies = movies,
-                        isLoading = false
+                        isLoading = false,
+                        hasSelectedCategories = allSelectedCategoryIds.isNotEmpty()
                     )
                 }
-            }
-        }
-    }
-    
-    private fun loadCategories() {
-        viewModelScope.launch {
-            categoryRepository.getCategoriesByType("vod").collect { categories ->
-                _uiState.update { it.copy(categories = categories) }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false) }
             }
         }
     }
@@ -89,20 +88,12 @@ class VodViewModel @Inject constructor(
         
         viewModelScope.launch {
             if (categoryId.isEmpty()) {
-                // Show movies from selected categories (or all if none selected)
-                val selectedCats = _uiState.value.selectedCategoryIds.toList()
-                val moviesFlow = if (selectedCats.isEmpty()) {
-                    streamRepository.getStreamsByType("vod")
-                } else {
-                    streamRepository.getStreamsByTypeAndCategories("vod", selectedCats)
-                }
-                moviesFlow.collect { movies ->
-                    _uiState.update { it.copy(movies = movies, isLoading = false) }
-                }
+                // Show all movies from selected categories
+                loadMovies()
             } else {
                 // Show only this specific category
                 streamRepository.getStreamsByCategory(categoryId).collect { movies ->
-                    _uiState.update { it.copy(movies = movies, isLoading = false) }
+                    _uiState.update { it.copy(movies = movies.filter { it.type == "vod" }, isLoading = false) }
                 }
             }
         }
@@ -113,24 +104,24 @@ class VodViewModel @Inject constructor(
         
         viewModelScope.launch {
             if (query.isBlank()) {
-                // Show movies from selected categories (or all if none selected)
-                val selectedCats = _uiState.value.selectedCategoryIds.toList()
-                val moviesFlow = if (selectedCats.isEmpty()) {
-                    streamRepository.getStreamsByType("vod")
-                } else {
-                    streamRepository.getStreamsByTypeAndCategories("vod", selectedCats)
-                }
-                moviesFlow.collect { movies ->
-                    _uiState.update { it.copy(movies = movies, isLoading = false) }
-                }
+                loadMovies()
             } else {
                 streamRepository.searchStreams(query).collect { movies ->
                     // Filter only VOD results and by selected categories
                     var vodMovies = movies.filter { it.type == "vod" }
-                    val selectedCats = _uiState.value.selectedCategoryIds
-                    if (selectedCats.isNotEmpty()) {
-                        vodMovies = vodMovies.filter { it.categoryId in selectedCats }
+                    
+                    // Also filter by selected categories if any
+                    val providers = providerRepository.getAllProviders().first()
+                    val allSelectedCategoryIds = mutableSetOf<String>()
+                    for (provider in providers) {
+                        val selectedCats = settingsRepository.getSelectedVodCategories(provider.id).first()
+                        allSelectedCategoryIds.addAll(selectedCats)
                     }
+                    
+                    if (allSelectedCategoryIds.isNotEmpty()) {
+                        vodMovies = vodMovies.filter { it.categoryId in allSelectedCategoryIds }
+                    }
+                    
                     _uiState.update { it.copy(movies = vodMovies, isLoading = false) }
                 }
             }

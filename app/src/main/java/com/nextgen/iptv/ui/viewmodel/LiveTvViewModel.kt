@@ -14,19 +14,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class LiveTvUiState(
     val categories: List<CategoryEntity> = emptyList(),
     val streams: List<StreamEntity> = emptyList(),
-    val selectedCategoryId: String? = null,
+    val selectedCategoryId: String? = null, // For UI filtering
     val isLoading: Boolean = false,
     val error: String? = null,
     val searchQuery: String = "",
-    val selectedCategoryIds: Set<String> = emptySet() // Categories selected during onboarding
+    val hasSelectedCategories: Boolean = false // Whether user has made a selection
 )
 
 @HiltViewModel
@@ -58,38 +57,27 @@ class LiveTvViewModel @Inject constructor(
                     allSelectedCategoryIds.addAll(selectedCats)
                 }
                 
-                _uiState.update { it.copy(selectedCategoryIds = allSelectedCategoryIds) }
+                // Load all categories for display
+                val allCategories = categoryRepository.getCategoriesByType("live").first()
                 
-                // If no categories selected, show all streams
-                // Otherwise filter by selected categories
-                val streamsFlow = if (allSelectedCategoryIds.isEmpty()) {
-                    streamRepository.getStreamsByType("live")
+                // Filter streams based on selected categories
+                val streams = if (allSelectedCategoryIds.isEmpty()) {
+                    // No categories selected - show nothing (user must select in settings)
+                    emptyList()
                 } else {
-                    streamRepository.getStreamsByTypeAndCategories("live", allSelectedCategoryIds.toList())
+                    // Load only streams from selected categories
+                    streamRepository.getStreamsByCategories(allSelectedCategoryIds.toList()).first()
                 }
                 
-                combine(
-                    categoryRepository.getCategoriesByType("live"),
-                    streamsFlow,
-                    _uiState
-                ) { categories, streams, state ->
-                    // Further filter by UI selected category if any
-                    val filteredStreams = if (state.selectedCategoryId != null) {
-                        streams.filter { it.categoryId == state.selectedCategoryId }
-                    } else {
-                        streams
-                    }.filter { 
-                        it.name.contains(state.searchQuery, ignoreCase = true) 
-                    }
-                    
+                _uiState.update { state ->
                     state.copy(
-                        categories = categories,
-                        streams = filteredStreams,
-                        isLoading = false
+                        categories = allCategories,
+                        streams = streams,
+                        isLoading = false,
+                        hasSelectedCategories = allSelectedCategoryIds.isNotEmpty()
                     )
-                }.collect { newState ->
-                    _uiState.value = newState
                 }
+                
             } catch (e: Exception) {
                 _uiState.update { 
                     it.copy(isLoading = false, error = e.message) 

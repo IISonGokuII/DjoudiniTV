@@ -55,7 +55,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nextgen.iptv.data.local.entity.CategoryEntity
-import com.nextgen.iptv.presentation.onboarding.CategorySelection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -140,30 +139,40 @@ fun OnboardingScreen(
                         message = uiState.syncMessage,
                         progress = uiState.syncProgress
                     )
-                    is OnboardingStep.CategorySelectionStep -> {
-                        val coroutineScope = rememberCoroutineScope()
-                        AllCategoriesSelectionStep(
+                    is OnboardingStep.SelectLiveTvCategories -> {
+                        SequentialCategorySelectionStep(
+                            title = "Live TV Kategorien",
+                            subtitle = "Welche Live TV Kategorien möchtest du sehen?",
+                            icon = Icons.Default.LiveTv,
                             categories = step.categories,
-                            selectedLiveIds = uiState.selectedLiveCategories,
-                            selectedVodIds = uiState.selectedVodCategories,
-                            selectedSeriesIds = uiState.selectedSeriesCategories,
-                            onToggleLive = viewModel::toggleLiveCategory,
-                            onToggleVod = viewModel::toggleVodCategory,
-                            onToggleSeries = viewModel::toggleSeriesCategory,
-                            onSelectAllLive = { viewModel.selectAllLiveCategories(step.categories.liveCategories) },
-                            onDeselectAllLive = viewModel::deselectAllLiveCategories,
-                            onSelectAllVod = { viewModel.selectAllVodCategories(step.categories.vodCategories) },
-                            onDeselectAllVod = viewModel::deselectAllVodCategories,
-                            onSelectAllSeries = { viewModel.selectAllSeriesCategories(step.categories.seriesCategories) },
-                            onDeselectAllSeries = viewModel::deselectAllSeriesCategories,
-                            onContinue = {
-                                coroutineScope.launch {
-                                    val saved = viewModel.saveOnboardingComplete()
-                                    if (saved) {
-                                        onComplete()
-                                    }
-                                }
-                            }
+                            selectedIds = step.selectedIds,
+                            onToggle = { viewModel.updateLiveTvSelection(step.selectedIds.toggle(it)) },
+                            onContinue = { viewModel.confirmLiveTvSelectionAndContinue() },
+                            continueButtonText = "Weiter zu Serien"
+                        )
+                    }
+                    is OnboardingStep.SelectSeriesCategories -> {
+                        SequentialCategorySelectionStep(
+                            title = "Serien-Kategorien",
+                            subtitle = "Welche Serien-Kategorien möchtest du sehen?",
+                            icon = Icons.Default.Tv,
+                            categories = step.categories,
+                            selectedIds = step.selectedIds,
+                            onToggle = { viewModel.updateSeriesSelection(step.selectedIds.toggle(it)) },
+                            onContinue = { viewModel.confirmSeriesSelectionAndContinue() },
+                            continueButtonText = "Weiter zu Filmen"
+                        )
+                    }
+                    is OnboardingStep.SelectVodCategories -> {
+                        SequentialCategorySelectionStep(
+                            title = "Film-Kategorien",
+                            subtitle = "Welche Film-Kategorien möchtest du sehen?",
+                            icon = Icons.Default.Movie,
+                            categories = step.categories,
+                            selectedIds = step.selectedIds,
+                            onToggle = { viewModel.updateVodSelection(step.selectedIds.toggle(it)) },
+                            onContinue = { viewModel.confirmVodSelectionAndFinish(onComplete) },
+                            continueButtonText = "App starten"
                         )
                     }
                     is OnboardingStep.Complete -> CompleteStep(
@@ -182,8 +191,10 @@ private fun calculateProgress(state: OnboardingUiState): Float {
         is OnboardingStep.XtreamLogin -> 0.3f
         is OnboardingStep.M3UUrl -> 0.3f
         is OnboardingStep.Validating -> 0.4f
-        is OnboardingStep.Syncing -> 0.4f + (state.syncProgress / 100f * 0.4f)
-        is OnboardingStep.CategorySelectionStep -> 0.85f
+        is OnboardingStep.Syncing -> 0.4f + (state.syncProgress / 100f * 0.2f)
+        is OnboardingStep.SelectLiveTvCategories -> 0.65f
+        is OnboardingStep.SelectSeriesCategories -> 0.8f
+        is OnboardingStep.SelectVodCategories -> 0.9f
         is OnboardingStep.Complete -> 1f
     }
 }
@@ -776,116 +787,6 @@ private fun CategorySelectionStep(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-private fun AllCategoriesSelectionStep(
-    categories: CategorySelection,
-    selectedLiveIds: Set<String>,
-    selectedVodIds: Set<String>,
-    selectedSeriesIds: Set<String>,
-    onToggleLive: (String) -> Unit,
-    onToggleVod: (String) -> Unit,
-    onToggleSeries: (String) -> Unit,
-    onSelectAllLive: () -> Unit,
-    onDeselectAllLive: () -> Unit,
-    onSelectAllVod: () -> Unit,
-    onDeselectAllVod: () -> Unit,
-    onSelectAllSeries: () -> Unit,
-    onDeselectAllSeries: () -> Unit,
-    onContinue: () -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Text(
-            text = "Kategorien wahlen",
-            style = MaterialTheme.typography.headlineMedium
-        )
-        
-        Text(
-            text = "Welche Inhalte mochtest du sehen?",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        // Total selected counter
-        val totalSelected = selectedLiveIds.size + selectedVodIds.size + selectedSeriesIds.size
-        val totalAvailable = categories.liveCategories.size + categories.vodCategories.size + categories.seriesCategories.size
-        
-        Text(
-            text = "$totalSelected von $totalAvailable Kategorien ausgewahlt",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.primary
-        )
-        
-        Spacer(modifier = Modifier.height(8.dp))
-        
-        // Scrollable category sections
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // Live TV Section
-            if (categories.liveCategories.isNotEmpty()) {
-                item {
-                    CategorySection(
-                        title = "Live TV",
-                        icon = Icons.Default.LiveTv,
-                        categories = categories.liveCategories,
-                        selectedIds = selectedLiveIds,
-                        onToggle = onToggleLive,
-                        onSelectAll = onSelectAllLive,
-                        onDeselectAll = onDeselectAllLive
-                    )
-                }
-            }
-            
-            // VOD Section
-            if (categories.vodCategories.isNotEmpty()) {
-                item {
-                    CategorySection(
-                        title = "Filme (VOD)",
-                        icon = Icons.Default.Movie,
-                        categories = categories.vodCategories,
-                        selectedIds = selectedVodIds,
-                        onToggle = onToggleVod,
-                        onSelectAll = onSelectAllVod,
-                        onDeselectAll = onDeselectAllVod
-                    )
-                }
-            }
-            
-            // Series Section
-            if (categories.seriesCategories.isNotEmpty()) {
-                item {
-                    CategorySection(
-                        title = "Serien",
-                        icon = Icons.Default.Tv,
-                        categories = categories.seriesCategories,
-                        selectedIds = selectedSeriesIds,
-                        onToggle = onToggleSeries,
-                        onSelectAll = onSelectAllSeries,
-                        onDeselectAll = onDeselectAllSeries
-                    )
-                }
-            }
-        }
-        
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        // Continue button
-        Button(
-            onClick = onContinue,
-            enabled = selectedLiveIds.isNotEmpty() || selectedVodIds.isNotEmpty() || selectedSeriesIds.isNotEmpty(),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("App starten")
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
-@Composable
 private fun CategorySection(
     title: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -961,6 +862,141 @@ private fun CategorySection(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@Composable
+private fun SequentialCategorySelectionStep(
+    title: String,
+    subtitle: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    categories: List<CategoryEntity>,
+    selectedIds: Set<String>,
+    onToggle: (String) -> Unit,
+    onContinue: () -> Unit,
+    continueButtonText: String
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        // Header
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size(48.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            
+            Spacer(modifier = Modifier.width(16.dp))
+            
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.headlineMedium
+                )
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // Selection actions
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OutlinedButton(
+                onClick = { 
+                    // Select all
+                    categories.forEach { onToggle(it.id) }
+                },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Alle auswählen")
+            }
+            
+            OutlinedButton(
+                onClick = { 
+                    // Deselect all - toggle all that are selected
+                    selectedIds.forEach { onToggle(it) }
+                },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Alle abwählen")
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        Text(
+            text = "${selectedIds.size} von ${categories.size} ausgewählt",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // Categories list
+        LazyColumn(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(categories) { category ->
+                val isSelected = selectedIds.contains(category.id)
+                
+                Card(
+                    onClick = { onToggle(category.id) },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (isSelected)
+                            MaterialTheme.colorScheme.primaryContainer
+                        else
+                            MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = category.name,
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.weight(1f)
+                        )
+                        
+                        if (isSelected) {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // Continue button
+        Button(
+            onClick = onContinue,
+            enabled = selectedIds.isNotEmpty(),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(continueButtonText)
+        }
+    }
+}
+
 @Composable
 private fun CompleteStep(
     onFinish: () -> Unit
@@ -1003,4 +1039,9 @@ private fun CompleteStep(
             Text("App starten")
         }
     }
+}
+
+// Helper extension to toggle a value in a Set
+fun Set<String>.toggle(value: String): Set<String> {
+    return if (this.contains(value)) this - value else this + value
 }

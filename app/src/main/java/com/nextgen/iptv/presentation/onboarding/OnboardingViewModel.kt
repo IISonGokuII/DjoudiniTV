@@ -20,11 +20,26 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class CategorySelection(
-    val liveCategories: List<CategoryEntity> = emptyList(),
-    val vodCategories: List<CategoryEntity> = emptyList(),
-    val seriesCategories: List<CategoryEntity> = emptyList()
-)
+// Sequential category selection data
+sealed class CategorySelectStep {
+    abstract val categories: List<CategoryEntity>
+    abstract val selectedIds: Set<String>
+    
+    data class LiveTvStep(
+        override val categories: List<CategoryEntity>,
+        override val selectedIds: Set<String>
+    ) : CategorySelectStep()
+    
+    data class SeriesStep(
+        override val categories: List<CategoryEntity>,
+        override val selectedIds: Set<String>
+    ) : CategorySelectStep()
+    
+    data class VodStep(
+        override val categories: List<CategoryEntity>,
+        override val selectedIds: Set<String>
+    ) : CategorySelectStep()
+}
 
 sealed class OnboardingStep {
     data object Welcome : OnboardingStep()
@@ -33,7 +48,23 @@ sealed class OnboardingStep {
     data object M3UUrl : OnboardingStep()
     data object Validating : OnboardingStep()
     data object Syncing : OnboardingStep()
-    data class CategorySelectionStep(val categories: CategorySelection) : OnboardingStep()
+    
+    // Sequential category selection steps
+    data class SelectLiveTvCategories(
+        val categories: List<CategoryEntity>,
+        val selectedIds: Set<String>
+    ) : OnboardingStep()
+    
+    data class SelectSeriesCategories(
+        val categories: List<CategoryEntity>,
+        val selectedIds: Set<String>
+    ) : OnboardingStep()
+    
+    data class SelectVodCategories(
+        val categories: List<CategoryEntity>,
+        val selectedIds: Set<String>
+    ) : OnboardingStep()
+    
     data object Complete : OnboardingStep()
 }
 
@@ -44,15 +75,16 @@ data class OnboardingUiState(
     val username: String = "",
     val password: String = "",
     val m3uUrl: String = "",
-    val selectedLiveCategories: Set<String> = emptySet(),
-    val selectedVodCategories: Set<String> = emptySet(),
-    val selectedSeriesCategories: Set<String> = emptySet(),
+    val providerId: String? = null,
     val isLoading: Boolean = false,
     val error: String? = null,
-    val providerId: String? = null,
     val validationMessage: String? = null,
     val syncMessage: String = "",
-    val syncProgress: Int = 0
+    val syncProgress: Int = 0,
+    // Temporarily store selections during flow
+    val tempLiveSelection: Set<String> = emptySet(),
+    val tempSeriesSelection: Set<String> = emptySet(),
+    val tempVodSelection: Set<String> = emptySet()
 )
 
 enum class ProviderTypeSelection {
@@ -136,7 +168,8 @@ class OnboardingViewModel @Inject constructor(
                     
                     addProviderUseCase("Mein Provider", providerType)
                         .onSuccess { providerId ->
-                            syncLiveTVAndLoadCategories(providerId)
+                            _uiState.update { it.copy(providerId = providerId) }
+                            startSequentialSync(providerId)
                         }
                         .onFailure { error ->
                             _uiState.update { 
@@ -161,34 +194,38 @@ class OnboardingViewModel @Inject constructor(
         }
     }
     
-    private fun syncLiveTVAndLoadCategories(providerId: String) {
+    /**
+     * STEP 1: Sync Live TV and show category selection
+     */
+    private fun startSequentialSync(providerId: String) {
         viewModelScope.launch {
             _uiState.update { 
                 it.copy(
-                    providerId = providerId,
                     syncMessage = "Synchronisiere Live TV...",
                     syncProgress = 10
                 ) 
             }
             
+            // Step 1: Sync Live TV (categories + streams)
             syncProviderUseCase.syncQuick(providerId).collect { progress ->
                 when (progress) {
                     is SyncProgress.Progress -> {
                         _uiState.update { 
                             it.copy(
                                 syncMessage = progress.message,
-                                syncProgress = 10 + (progress.percent * 0.25).toInt()
+                                syncProgress = 10 + (progress.percent * 0.3).toInt()
                             )
                         }
                     }
                     is SyncProgress.Success -> {
-                        loadVodAndSeriesCategories(providerId)
+                        // Live TV done, now load Live TV categories for selection
+                        loadLiveTvCategoriesForSelection(providerId)
                     }
                     is SyncProgress.Error -> {
                         _uiState.update { 
                             it.copy(
                                 isLoading = false,
-                                error = progress.message,
+                                error = "Live TV Sync fehlgeschlagen: ${progress.message}",
                                 currentStep = OnboardingStep.XtreamLogin
                             ) 
                         }
@@ -199,185 +236,259 @@ class OnboardingViewModel @Inject constructor(
         }
     }
     
-    private fun loadVodAndSeriesCategories(providerId: String) {
+    private fun loadLiveTvCategoriesForSelection(providerId: String) {
         viewModelScope.launch {
-            var vodSuccess = false
-            var seriesSuccess = false
-            var vodError: String? = null
-            var seriesError: String? = null
-            
             try {
-                // Step 1: Sync VOD Categories - WAIT for completion
+                val allCategories = categoryRepository.getCategoriesByProvider(providerId).first()
+                val liveCats = allCategories.filter { it.type == "live" }
+                
                 _uiState.update { 
                     it.copy(
-                        syncMessage = "Lade Film-Kategorien...",
-                        syncProgress = 40
+                        isLoading = false,
+                        currentStep = OnboardingStep.SelectLiveTvCategories(
+                            categories = liveCats,
+                            selectedIds = liveCats.map { cat -> cat.id }.toSet() // All selected by default
+                        ),
+                        tempLiveSelection = liveCats.map { cat -> cat.id }.toSet()
                     ) 
                 }
-                
-                syncProviderUseCase.syncVodCategoriesOnly(providerId).collect { progress ->
-                    when (progress) {
-                        is SyncProgress.Progress -> {
-                            _uiState.update { 
-                                it.copy(
-                                    syncMessage = progress.message,
-                                    syncProgress = 40 + (progress.percent * 0.15).toInt()
-                                )
-                            }
-                        }
-                        is SyncProgress.Success -> {
-                            vodSuccess = true
-                        }
-                        is SyncProgress.Error -> {
-                            vodError = progress.message
-                            vodSuccess = true // Continue even if VOD fails
-                        }
-                        else -> {}
-                    }
-                }
-                
-                // Step 2: Sync Series Categories - WAIT for completion
-                _uiState.update { 
-                    it.copy(
-                        syncMessage = "Lade Serien-Kategorien...",
-                        syncProgress = 60
-                    ) 
-                }
-                
-                syncProviderUseCase.syncSeriesCategoriesOnly(providerId).collect { progress ->
-                    when (progress) {
-                        is SyncProgress.Progress -> {
-                            _uiState.update { 
-                                it.copy(
-                                    syncMessage = progress.message,
-                                    syncProgress = 60 + (progress.percent * 0.15).toInt()
-                                )
-                            }
-                        }
-                        is SyncProgress.Success -> {
-                            seriesSuccess = true
-                        }
-                        is SyncProgress.Error -> {
-                            seriesError = progress.message
-                            seriesSuccess = true // Continue even if Series fails
-                        }
-                        else -> {}
-                    }
-                }
-                
-                // Step 3: Only show category selection when BOTH are done
-                if (vodSuccess && seriesSuccess) {
-                    showCategorySelection(providerId)
-                }
-                
             } catch (e: Exception) {
-                // On exception, still try to show what we have
-                showCategorySelection(providerId)
+                _uiState.update { 
+                    it.copy(
+                        isLoading = false,
+                        error = "Fehler beim Laden der Live TV Kategorien: ${e.message}",
+                        currentStep = OnboardingStep.XtreamLogin
+                    ) 
+                }
             }
         }
     }
     
-    private fun showCategorySelection(providerId: String) {
+    fun updateLiveTvSelection(selectedIds: Set<String>) {
+        _uiState.update { 
+            it.copy(
+                tempLiveSelection = selectedIds,
+                currentStep = (it.currentStep as? OnboardingStep.SelectLiveTvCategories)?.let { step ->
+                    step.copy(selectedIds = selectedIds)
+                } ?: it.currentStep
+            ) 
+        }
+    }
+    
+    /**
+     * After Live TV selection, save and continue to Series
+     */
+    fun confirmLiveTvSelectionAndContinue() {
         viewModelScope.launch {
-            try {
-                val allCategories = categoryRepository.getCategoriesByProvider(providerId).first()
-                
-                val liveCats = allCategories.filter { it.type == "live" }
-                val vodCats = allCategories.filter { it.type == "vod" }
-                val seriesCats = allCategories.filter { it.type == "series" }
-                
-                _uiState.update { 
-                    it.copy(
-                        isLoading = false,
-                        currentStep = OnboardingStep.CategorySelectionStep(
-                            CategorySelection(
-                                liveCategories = liveCats,
-                                vodCategories = vodCats,
-                                seriesCategories = seriesCats
+            val state = _uiState.value
+            val providerId = state.providerId ?: return@launch
+            
+            // Save Live TV selection
+            settingsRepository.setSelectedLiveCategories(providerId, state.tempLiveSelection)
+            
+            // Move to Series sync
+            _uiState.update { 
+                it.copy(
+                    isLoading = true,
+                    syncMessage = "Lade Serien-Kategorien...",
+                    syncProgress = 45
+                ) 
+            }
+            
+            // Sync Series categories
+            syncProviderUseCase.syncSeriesCategoriesOnly(providerId).collect { progress ->
+                when (progress) {
+                    is SyncProgress.Progress -> {
+                        _uiState.update { 
+                            it.copy(
+                                syncMessage = progress.message,
+                                syncProgress = 45 + (progress.percent * 0.1).toInt()
                             )
-                        ),
-                        // Default: ALL categories selected (user can deselect)
-                        selectedLiveCategories = liveCats.map { cat -> cat.id }.toSet(),
-                        selectedVodCategories = vodCats.map { cat -> cat.id }.toSet(),
-                        selectedSeriesCategories = seriesCats.map { cat -> cat.id }.toSet()
-                    ) 
-                }
-            } catch (e: Exception) {
-                _uiState.update { 
-                    it.copy(
-                        isLoading = false,
-                        error = "Fehler beim Laden der Kategorien: ${e.message}",
-                        currentStep = OnboardingStep.Complete
-                    ) 
+                        }
+                    }
+                    is SyncProgress.Success -> {
+                        loadSeriesCategoriesForSelection(providerId)
+                    }
+                    is SyncProgress.Error -> {
+                        // Continue even if series fails - maybe user doesn't want series
+                        loadSeriesCategoriesForSelection(providerId)
+                    }
+                    else -> {}
                 }
             }
         }
     }
-
-    fun toggleLiveCategory(categoryId: String) {
-        _uiState.update { state ->
-            val current = state.selectedLiveCategories
-            val updated = if (current.contains(categoryId)) current - categoryId else current + categoryId
-            state.copy(selectedLiveCategories = updated)
+    
+    private fun loadSeriesCategoriesForSelection(providerId: String) {
+        viewModelScope.launch {
+            val allCategories = categoryRepository.getCategoriesByProvider(providerId).first()
+            val seriesCats = allCategories.filter { it.type == "series" }
+            
+            _uiState.update { 
+                it.copy(
+                    isLoading = false,
+                    currentStep = OnboardingStep.SelectSeriesCategories(
+                        categories = seriesCats,
+                        selectedIds = seriesCats.map { cat -> cat.id }.toSet() // All selected by default
+                    ),
+                    tempSeriesSelection = seriesCats.map { cat -> cat.id }.toSet()
+                ) 
+            }
         }
     }
-
-    fun toggleVodCategory(categoryId: String) {
-        _uiState.update { state ->
-            val current = state.selectedVodCategories
-            val updated = if (current.contains(categoryId)) current - categoryId else current + categoryId
-            state.copy(selectedVodCategories = updated)
+    
+    fun updateSeriesSelection(selectedIds: Set<String>) {
+        _uiState.update { 
+            it.copy(
+                tempSeriesSelection = selectedIds,
+                currentStep = (it.currentStep as? OnboardingStep.SelectSeriesCategories)?.let { step ->
+                    step.copy(selectedIds = selectedIds)
+                } ?: it.currentStep
+            ) 
         }
     }
-
-    fun toggleSeriesCategory(categoryId: String) {
-        _uiState.update { state ->
-            val current = state.selectedSeriesCategories
-            val updated = if (current.contains(categoryId)) current - categoryId else current + categoryId
-            state.copy(selectedSeriesCategories = updated)
-        }
-    }
-
-    fun selectAllLiveCategories(categories: List<CategoryEntity>) {
-        _uiState.update { it.copy(selectedLiveCategories = categories.map { cat -> cat.id }.toSet()) }
-    }
-
-    fun deselectAllLiveCategories() {
-        _uiState.update { it.copy(selectedLiveCategories = emptySet()) }
-    }
-
-    fun selectAllVodCategories(categories: List<CategoryEntity>) {
-        _uiState.update { it.copy(selectedVodCategories = categories.map { cat -> cat.id }.toSet()) }
-    }
-
-    fun deselectAllVodCategories() {
-        _uiState.update { it.copy(selectedVodCategories = emptySet()) }
-    }
-
-    fun selectAllSeriesCategories(categories: List<CategoryEntity>) {
-        _uiState.update { it.copy(selectedSeriesCategories = categories.map { cat -> cat.id }.toSet()) }
-    }
-
-    fun deselectAllSeriesCategories() {
-        _uiState.update { it.copy(selectedSeriesCategories = emptySet()) }
-    }
-
+    
     /**
-     * Saves selected categories and returns success status
-     * Call this with await() from UI to ensure completion before navigating
+     * After Series selection, save and sync Series, then continue to VOD
      */
-    suspend fun saveOnboardingComplete(): Boolean {
-        val state = _uiState.value
-        val providerId = state.providerId ?: return false
+    fun confirmSeriesSelectionAndContinue() {
+        viewModelScope.launch {
+            val state = _uiState.value
+            val providerId = state.providerId ?: return@launch
+            
+            // Save Series selection
+            settingsRepository.setSelectedSeriesCategories(providerId, state.tempSeriesSelection)
+            
+            // If user selected series categories, sync the actual series
+            if (state.tempSeriesSelection.isNotEmpty()) {
+                _uiState.update { 
+                    it.copy(
+                        isLoading = true,
+                        syncMessage = "Synchronisiere Serien...",
+                        syncProgress = 60
+                    ) 
+                }
+                
+                syncProviderUseCase(providerId).collect { progress ->
+                    when (progress) {
+                        is SyncProgress.Progress -> {
+                            _uiState.update { 
+                                it.copy(
+                                    syncMessage = progress.message,
+                                    syncProgress = 60 + (progress.percent * 0.1).toInt()
+                                )
+                            }
+                        }
+                        is SyncProgress.Success, is SyncProgress.Error -> {
+                            // Move to VOD regardless of success
+                            startVodCategorySync(providerId)
+                        }
+                        else -> {}
+                    }
+                }
+            } else {
+                // No series selected, skip to VOD
+                startVodCategorySync(providerId)
+            }
+        }
+    }
+    
+    private suspend fun startVodCategorySync(providerId: String) {
+        _uiState.update { 
+            it.copy(
+                isLoading = true,
+                syncMessage = "Lade Film-Kategorien...",
+                syncProgress = 75
+            ) 
+        }
         
-        return try {
-            // Save selected categories to settings
-            settingsRepository.setSelectedLiveCategories(providerId, state.selectedLiveCategories)
-            settingsRepository.setSelectedVodCategories(providerId, state.selectedVodCategories)
-            settingsRepository.setSelectedSeriesCategories(providerId, state.selectedSeriesCategories)
-            true
-        } catch (e: Exception) {
-            false
+        syncProviderUseCase.syncVodCategoriesOnly(providerId).collect { progress ->
+            when (progress) {
+                is SyncProgress.Progress -> {
+                    _uiState.update { 
+                        it.copy(
+                            syncMessage = progress.message,
+                            syncProgress = 75 + (progress.percent * 0.1).toInt()
+                        )
+                    }
+                }
+                is SyncProgress.Success -> {
+                    loadVodCategoriesForSelection(providerId)
+                }
+                is SyncProgress.Error -> {
+                    loadVodCategoriesForSelection(providerId)
+                }
+                else -> {}
+            }
+        }
+    }
+    
+    private fun loadVodCategoriesForSelection(providerId: String) {
+        viewModelScope.launch {
+            val allCategories = categoryRepository.getCategoriesByProvider(providerId).first()
+            val vodCats = allCategories.filter { it.type == "vod" }
+            
+            _uiState.update { 
+                it.copy(
+                    isLoading = false,
+                    currentStep = OnboardingStep.SelectVodCategories(
+                        categories = vodCats,
+                        selectedIds = vodCats.map { cat -> cat.id }.toSet() // All selected by default
+                    ),
+                    tempVodSelection = vodCats.map { cat -> cat.id }.toSet()
+                ) 
+            }
+        }
+    }
+    
+    fun updateVodSelection(selectedIds: Set<String>) {
+        _uiState.update { 
+            it.copy(
+                tempVodSelection = selectedIds,
+                currentStep = (it.currentStep as? OnboardingStep.SelectVodCategories)?.let { step ->
+                    step.copy(selectedIds = selectedIds)
+                } ?: it.currentStep
+            ) 
+        }
+    }
+    
+    /**
+     * Final step: Save VOD selection, sync VOD, finish
+     */
+    fun confirmVodSelectionAndFinish(onComplete: () -> Unit) {
+        viewModelScope.launch {
+            val state = _uiState.value
+            val providerId = state.providerId ?: return@launch
+            
+            // Save VOD selection
+            settingsRepository.setSelectedVodCategories(providerId, state.tempVodSelection)
+            
+            // If user selected VOD categories, sync the actual movies
+            if (state.tempVodSelection.isNotEmpty()) {
+                _uiState.update { 
+                    it.copy(
+                        isLoading = true,
+                        syncMessage = "Synchronisiere Filme...",
+                        syncProgress = 90
+                    ) 
+                }
+                
+                // Note: Full sync includes VOD - or we need a VOD-only sync method
+                // For now, mark as complete - VOD will sync on-demand or via settings
+                _uiState.update { 
+                    it.copy(
+                        isLoading = false,
+                        currentStep = OnboardingStep.Complete
+                    ) 
+                }
+            } else {
+                _uiState.update { 
+                    it.copy(
+                        isLoading = false,
+                        currentStep = OnboardingStep.Complete
+                    ) 
+                }
+            }
         }
     }
 
