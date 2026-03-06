@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
@@ -51,6 +53,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nextgen.iptv.data.local.entity.CategoryEntity
+import com.nextgen.iptv.presentation.onboarding.CategorySelection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -135,20 +138,27 @@ fun OnboardingScreen(
                         message = uiState.syncMessage,
                         progress = uiState.syncProgress
                     )
-                    is OnboardingStep.CategorySelection -> CategorySelectionStep(
-                        title = "Kategorien wahlen",
-                        subtitle = "Welche Live TV Kategorien mochtest du sehen?",
-                        icon = Icons.Default.LiveTv,
+                    is OnboardingStep.CategorySelectionStep -> {
+                        AllCategoriesSelectionStep(
                         categories = step.categories,
-                        selectedIds = uiState.selectedCategories,
-                        onToggle = viewModel::toggleCategory,
-                        onSelectAll = { viewModel.selectAllCategories(step.categories) },
-                        onDeselectAll = viewModel::deselectAllCategories,
-                        onContinue = {
-                            viewModel.saveOnboardingComplete()
-                            onComplete()
-                        }
-                    )
+                        selectedLiveIds = uiState.selectedLiveCategories,
+                        selectedVodIds = uiState.selectedVodCategories,
+                        selectedSeriesIds = uiState.selectedSeriesCategories,
+                        onToggleLive = viewModel::toggleLiveCategory,
+                        onToggleVod = viewModel::toggleVodCategory,
+                        onToggleSeries = viewModel::toggleSeriesCategory,
+                        onSelectAllLive = { viewModel.selectAllLiveCategories(step.categories.liveCategories) },
+                        onDeselectAllLive = viewModel::deselectAllLiveCategories,
+                        onSelectAllVod = { viewModel.selectAllVodCategories(step.categories.vodCategories) },
+                        onDeselectAllVod = viewModel::deselectAllVodCategories,
+                        onSelectAllSeries = { viewModel.selectAllSeriesCategories(step.categories.seriesCategories) },
+                        onDeselectAllSeries = viewModel::deselectAllSeriesCategories,
+                            onContinue = {
+                                viewModel.saveOnboardingComplete()
+                                onComplete()
+                            }
+                        )
+                    }
                     is OnboardingStep.Complete -> CompleteStep(
                         onFinish = onComplete
                     )
@@ -166,7 +176,7 @@ private fun calculateProgress(state: OnboardingUiState): Float {
         is OnboardingStep.M3UUrl -> 0.3f
         is OnboardingStep.Validating -> 0.4f
         is OnboardingStep.Syncing -> 0.4f + (state.syncProgress / 100f * 0.4f)
-        is OnboardingStep.CategorySelection -> 0.9f
+        is OnboardingStep.CategorySelectionStep -> 0.85f
         is OnboardingStep.Complete -> 1f
     }
 }
@@ -611,7 +621,7 @@ private fun SyncingStep(
         Spacer(modifier = Modifier.height(8.dp))
         
         Text(
-            text = "Nur Live TV wird synchronisiert (schnell)",
+            text = "Live TV, Film- und Serien-Kategorien werden geladen",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
@@ -753,6 +763,193 @@ private fun CategorySelectionStep(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Weiter")
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@Composable
+private fun AllCategoriesSelectionStep(
+    categories: CategorySelection,
+    selectedLiveIds: Set<String>,
+    selectedVodIds: Set<String>,
+    selectedSeriesIds: Set<String>,
+    onToggleLive: (String) -> Unit,
+    onToggleVod: (String) -> Unit,
+    onToggleSeries: (String) -> Unit,
+    onSelectAllLive: () -> Unit,
+    onDeselectAllLive: () -> Unit,
+    onSelectAllVod: () -> Unit,
+    onDeselectAllVod: () -> Unit,
+    onSelectAllSeries: () -> Unit,
+    onDeselectAllSeries: () -> Unit,
+    onContinue: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(
+            text = "Kategorien wahlen",
+            style = MaterialTheme.typography.headlineMedium
+        )
+        
+        Text(
+            text = "Welche Inhalte mochtest du sehen?",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // Total selected counter
+        val totalSelected = selectedLiveIds.size + selectedVodIds.size + selectedSeriesIds.size
+        val totalAvailable = categories.liveCategories.size + categories.vodCategories.size + categories.seriesCategories.size
+        
+        Text(
+            text = "$totalSelected von $totalAvailable Kategorien ausgewahlt",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        // Scrollable category sections
+        LazyColumn(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Live TV Section
+            if (categories.liveCategories.isNotEmpty()) {
+                item {
+                    CategorySection(
+                        title = "Live TV",
+                        icon = Icons.Default.LiveTv,
+                        categories = categories.liveCategories,
+                        selectedIds = selectedLiveIds,
+                        onToggle = onToggleLive,
+                        onSelectAll = onSelectAllLive,
+                        onDeselectAll = onDeselectAllLive
+                    )
+                }
+            }
+            
+            // VOD Section
+            if (categories.vodCategories.isNotEmpty()) {
+                item {
+                    CategorySection(
+                        title = "Filme (VOD)",
+                        icon = Icons.Default.Movie,
+                        categories = categories.vodCategories,
+                        selectedIds = selectedVodIds,
+                        onToggle = onToggleVod,
+                        onSelectAll = onSelectAllVod,
+                        onDeselectAll = onDeselectAllVod
+                    )
+                }
+            }
+            
+            // Series Section
+            if (categories.seriesCategories.isNotEmpty()) {
+                item {
+                    CategorySection(
+                        title = "Serien",
+                        icon = Icons.Default.Tv,
+                        categories = categories.seriesCategories,
+                        selectedIds = selectedSeriesIds,
+                        onToggle = onToggleSeries,
+                        onSelectAll = onSelectAllSeries,
+                        onDeselectAll = onDeselectAllSeries
+                    )
+                }
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // Continue button
+        Button(
+            onClick = onContinue,
+            enabled = selectedLiveIds.isNotEmpty() || selectedVodIds.isNotEmpty() || selectedSeriesIds.isNotEmpty(),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("App starten")
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@Composable
+private fun CategorySection(
+    title: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    categories: List<CategoryEntity>,
+    selectedIds: Set<String>,
+    onToggle: (String) -> Unit,
+    onSelectAll: () -> Unit,
+    onDeselectAll: () -> Unit
+) {
+    Column {
+        // Section header
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            
+            Spacer(modifier = Modifier.width(8.dp))
+            
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.weight(1f)
+            )
+            
+            // Select/Deselect all buttons
+            TextButton(onClick = onSelectAll) {
+                Text("Alle")
+            }
+            
+            TextButton(onClick = onDeselectAll) {
+                Text("Keine")
+            }
+        }
+        
+        Text(
+            text = "${selectedIds.size} von ${categories.size} ausgewahlt",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = 32.dp, bottom = 8.dp)
+        )
+        
+        // Categories chips
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            categories.forEach { category ->
+                val isSelected = selectedIds.contains(category.id)
+                
+                FilterChip(
+                    selected = isSelected,
+                    onClick = { onToggle(category.id) },
+                    label = { Text(category.name) },
+                    leadingIcon = if (isSelected) {
+                        {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                    } else null
+                )
+            }
         }
     }
 }

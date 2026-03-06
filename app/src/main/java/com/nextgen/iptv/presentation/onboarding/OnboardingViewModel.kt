@@ -19,6 +19,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+data class CategorySelection(
+    val liveCategories: List<CategoryEntity> = emptyList(),
+    val vodCategories: List<CategoryEntity> = emptyList(),
+    val seriesCategories: List<CategoryEntity> = emptyList()
+)
+
 sealed class OnboardingStep {
     data object Welcome : OnboardingStep()
     data object ProviderType : OnboardingStep()
@@ -26,7 +32,7 @@ sealed class OnboardingStep {
     data object M3UUrl : OnboardingStep()
     data object Validating : OnboardingStep()
     data object Syncing : OnboardingStep()
-    data class CategorySelection(val categories: List<CategoryEntity>) : OnboardingStep()
+    data class CategorySelectionStep(val categories: CategorySelection) : OnboardingStep()
     data object Complete : OnboardingStep()
 }
 
@@ -37,7 +43,9 @@ data class OnboardingUiState(
     val username: String = "",
     val password: String = "",
     val m3uUrl: String = "",
-    val selectedCategories: Set<String> = emptySet(),
+    val selectedLiveCategories: Set<String> = emptySet(),
+    val selectedVodCategories: Set<String> = emptySet(),
+    val selectedSeriesCategories: Set<String> = emptySet(),
     val isLoading: Boolean = false,
     val error: String? = null,
     val providerId: String? = null,
@@ -128,48 +136,8 @@ class OnboardingViewModel @Inject constructor(
                     // Step 2: Add provider
                     addProviderUseCase("Mein Provider", providerType)
                         .onSuccess { providerId ->
-                            _uiState.update { 
-                                it.copy(
-                                    providerId = providerId,
-                                    syncMessage = "Synchronisiere Live TV...",
-                                    syncProgress = 10
-                                ) 
-                            }
-                            
-                            // Step 3: Quick sync ONLY Live TV (fast!)
-                            syncProviderUseCase.syncQuick(providerId).collect { progress ->
-                                when (progress) {
-                                    is SyncProgress.Starting -> {
-                                        _uiState.update { 
-                                            it.copy(
-                                                syncMessage = "Starte Synchronisation...",
-                                                syncProgress = 10
-                                            )
-                                        }
-                                    }
-                                    is SyncProgress.Progress -> {
-                                        _uiState.update { 
-                                            it.copy(
-                                                syncMessage = progress.message,
-                                                syncProgress = progress.percent
-                                            )
-                                        }
-                                    }
-                                    is SyncProgress.Success -> {
-                                        // Step 4: Load categories for selection
-                                        loadCategoriesAndShowSelection(providerId)
-                                    }
-                                    is SyncProgress.Error -> {
-                                        _uiState.update { 
-                                            it.copy(
-                                                isLoading = false,
-                                                error = progress.message,
-                                                currentStep = OnboardingStep.XtreamLogin
-                                            ) 
-                                        }
-                                    }
-                                }
-                            }
+                            // Step 3: Quick sync Live TV
+                            syncLiveTVAndLoadCategories(providerId)
                         }
                         .onFailure { error ->
                             _uiState.update { 
@@ -194,16 +162,131 @@ class OnboardingViewModel @Inject constructor(
         }
     }
     
-    private fun loadCategoriesAndShowSelection(providerId: String) {
+    private fun syncLiveTVAndLoadCategories(providerId: String) {
+        viewModelScope.launch {
+            _uiState.update { 
+                it.copy(
+                    providerId = providerId,
+                    syncMessage = "Synchronisiere Live TV...",
+                    syncProgress = 10
+                ) 
+            }
+            
+            // Sync Live TV
+            syncProviderUseCase.syncQuick(providerId).collect { progress ->
+                when (progress) {
+                    is SyncProgress.Progress -> {
+                        _uiState.update { 
+                            it.copy(
+                                syncMessage = progress.message,
+                                syncProgress = progress.percent / 3  // First third of total progress
+                            )
+                        }
+                    }
+                    is SyncProgress.Success -> {
+                        // Now load VOD and Series categories
+                        loadVodAndSeriesCategories(providerId)
+                    }
+                    is SyncProgress.Error -> {
+                        _uiState.update { 
+                            it.copy(
+                                isLoading = false,
+                                error = progress.message,
+                                currentStep = OnboardingStep.XtreamLogin
+                            ) 
+                        }
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+    
+    private fun loadVodAndSeriesCategories(providerId: String) {
         viewModelScope.launch {
             try {
-                val categories = categoryRepository.getCategoriesByProvider(providerId).first()
+                // Load VOD categories
+                _uiState.update { 
+                    it.copy(
+                        syncMessage = "Lade Film-Kategorien...",
+                        syncProgress = 35
+                    ) 
+                }
+                
+                // Trigger VOD categories sync (categories only, fast)
+                syncProviderUseCase.syncVodCategoriesOnly(providerId).collect { progress ->
+                    when (progress) {
+                        is SyncProgress.Progress -> {
+                            _uiState.update { 
+                                it.copy(
+                                    syncMessage = progress.message,
+                                    syncProgress = 35 + (progress.percent / 3)
+                                )
+                            }
+                        }
+                        is SyncProgress.Success -> {
+                            // Continue to series
+                        }
+                        else -> {}
+                    }
+                }
+                
+                // Load Series categories
+                _uiState.update { 
+                    it.copy(
+                        syncMessage = "Lade Serien-Kategorien...",
+                        syncProgress = 68
+                    ) 
+                }
+                
+                // Trigger Series categories sync (categories only, fast)
+                syncProviderUseCase.syncSeriesCategoriesOnly(providerId).collect { progress ->
+                    when (progress) {
+                        is SyncProgress.Progress -> {
+                            _uiState.update { 
+                                it.copy(
+                                    syncMessage = progress.message,
+                                    syncProgress = 68 + (progress.percent / 3)
+                                )
+                            }
+                        }
+                        is SyncProgress.Success -> {
+                            // All categories loaded, show selection
+                            showCategorySelection(providerId)
+                        }
+                        else -> {}
+                    }
+                }
+            } catch (e: Exception) {
+                // If VOD/Series fail, still show Live TV categories
+                showCategorySelection(providerId)
+            }
+        }
+    }
+    
+    private fun showCategorySelection(providerId: String) {
+        viewModelScope.launch {
+            try {
+                val allCategories = categoryRepository.getCategoriesByProvider(providerId).first()
+                
+                val liveCats = allCategories.filter { it.type == "live" }
+                val vodCats = allCategories.filter { it.type == "vod" }
+                val seriesCats = allCategories.filter { it.type == "series" }
+                
                 _uiState.update { 
                     it.copy(
                         isLoading = false,
-                        currentStep = OnboardingStep.CategorySelection(categories),
+                        currentStep = OnboardingStep.CategorySelectionStep(
+                            CategorySelection(
+                                liveCategories = liveCats,
+                                vodCategories = vodCats,
+                                seriesCategories = seriesCats
+                            )
+                        ),
                         // Select all by default
-                        selectedCategories = categories.map { cat -> cat.id }.toSet()
+                        selectedLiveCategories = liveCats.map { cat -> cat.id }.toSet(),
+                        selectedVodCategories = vodCats.map { cat -> cat.id }.toSet(),
+                        selectedSeriesCategories = seriesCats.map { cat -> cat.id }.toSet()
                     ) 
                 }
             } catch (e: Exception) {
@@ -218,26 +301,54 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
-    fun toggleCategory(categoryId: String) {
+    // Toggle functions for each category type
+    fun toggleLiveCategory(categoryId: String) {
         _uiState.update { state ->
-            val current = state.selectedCategories
-            val updated = if (current.contains(categoryId)) {
-                current - categoryId
-            } else {
-                current + categoryId
-            }
-            state.copy(selectedCategories = updated)
+            val current = state.selectedLiveCategories
+            val updated = if (current.contains(categoryId)) current - categoryId else current + categoryId
+            state.copy(selectedLiveCategories = updated)
         }
     }
 
-    fun selectAllCategories(categories: List<CategoryEntity>) {
-        _uiState.update { 
-            it.copy(selectedCategories = categories.map { cat -> cat.id }.toSet()) 
+    fun toggleVodCategory(categoryId: String) {
+        _uiState.update { state ->
+            val current = state.selectedVodCategories
+            val updated = if (current.contains(categoryId)) current - categoryId else current + categoryId
+            state.copy(selectedVodCategories = updated)
         }
     }
 
-    fun deselectAllCategories() {
-        _uiState.update { it.copy(selectedCategories = emptySet()) }
+    fun toggleSeriesCategory(categoryId: String) {
+        _uiState.update { state ->
+            val current = state.selectedSeriesCategories
+            val updated = if (current.contains(categoryId)) current - categoryId else current + categoryId
+            state.copy(selectedSeriesCategories = updated)
+        }
+    }
+
+    // Select/Deselect all for each type
+    fun selectAllLiveCategories(categories: List<CategoryEntity>) {
+        _uiState.update { it.copy(selectedLiveCategories = categories.map { cat -> cat.id }.toSet()) }
+    }
+
+    fun deselectAllLiveCategories() {
+        _uiState.update { it.copy(selectedLiveCategories = emptySet()) }
+    }
+
+    fun selectAllVodCategories(categories: List<CategoryEntity>) {
+        _uiState.update { it.copy(selectedVodCategories = categories.map { cat -> cat.id }.toSet()) }
+    }
+
+    fun deselectAllVodCategories() {
+        _uiState.update { it.copy(selectedVodCategories = emptySet()) }
+    }
+
+    fun selectAllSeriesCategories(categories: List<CategoryEntity>) {
+        _uiState.update { it.copy(selectedSeriesCategories = categories.map { cat -> cat.id }.toSet()) }
+    }
+
+    fun deselectAllSeriesCategories() {
+        _uiState.update { it.copy(selectedSeriesCategories = emptySet()) }
     }
 
     fun saveOnboardingComplete() {

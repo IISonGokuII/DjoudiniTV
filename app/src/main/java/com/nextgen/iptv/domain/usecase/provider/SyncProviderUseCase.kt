@@ -84,7 +84,88 @@ class SyncProviderUseCase @Inject constructor(
             emit(SyncProgress.Error(e.message ?: "Unbekannter Fehler"))
         }
     }
-
+    
+    /**
+     * Sync only VOD categories (fast, for onboarding)
+     */
+    fun syncVodCategoriesOnly(providerId: String): Flow<SyncProgress> = flow {
+        emit(SyncProgress.Starting)
+        
+        try {
+            val provider = providerRepository.getProviderById(providerId)
+                ?: throw IllegalArgumentException("Provider nicht gefunden")
+            
+            if (provider.type != "xtream" || provider.username == null || provider.password == null) {
+                emit(SyncProgress.Error("Nur Xtream Codes wird unterstutzt"))
+                return@flow
+            }
+            
+            val api = xtreamCodesService.createApi(provider.serverUrl)
+            val apiUrl = XtreamCodesService.buildApiUrl(provider.serverUrl)
+            
+            emit(SyncProgress.Progress("Lade Film-Kategorien...", 0))
+            
+            // Only sync VOD categories
+            val vodCategories = api.getVodCategories(apiUrl, provider.username, provider.password)
+            val vodCategoryEntities = vodCategories.mapNotNull { cat ->
+                cat.categoryId?.let {
+                    CategoryEntity(
+                        id = "${providerId}_vod_$it",
+                        providerId = providerId,
+                        name = cat.categoryName ?: "Unknown",
+                        type = "vod"
+                    )
+                }
+            }
+            categoryRepository.addCategories(vodCategoryEntities)
+            
+            emit(SyncProgress.Progress("${vodCategories.size} Film-Kategorien geladen", 100))
+            emit(SyncProgress.Success)
+        } catch (e: Exception) {
+            emit(SyncProgress.Error(e.message ?: "Fehler beim Laden der Film-Kategorien"))
+        }
+    }
+    
+    /**
+     * Sync only Series categories (fast, for onboarding)
+     */
+    fun syncSeriesCategoriesOnly(providerId: String): Flow<SyncProgress> = flow {
+        emit(SyncProgress.Starting)
+        
+        try {
+            val provider = providerRepository.getProviderById(providerId)
+                ?: throw IllegalArgumentException("Provider nicht gefunden")
+            
+            if (provider.type != "xtream" || provider.username == null || provider.password == null) {
+                emit(SyncProgress.Error("Nur Xtream Codes wird unterstutzt"))
+                return@flow
+            }
+            
+            val api = xtreamCodesService.createApi(provider.serverUrl)
+            val apiUrl = XtreamCodesService.buildApiUrl(provider.serverUrl)
+            
+            emit(SyncProgress.Progress("Lade Serien-Kategorien...", 0))
+            
+            // Only sync Series categories
+            val seriesCategories = api.getSeriesCategories(apiUrl, provider.username, provider.password)
+            val seriesCatEntities = seriesCategories.mapNotNull { cat ->
+                cat.categoryId?.let {
+                    CategoryEntity(
+                        id = "${providerId}_series_$it",
+                        providerId = providerId,
+                        name = cat.categoryName ?: "Unknown",
+                        type = "series"
+                    )
+                }
+            }
+            categoryRepository.addCategories(seriesCatEntities)
+            
+            emit(SyncProgress.Progress("${seriesCategories.size} Serien-Kategorien geladen", 100))
+            emit(SyncProgress.Success)
+        } catch (e: Exception) {
+            emit(SyncProgress.Error(e.message ?: "Fehler beim Laden der Serien-Kategorien"))
+        }
+    }
     
     private suspend fun syncXtreamCodesQuick(
         collector: kotlinx.coroutines.flow.FlowCollector<SyncProgress>,
@@ -103,7 +184,7 @@ class SyncProviderUseCase @Inject constructor(
             withTimeout(10000) {
                 val auth = api.authenticate(apiUrl, username, password)
                 if (auth.userInfo?.auth != 1) {
-                    throw IllegalStateException("Authentifizierung fehlgeschlagen - Falsche Zugangsdaten")
+                    throw IllegalStateException("Authentifizierung fehlgeschlagen")
                 }
             }
         } catch (e: Exception) {
@@ -151,7 +232,7 @@ class SyncProviderUseCase @Inject constructor(
         streamRepository.deleteStreamsByProvider(providerId)
         
         // Live TV
-        collector.emit(SyncProgress.Progress("Synchronisiere Live TV...", 10))
+        collector.emit(SyncProgress.Progress("Synchronisiere Live TV...", 15))
         syncLiveTV(api, apiUrl, providerId, baseUrl, username, password, collector)
         
         // VOD
@@ -172,7 +253,6 @@ class SyncProviderUseCase @Inject constructor(
         
         collector.emit(SyncProgress.Progress("Synchronisation abgeschlossen!", 100))
     }
-
     
     private suspend fun syncLiveTV(
         api: XtreamCodesApiDynamic,
