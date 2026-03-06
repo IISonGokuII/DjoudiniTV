@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -21,11 +22,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -44,19 +48,23 @@ import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
+import com.nextgen.iptv.ui.viewmodel.PlayerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlayerScreen(
     streamUrl: String,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    viewModel: PlayerViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val activity = context as? Activity
+    val uiState by viewModel.uiState.collectAsState()
     
     var isFullscreen by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    var showResumeDialog by remember { mutableStateOf(false) }
 
     // Handle fullscreen mode
     LaunchedEffect(isFullscreen) {
@@ -65,17 +73,13 @@ fun PlayerScreen(
             val controller = window.insetsController
             
             if (isFullscreen) {
-                // Hide system UI
                 controller?.let { ctrl ->
                     ctrl.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
                     ctrl.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
                 }
-                // Set landscape orientation
                 act.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             } else {
-                // Show system UI
                 controller?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-                // Reset orientation
                 act.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
             }
         }
@@ -85,17 +89,44 @@ fun PlayerScreen(
     DisposableEffect(Unit) {
         onDispose {
             activity?.let { act ->
-                // Reset system UI
                 val controller = act.window.insetsController
                 controller?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-                // Reset orientation
                 act.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
             }
         }
     }
 
+    // Show resume dialog if there's saved progress
+    LaunchedEffect(uiState.savedProgressMs) {
+        if (uiState.savedProgressMs > 0) {
+            showResumeDialog = true
+        }
+    }
+
+    // Resume Dialog
+    if (showResumeDialog) {
+        AlertDialog(
+            onDismissRequest = { showResumeDialog = false },
+            title = { Text("Weiterschauen?") },
+            text = { Text("Möchten Sie bei ${formatTime(uiState.savedProgressMs)} weitermachen?") },
+            confirmButton = {
+                TextButton(onClick = { showResumeDialog = false }) {
+                    Text("Ja, weiter")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { 
+                    showResumeDialog = false
+                    // Reset progress to start
+                    viewModel.clearError()
+                }) {
+                    Text("Nein, von Anfang")
+                }
+            }
+        )
+    }
+
     if (isFullscreen) {
-        // Fullscreen player (no scaffold)
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -103,6 +134,7 @@ fun PlayerScreen(
         ) {
             PlayerContent(
                 streamUrl = streamUrl,
+                savedProgressMs = uiState.savedProgressMs,
                 isFullscreen = true,
                 onFullscreenToggle = { isFullscreen = false },
                 onNavigateBack = {
@@ -110,7 +142,10 @@ fun PlayerScreen(
                     onNavigateBack()
                 },
                 onLoadingChange = { isLoading = it },
-                onError = { errorMessage = it }
+                onError = { errorMessage = it },
+                onSaveProgress = { position, duration ->
+                    viewModel.saveProgress(position, duration)
+                }
             )
             
             if (isLoading) {
@@ -121,7 +156,6 @@ fun PlayerScreen(
             }
         }
     } else {
-        // Normal player with scaffold
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -151,11 +185,15 @@ fun PlayerScreen(
                 ) {
                     PlayerContent(
                         streamUrl = streamUrl,
+                        savedProgressMs = uiState.savedProgressMs,
                         isFullscreen = false,
                         onFullscreenToggle = { isFullscreen = true },
                         onNavigateBack = onNavigateBack,
                         onLoadingChange = { isLoading = it },
-                        onError = { errorMessage = it }
+                        onError = { errorMessage = it },
+                        onSaveProgress = { position, duration ->
+                            viewModel.saveProgress(position, duration)
+                        }
                     )
                     
                     if (isLoading) {
@@ -201,11 +239,13 @@ fun PlayerScreen(
 @Composable
 private fun PlayerContent(
     streamUrl: String,
+    savedProgressMs: Long,
     isFullscreen: Boolean,
     onFullscreenToggle: () -> Unit,
     onNavigateBack: () -> Unit,
     onLoadingChange: (Boolean) -> Unit,
-    onError: (String?) -> Unit
+    onError: (String?) -> Unit,
+    onSaveProgress: (Long, Long) -> Unit
 ) {
     val context = LocalContext.current
     var player by remember { mutableStateOf<ExoPlayer?>(null) }
@@ -218,10 +258,10 @@ private fun PlayerContent(
             .setLoadControl(
                 DefaultLoadControl.Builder()
                     .setBufferDurationsMs(
-                        30000,  // minBufferMs
-                        60000,  // maxBufferMs
-                        1000,   // bufferForPlaybackMs
-                        5000    // bufferForPlaybackAfterRebufferMs
+                        30000,
+                        60000,
+                        1000,
+                        5000
                     )
                     .build()
             )
@@ -260,6 +300,12 @@ private fun PlayerContent(
         try {
             val mediaItem = MediaItem.fromUri(streamUrl)
             exoPlayer.setMediaItem(mediaItem)
+            
+            // Seek to saved position if available
+            if (savedProgressMs > 0) {
+                exoPlayer.seekTo(savedProgressMs)
+            }
+            
             exoPlayer.prepare()
             exoPlayer.play()
         } catch (e: Exception) {
@@ -267,6 +313,12 @@ private fun PlayerContent(
         }
 
         onDispose {
+            // Save progress before releasing
+            val currentPosition = exoPlayer.currentPosition
+            val duration = exoPlayer.duration
+            if (duration > 0) {
+                onSaveProgress(currentPosition, duration)
+            }
             exoPlayer.release()
         }
     }
@@ -287,4 +339,15 @@ private fun PlayerContent(
             playerView.player = player
         }
     )
+}
+
+private fun formatTime(ms: Long): String {
+    val seconds = ms / 1000
+    val minutes = seconds / 60
+    val hours = minutes / 60
+    return if (hours > 0) {
+        String.format("%d:%02d:%02d", hours, minutes % 60, seconds % 60)
+    } else {
+        String.format("%d:%02d", minutes, seconds % 60)
+    }
 }
