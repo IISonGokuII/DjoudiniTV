@@ -1,5 +1,8 @@
 package com.nextgen.iptv.ui.viewmodel;
 
+import com.nextgen.iptv.domain.repository.ProviderRepository;
+import com.nextgen.iptv.domain.repository.SettingsRepository;
+import com.nextgen.iptv.domain.usecase.provider.SyncProviderUseCase;
 import com.nextgen.iptv.domain.usecase.settings.GetSettingsUseCase;
 import com.nextgen.iptv.domain.usecase.settings.UpdateSettingsUseCase;
 import dagger.internal.DaggerGenerated;
@@ -28,25 +31,41 @@ public final class SettingsViewModel_Factory implements Factory<SettingsViewMode
 
   private final Provider<UpdateSettingsUseCase> updateSettingsUseCaseProvider;
 
+  private final Provider<ProviderRepository> providerRepositoryProvider;
+
+  private final Provider<SettingsRepository> settingsRepositoryProvider;
+
+  private final Provider<SyncProviderUseCase> syncProviderUseCaseProvider;
+
   public SettingsViewModel_Factory(Provider<GetSettingsUseCase> getSettingsUseCaseProvider,
-      Provider<UpdateSettingsUseCase> updateSettingsUseCaseProvider) {
+      Provider<UpdateSettingsUseCase> updateSettingsUseCaseProvider,
+      Provider<ProviderRepository> providerRepositoryProvider,
+      Provider<SettingsRepository> settingsRepositoryProvider,
+      Provider<SyncProviderUseCase> syncProviderUseCaseProvider) {
     this.getSettingsUseCaseProvider = getSettingsUseCaseProvider;
     this.updateSettingsUseCaseProvider = updateSettingsUseCaseProvider;
+    this.providerRepositoryProvider = providerRepositoryProvider;
+    this.settingsRepositoryProvider = settingsRepositoryProvider;
+    this.syncProviderUseCaseProvider = syncProviderUseCaseProvider;
   }
 
   @Override
   public SettingsViewModel get() {
-    return newInstance(getSettingsUseCaseProvider.get(), updateSettingsUseCaseProvider.get());
+    return newInstance(getSettingsUseCaseProvider.get(), updateSettingsUseCaseProvider.get(), providerRepositoryProvider.get(), settingsRepositoryProvider.get(), syncProviderUseCaseProvider.get());
   }
 
   public static SettingsViewModel_Factory create(
       Provider<GetSettingsUseCase> getSettingsUseCaseProvider,
-      Provider<UpdateSettingsUseCase> updateSettingsUseCaseProvider) {
-    return new SettingsViewModel_Factory(getSettingsUseCaseProvider, updateSettingsUseCaseProvider);
+      Provider<UpdateSettingsUseCase> updateSettingsUseCaseProvider,
+      Provider<ProviderRepository> providerRepositoryProvider,
+      Provider<SettingsRepository> settingsRepositoryProvider,
+      Provider<SyncProviderUseCase> syncProviderUseCaseProvider) {
+    return new SettingsViewModel_Factory(getSettingsUseCaseProvider, updateSettingsUseCaseProvider, providerRepositoryProvider, settingsRepositoryProvider, syncProviderUseCaseProvider);
   }
 
   public static SettingsViewModel newInstance(GetSettingsUseCase getSettingsUseCase,
-      UpdateSettingsUseCase updateSettingsUseCase) {
-    return new SettingsViewModel(getSettingsUseCase, updateSettingsUseCase);
+      UpdateSettingsUseCase updateSettingsUseCase, ProviderRepository providerRepository,
+      SettingsRepository settingsRepository, SyncProviderUseCase syncProviderUseCase) {
+    return new SettingsViewModel(getSettingsUseCase, updateSettingsUseCase, providerRepository, settingsRepository, syncProviderUseCase);
   }
 }
