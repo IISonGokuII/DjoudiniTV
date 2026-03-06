@@ -47,6 +47,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -139,23 +141,28 @@ fun OnboardingScreen(
                         progress = uiState.syncProgress
                     )
                     is OnboardingStep.CategorySelectionStep -> {
+                        val coroutineScope = rememberCoroutineScope()
                         AllCategoriesSelectionStep(
-                        categories = step.categories,
-                        selectedLiveIds = uiState.selectedLiveCategories,
-                        selectedVodIds = uiState.selectedVodCategories,
-                        selectedSeriesIds = uiState.selectedSeriesCategories,
-                        onToggleLive = viewModel::toggleLiveCategory,
-                        onToggleVod = viewModel::toggleVodCategory,
-                        onToggleSeries = viewModel::toggleSeriesCategory,
-                        onSelectAllLive = { viewModel.selectAllLiveCategories(step.categories.liveCategories) },
-                        onDeselectAllLive = viewModel::deselectAllLiveCategories,
-                        onSelectAllVod = { viewModel.selectAllVodCategories(step.categories.vodCategories) },
-                        onDeselectAllVod = viewModel::deselectAllVodCategories,
-                        onSelectAllSeries = { viewModel.selectAllSeriesCategories(step.categories.seriesCategories) },
-                        onDeselectAllSeries = viewModel::deselectAllSeriesCategories,
+                            categories = step.categories,
+                            selectedLiveIds = uiState.selectedLiveCategories,
+                            selectedVodIds = uiState.selectedVodCategories,
+                            selectedSeriesIds = uiState.selectedSeriesCategories,
+                            onToggleLive = viewModel::toggleLiveCategory,
+                            onToggleVod = viewModel::toggleVodCategory,
+                            onToggleSeries = viewModel::toggleSeriesCategory,
+                            onSelectAllLive = { viewModel.selectAllLiveCategories(step.categories.liveCategories) },
+                            onDeselectAllLive = viewModel::deselectAllLiveCategories,
+                            onSelectAllVod = { viewModel.selectAllVodCategories(step.categories.vodCategories) },
+                            onDeselectAllVod = viewModel::deselectAllVodCategories,
+                            onSelectAllSeries = { viewModel.selectAllSeriesCategories(step.categories.seriesCategories) },
+                            onDeselectAllSeries = viewModel::deselectAllSeriesCategories,
                             onContinue = {
-                                viewModel.saveOnboardingComplete()
-                                onComplete()
+                                coroutineScope.launch {
+                                    val saved = viewModel.saveOnboardingComplete()
+                                    if (saved) {
+                                        onComplete()
+                                    }
+                                }
                             }
                         )
                     }

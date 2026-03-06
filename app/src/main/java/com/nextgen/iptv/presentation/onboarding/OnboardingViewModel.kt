@@ -201,7 +201,13 @@ class OnboardingViewModel @Inject constructor(
     
     private fun loadVodAndSeriesCategories(providerId: String) {
         viewModelScope.launch {
+            var vodSuccess = false
+            var seriesSuccess = false
+            var vodError: String? = null
+            var seriesError: String? = null
+            
             try {
+                // Step 1: Sync VOD Categories - WAIT for completion
                 _uiState.update { 
                     it.copy(
                         syncMessage = "Lade Film-Kategorien...",
@@ -219,10 +225,18 @@ class OnboardingViewModel @Inject constructor(
                                 )
                             }
                         }
+                        is SyncProgress.Success -> {
+                            vodSuccess = true
+                        }
+                        is SyncProgress.Error -> {
+                            vodError = progress.message
+                            vodSuccess = true // Continue even if VOD fails
+                        }
                         else -> {}
                     }
                 }
                 
+                // Step 2: Sync Series Categories - WAIT for completion
                 _uiState.update { 
                     it.copy(
                         syncMessage = "Lade Serien-Kategorien...",
@@ -241,12 +255,23 @@ class OnboardingViewModel @Inject constructor(
                             }
                         }
                         is SyncProgress.Success -> {
-                            showCategorySelection(providerId)
+                            seriesSuccess = true
+                        }
+                        is SyncProgress.Error -> {
+                            seriesError = progress.message
+                            seriesSuccess = true // Continue even if Series fails
                         }
                         else -> {}
                     }
                 }
+                
+                // Step 3: Only show category selection when BOTH are done
+                if (vodSuccess && seriesSuccess) {
+                    showCategorySelection(providerId)
+                }
+                
             } catch (e: Exception) {
+                // On exception, still try to show what we have
                 showCategorySelection(providerId)
             }
         }
@@ -271,6 +296,7 @@ class OnboardingViewModel @Inject constructor(
                                 seriesCategories = seriesCats
                             )
                         ),
+                        // Default: ALL categories selected (user can deselect)
                         selectedLiveCategories = liveCats.map { cat -> cat.id }.toSet(),
                         selectedVodCategories = vodCats.map { cat -> cat.id }.toSet(),
                         selectedSeriesCategories = seriesCats.map { cat -> cat.id }.toSet()
@@ -280,6 +306,7 @@ class OnboardingViewModel @Inject constructor(
                 _uiState.update { 
                     it.copy(
                         isLoading = false,
+                        error = "Fehler beim Laden der Kategorien: ${e.message}",
                         currentStep = OnboardingStep.Complete
                     ) 
                 }
@@ -335,15 +362,22 @@ class OnboardingViewModel @Inject constructor(
         _uiState.update { it.copy(selectedSeriesCategories = emptySet()) }
     }
 
-    fun saveOnboardingComplete() {
-        viewModelScope.launch {
-            val state = _uiState.value
-            val providerId = state.providerId ?: return@launch
-            
+    /**
+     * Saves selected categories and returns success status
+     * Call this with await() from UI to ensure completion before navigating
+     */
+    suspend fun saveOnboardingComplete(): Boolean {
+        val state = _uiState.value
+        val providerId = state.providerId ?: return false
+        
+        return try {
             // Save selected categories to settings
             settingsRepository.setSelectedLiveCategories(providerId, state.selectedLiveCategories)
             settingsRepository.setSelectedVodCategories(providerId, state.selectedVodCategories)
             settingsRepository.setSelectedSeriesCategories(providerId, state.selectedSeriesCategories)
+            true
+        } catch (e: Exception) {
+            false
         }
     }
 
