@@ -21,6 +21,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -64,10 +65,10 @@ fun ProviderSetupScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Provider hinzufügen") },
+                title = { Text("Provider hinzufugen") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zurück")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zuruck")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -85,7 +86,7 @@ fun ProviderSetupScreen(
             onUsernameChange = viewModel::onUsernameChange,
             onPasswordChange = viewModel::onPasswordChange,
             onM3uUrlChange = viewModel::onM3uUrlChange,
-            onAddProvider = { viewModel.addProvider(onNavigateBack) },
+            onAddProvider = { viewModel.validateAndAddProvider(onNavigateBack) },
             onDismissError = viewModel::clearError,
             modifier = Modifier.padding(paddingValues)
         )
@@ -120,13 +121,15 @@ private fun ProviderSetupContent(
             placeholder = { Text("Mein IPTV Provider") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            enabled = !uiState.isLoading && !uiState.isValidating
         )
 
         // Provider Type Dropdown
         ProviderTypeDropdown(
             selectedType = uiState.selectedType,
-            onTypeChange = onTypeChange
+            onTypeChange = onTypeChange,
+            enabled = !uiState.isLoading && !uiState.isValidating
         )
 
         // Type-specific fields
@@ -138,18 +141,20 @@ private fun ProviderSetupContent(
                     password = uiState.password,
                     onServerUrlChange = onServerUrlChange,
                     onUsernameChange = onUsernameChange,
-                    onPasswordChange = onPasswordChange
+                    onPasswordChange = onPasswordChange,
+                    enabled = !uiState.isLoading && !uiState.isValidating
                 )
             }
             SetupProviderType.M3U_URL -> {
                 M3uUrlFields(
                     url = uiState.m3uUrl,
-                    onUrlChange = onM3uUrlChange
+                    onUrlChange = onM3uUrlChange,
+                    enabled = !uiState.isLoading && !uiState.isValidating
                 )
             }
             SetupProviderType.M3U_LOCAL -> {
                 Text(
-                    text = "Lokale M3U-Dateien werden noch nicht unterstützt.",
+                    text = "Lokale M3U-Dateien werden noch nicht unterstutzt.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -158,20 +163,71 @@ private fun ProviderSetupContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Validation message
+        uiState.validationMessage?.let { message ->
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        // Progress indicator when validating or syncing
+        if (uiState.isValidating || uiState.isLoading) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (uiState.isValidating) {
+                    CircularProgressIndicator(modifier = Modifier.height(32.dp))
+                    Text(
+                        text = "Verbindung wird uberpruft...",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                } else {
+                    LinearProgressIndicator(
+                        progress = { uiState.syncProgress / 100f },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Text(
+                        text = uiState.syncMessage,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = "${uiState.syncProgress}%",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
         // Add Button
         Button(
             onClick = onAddProvider,
             modifier = Modifier.fillMaxWidth(),
-            enabled = !uiState.isLoading && uiState.selectedType != SetupProviderType.M3U_LOCAL
+            enabled = !uiState.isLoading && !uiState.isValidating && uiState.selectedType != SetupProviderType.M3U_LOCAL
         ) {
-            if (uiState.isLoading) {
+            if (uiState.isLoading || uiState.isValidating) {
                 CircularProgressIndicator(
                     modifier = Modifier.height(24.dp),
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             } else {
-                Text("Provider hinzufügen")
+                Text("Provider hinzufugen")
             }
+        }
+        
+        // Info text
+        if (!uiState.isLoading && !uiState.isValidating) {
+            Text(
+                text = "Hinweis: Nur Live TV wird beim ersten Login synchronisiert. VOD und Serien konnen spater uber die Einstellungen synchronisiert werden.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 8.dp)
+            )
         }
     }
 
@@ -194,54 +250,55 @@ private fun ProviderSetupContent(
 @Composable
 private fun ProviderTypeDropdown(
     selectedType: SetupProviderType,
-    onTypeChange: (SetupProviderType) -> Unit
+    onTypeChange: (SetupProviderType) -> Unit,
+    enabled: Boolean = true
 ) {
     var expanded by remember { mutableStateOf(false) }
-
+    
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = it }
+        onExpandedChange = { if (enabled) expanded = it }
     ) {
         OutlinedTextField(
             value = when (selectedType) {
                 SetupProviderType.XTREAM -> "Xtream Codes API"
-                SetupProviderType.M3U_URL -> "M3U URL"
+                SetupProviderType.M3U_URL -> "M3U Playlist URL"
                 SetupProviderType.M3U_LOCAL -> "Lokale M3U-Datei"
             },
             onValueChange = {},
             readOnly = true,
-            label = { Text("Provider Typ") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            label = { Text("Provider-Typ") },
+            trailingIcon = { 
+                if (enabled) {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor()
+                .menuAnchor(),
+            enabled = enabled
         )
-
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            DropdownMenuItem(
-                text = { Text("Xtream Codes API") },
-                onClick = {
-                    onTypeChange(SetupProviderType.XTREAM)
-                    expanded = false
-                }
-            )
-            DropdownMenuItem(
-                text = { Text("M3U URL") },
-                onClick = {
-                    onTypeChange(SetupProviderType.M3U_URL)
-                    expanded = false
-                }
-            )
-            DropdownMenuItem(
-                text = { Text("Lokale M3U-Datei") },
-                onClick = {
-                    onTypeChange(SetupProviderType.M3U_LOCAL)
-                    expanded = false
-                }
-            )
+        
+        if (enabled) {
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                DropdownMenuItem(
+                    text = { Text("Xtream Codes API") },
+                    onClick = {
+                        onTypeChange(SetupProviderType.XTREAM)
+                        expanded = false
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("M3U Playlist URL") },
+                    onClick = {
+                        onTypeChange(SetupProviderType.M3U_URL)
+                        expanded = false
+                    }
+                )
+            }
         }
     }
 }
@@ -253,7 +310,8 @@ private fun XtreamFields(
     password: String,
     onServerUrlChange: (String) -> Unit,
     onUsernameChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit
+    onPasswordChange: (String) -> Unit,
+    enabled: Boolean = true
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         OutlinedTextField(
@@ -266,7 +324,8 @@ private fun XtreamFields(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Uri,
                 imeAction = ImeAction.Next
-            )
+            ),
+            enabled = enabled
         )
 
         OutlinedTextField(
@@ -275,7 +334,8 @@ private fun XtreamFields(
             label = { Text("Benutzername") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            enabled = enabled
         )
 
         OutlinedTextField(
@@ -288,7 +348,8 @@ private fun XtreamFields(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
-            )
+            ),
+            enabled = enabled
         )
     }
 }
@@ -296,7 +357,8 @@ private fun XtreamFields(
 @Composable
 private fun M3uUrlFields(
     url: String,
-    onUrlChange: (String) -> Unit
+    onUrlChange: (String) -> Unit,
+    enabled: Boolean = true
 ) {
     OutlinedTextField(
         value = url,
@@ -308,6 +370,7 @@ private fun M3uUrlFields(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Uri,
             imeAction = ImeAction.Done
-        )
+        ),
+        enabled = enabled
     )
 }

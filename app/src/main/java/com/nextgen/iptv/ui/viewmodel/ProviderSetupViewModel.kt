@@ -6,6 +6,8 @@ import com.nextgen.iptv.domain.model.ProviderType
 import com.nextgen.iptv.domain.usecase.provider.AddProviderUseCase
 import com.nextgen.iptv.domain.usecase.provider.SyncProviderUseCase
 import com.nextgen.iptv.domain.usecase.provider.SyncProgress
+import com.nextgen.iptv.domain.usecase.provider.ValidateProviderUseCase
+import com.nextgen.iptv.domain.usecase.provider.ValidationResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,8 +24,13 @@ data class ProviderSetupUiState(
     val password: String = "",
     val m3uUrl: String = "",
     val isLoading: Boolean = false,
+    val isValidating: Boolean = false,
+    val syncProgress: Int = 0,
+    val syncMessage: String = "",
     val error: String? = null,
-    val success: Boolean = false
+    val success: Boolean = false,
+    val providerId: String? = null,
+    val validationMessage: String? = null
 )
 
 enum class SetupProviderType {
@@ -33,6 +40,7 @@ enum class SetupProviderType {
 @HiltViewModel
 class ProviderSetupViewModel @Inject constructor(
     private val addProviderUseCase: AddProviderUseCase,
+    private val validateProviderUseCase: ValidateProviderUseCase,
     private val syncProviderUseCase: SyncProviderUseCase
 ) : ViewModel() {
 
@@ -63,7 +71,7 @@ class ProviderSetupViewModel @Inject constructor(
         _uiState.update { it.copy(m3uUrl = url, error = null) }
     }
 
-    fun addProvider(onSuccess: () -> Unit = {}) {
+    fun validateAndAddProvider(onSuccess: () -> Unit = {}) {
         val state = _uiState.value
         
         // Validate inputs
@@ -78,7 +86,6 @@ class ProviderSetupViewModel @Inject constructor(
                     _uiState.update { it.copy(error = "Server, Benutzername und Passwort sind erforderlich") }
                     return
                 }
-                // Normalize URL - add http:// if missing
                 val normalizedUrl = normalizeUrl(state.serverUrl)
                 ProviderType.XtreamCodes(
                     serverUrl = normalizedUrl,
@@ -95,38 +102,136 @@ class ProviderSetupViewModel @Inject constructor(
                 ProviderType.M3uUrl(normalizedUrl)
             }
             SetupProviderType.M3U_LOCAL -> {
-                _uiState.update { it.copy(error = "Lokale M3U-Dateien werden noch nicht unterstützt") }
+                _uiState.update { it.copy(error = "Lokale M3U-Dateien werden noch nicht unterstutzt") }
                 return
             }
         }
         
-        _uiState.update { it.copy(isLoading = true, error = null) }
+        _uiState.update { it.copy(isValidating = true, error = null, validationMessage = null, syncMessage = "") }
         
         viewModelScope.launch {
-            addProviderUseCase(state.name, providerType)
-                .onSuccess { providerId ->
-                    // Start sync and observe progress
-                    syncProviderUseCase(providerId).collect { progress ->
-                        when (progress) {
-                            is SyncProgress.Success -> {
-                                _uiState.update { it.copy(isLoading = false, success = true) }
-                                onSuccess()
+            // First validate the connection (max 30 seconds)
+            when (val result = validateProviderUseCase(providerType)) {
+                is ValidationResult.Success -> {
+                    _uiState.update { 
+                        it.copy(
+                            isValidating = false,
+                            validationMessage = result.info
+                        ) 
+                    }
+                    
+                    // Then add the provider
+                    _uiState.update { it.copy(isLoading = true, syncMessage = "Provider wird gespeichert...", syncProgress = 5) }
+                    
+                    addProviderUseCase(state.name, providerType)
+                        .onSuccess { providerId ->
+                            // Start quick sync (only Live TV - fast)
+                            performQuickSync(providerId, onSuccess)
+                        }
+                        .onFailure { error ->
+                            _uiState.update { 
+                                it.copy(
+                                    isLoading = false,
+                                    error = "Provider konnte nicht gespeichert werden: ${error.message}"
+                                ) 
                             }
-                            is SyncProgress.Error -> {
-                                _uiState.update { it.copy(isLoading = false, error = progress.message) }
-                            }
-                            is SyncProgress.Progress -> {
-                                // Optionally show progress message
-                            }
-                            is SyncProgress.Starting -> {
-                                // Sync is starting
-                            }
+                        }
+                }
+                is ValidationResult.Error -> {
+                    _uiState.update { 
+                        it.copy(
+                            isValidating = false,
+                            error = result.message
+                        ) 
+                    }
+                }
+            }
+        }
+    }
+    
+    private fun performQuickSync(providerId: String, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            syncProviderUseCase.syncQuick(providerId).collect { progress ->
+                when (progress) {
+                    is SyncProgress.Starting -> {
+                        _uiState.update { 
+                            it.copy(syncMessage = "Synchronisation wird gestartet...", syncProgress = 10)
+                        }
+                    }
+                    is SyncProgress.Progress -> {
+                        _uiState.update { 
+                            it.copy(
+                                syncMessage = progress.message,
+                                syncProgress = progress.percent
+                            )
+                        }
+                    }
+                    is SyncProgress.Success -> {
+                        _uiState.update { 
+                            it.copy(
+                                isLoading = false,
+                                success = true,
+                                syncProgress = 100,
+                                syncMessage = "Fertig!",
+                                providerId = providerId
+                            ) 
+                        }
+                        onSuccess()
+                    }
+                    is SyncProgress.Error -> {
+                        _uiState.update { 
+                            it.copy(
+                                isLoading = false,
+                                error = progress.message
+                            ) 
                         }
                     }
                 }
-                .onFailure { error ->
-                    _uiState.update { it.copy(isLoading = false, error = error.message) }
+            }
+        }
+    }
+    
+    /**
+     * Perform full sync (VOD + Series) - call this from a separate screen or button
+     */
+    fun performFullSync() {
+        val providerId = _uiState.value.providerId ?: return
+        
+        _uiState.update { it.copy(isLoading = true, syncMessage = "Vollstandige Synchronisation...", syncProgress = 0) }
+        
+        viewModelScope.launch {
+            syncProviderUseCase(providerId).collect { progress ->
+                when (progress) {
+                    is SyncProgress.Starting -> {
+                        _uiState.update { it.copy(syncMessage = "Starte vollstandige Synchronisation...", syncProgress = 5) }
+                    }
+                    is SyncProgress.Progress -> {
+                        _uiState.update { 
+                            it.copy(
+                                syncMessage = progress.message,
+                                syncProgress = progress.percent
+                            )
+                        }
+                    }
+                    is SyncProgress.Success -> {
+                        _uiState.update { 
+                            it.copy(
+                                isLoading = false,
+                                syncProgress = 100,
+                                syncMessage = "Vollstandige Synchronisation abgeschlossen!"
+                            ) 
+                        }
+                    }
+                    is SyncProgress.Error -> {
+                        _uiState.update { 
+                            it.copy(
+                                isLoading = false,
+                                error = progress.message
+                            ) 
+                        }
+                    }
                 }
+            }
         }
     }
     

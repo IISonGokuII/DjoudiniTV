@@ -13,12 +13,13 @@ import com.nextgen.iptv.domain.repository.SeriesRepository
 import com.nextgen.iptv.domain.repository.StreamRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withTimeout
 import java.util.UUID
 import javax.inject.Inject
 
 sealed class SyncProgress {
     data object Starting : SyncProgress()
-    data class Progress(val message: String) : SyncProgress()
+    data class Progress(val message: String, val percent: Int = 0) : SyncProgress()
     data object Success : SyncProgress()
     data class Error(val message: String) : SyncProgress()
 }
@@ -30,31 +31,62 @@ class SyncProviderUseCase @Inject constructor(
     private val seriesRepository: SeriesRepository,
     private val xtreamCodesService: XtreamCodesService
 ) {
+    /**
+     * Quick sync - only Live TV (fast, 10-30 seconds)
+     */
+    fun syncQuick(providerId: String): Flow<SyncProgress> = flow {
+        emit(SyncProgress.Starting)
+        
+        try {
+            val provider = providerRepository.getProviderById(providerId)
+                ?: throw IllegalArgumentException("Provider nicht gefunden")
+            
+            when (provider.type) {
+                "xtream" -> {
+                    if (provider.username == null || provider.password == null) {
+                        throw IllegalArgumentException("Username und Passwort erforderlich")
+                    }
+                    syncXtreamCodesQuick(this, providerId, provider.serverUrl, provider.username, provider.password)
+                }
+                "m3u_url" -> emit(SyncProgress.Error("M3U URL Sync noch nicht implementiert"))
+                "m3u_local" -> emit(SyncProgress.Error("M3U Local Sync noch nicht implementiert"))
+            }
+            
+            emit(SyncProgress.Success)
+        } catch (e: Exception) {
+            emit(SyncProgress.Error(e.message ?: "Unbekannter Fehler"))
+        }
+    }
+    
+    /**
+     * Full sync - Live TV + VOD + Series (can take 5-30 minutes)
+     */
     operator fun invoke(providerId: String): Flow<SyncProgress> = flow {
         emit(SyncProgress.Starting)
         
         try {
             val provider = providerRepository.getProviderById(providerId)
-                ?: throw IllegalArgumentException("Provider not found")
+                ?: throw IllegalArgumentException("Provider nicht gefunden")
             
             when (provider.type) {
                 "xtream" -> {
                     if (provider.username == null || provider.password == null) {
-                        throw IllegalArgumentException("Username and password required for Xtream Codes")
+                        throw IllegalArgumentException("Username und Passwort erforderlich")
                     }
-                    syncXtreamCodes(this, providerId, provider.serverUrl, provider.username, provider.password)
+                    syncXtreamCodesFull(this, providerId, provider.serverUrl, provider.username, provider.password)
                 }
-                "m3u_url" -> emit(SyncProgress.Error("M3U URL sync not implemented yet"))
-                "m3u_local" -> emit(SyncProgress.Error("M3U Local sync not implemented yet"))
+                "m3u_url" -> emit(SyncProgress.Error("M3U URL Sync noch nicht implementiert"))
+                "m3u_local" -> emit(SyncProgress.Error("M3U Local Sync noch nicht implementiert"))
             }
             
             emit(SyncProgress.Success)
         } catch (e: Exception) {
-            emit(SyncProgress.Error(e.message ?: "Unknown error"))
+            emit(SyncProgress.Error(e.message ?: "Unbekannter Fehler"))
         }
     }
+
     
-    private suspend fun syncXtreamCodes(
+    private suspend fun syncXtreamCodesQuick(
         collector: kotlinx.coroutines.flow.FlowCollector<SyncProgress>,
         providerId: String,
         baseUrl: String,
@@ -64,52 +96,95 @@ class SyncProviderUseCase @Inject constructor(
         val api = xtreamCodesService.createApi(baseUrl)
         val apiUrl = XtreamCodesService.buildApiUrl(baseUrl)
         
-        collector.emit(SyncProgress.Progress("Verbindung wird hergestellt..."))
+        collector.emit(SyncProgress.Progress("Verbindung wird hergestellt...", 5))
         
-        // Test connection
+        // Test connection with timeout
         try {
-            val auth = api.authenticate(apiUrl, username, password)
-            if (auth.userInfo?.auth != 1) {
-                throw IllegalStateException("Authentication failed")
+            withTimeout(10000) {
+                val auth = api.authenticate(apiUrl, username, password)
+                if (auth.userInfo?.auth != 1) {
+                    throw IllegalStateException("Authentifizierung fehlgeschlagen - Falsche Zugangsdaten")
+                }
             }
         } catch (e: Exception) {
-            throw IllegalStateException("Connection failed: ${e.message}")
+            throw IllegalStateException("Verbindung fehlgeschlagen: ${e.message}")
         }
         
-        collector.emit(SyncProgress.Progress("Bereinige alte Daten..."))
+        // Clear old data
         categoryRepository.deleteCategoriesByProvider(providerId)
         streamRepository.deleteStreamsByProvider(providerId)
         
-        // Sync Live TV
-        collector.emit(SyncProgress.Progress("Synchronisiere Live TV..."))
-        syncLiveTv(api, apiUrl, providerId, baseUrl, username, password)
+        collector.emit(SyncProgress.Progress("Synchronisiere Live TV...", 20))
         
-        // Sync VOD
-        collector.emit(SyncProgress.Progress("Synchronisiere VOD..."))
-        try {
-            syncVod(api, apiUrl, providerId, baseUrl, username, password)
-        } catch (e: Exception) {
-            collector.emit(SyncProgress.Progress("VOD nicht verfügbar"))
-        }
+        // Sync ONLY Live TV (fast - usually under 30 seconds)
+        syncLiveTV(api, apiUrl, providerId, baseUrl, username, password, collector)
         
-        // Sync Series
-        collector.emit(SyncProgress.Progress("Synchronisiere Serien..."))
-        try {
-            syncSeries(api, apiUrl, providerId, baseUrl, username, password)
-        } catch (e: Exception) {
-            collector.emit(SyncProgress.Progress("Serien nicht verfügbar: ${e.message}"))
-        }
+        collector.emit(SyncProgress.Progress("Fertig! VOD und Serien konnen spater synchronisiert werden.", 100))
     }
     
-    private suspend fun syncLiveTv(
-        api: XtreamCodesApiDynamic,
-        apiUrl: String,
+    private suspend fun syncXtreamCodesFull(
+        collector: kotlinx.coroutines.flow.FlowCollector<SyncProgress>,
         providerId: String,
         baseUrl: String,
         username: String,
         password: String
     ) {
+        val api = xtreamCodesService.createApi(baseUrl)
+        val apiUrl = XtreamCodesService.buildApiUrl(baseUrl)
+        
+        collector.emit(SyncProgress.Progress("Verbindung wird hergestellt...", 5))
+        
+        // Test connection with timeout
+        try {
+            withTimeout(10000) {
+                val auth = api.authenticate(apiUrl, username, password)
+                if (auth.userInfo?.auth != 1) {
+                    throw IllegalStateException("Authentifizierung fehlgeschlagen")
+                }
+            }
+        } catch (e: Exception) {
+            throw IllegalStateException("Verbindung fehlgeschlagen: ${e.message}")
+        }
+        
+        // Clear old data
+        categoryRepository.deleteCategoriesByProvider(providerId)
+        streamRepository.deleteStreamsByProvider(providerId)
+        
+        // Live TV
+        collector.emit(SyncProgress.Progress("Synchronisiere Live TV...", 10))
+        syncLiveTV(api, apiUrl, providerId, baseUrl, username, password, collector)
+        
+        // VOD
+        collector.emit(SyncProgress.Progress("Synchronisiere VOD...", 40))
+        try {
+            syncVOD(api, apiUrl, providerId, baseUrl, username, password)
+        } catch (e: Exception) {
+            collector.emit(SyncProgress.Progress("VOD-Sync fehlgeschlagen: ${e.message}", 70))
+        }
+        
+        // Series
+        collector.emit(SyncProgress.Progress("Synchronisiere Serien...", 70))
+        try {
+            syncSeries(api, apiUrl, providerId, baseUrl, username, password)
+        } catch (e: Exception) {
+            collector.emit(SyncProgress.Progress("Serien-Sync fehlgeschlagen: ${e.message}", 95))
+        }
+        
+        collector.emit(SyncProgress.Progress("Synchronisation abgeschlossen!", 100))
+    }
+
+    
+    private suspend fun syncLiveTV(
+        api: XtreamCodesApiDynamic,
+        apiUrl: String,
+        providerId: String,
+        baseUrl: String,
+        username: String,
+        password: String,
+        collector: kotlinx.coroutines.flow.FlowCollector<SyncProgress>
+    ) {
         // Categories
+        collector.emit(SyncProgress.Progress("Lade Kategorien...", 25))
         val liveCategories = api.getLiveCategories(apiUrl, username, password)
         val categoryEntities = liveCategories.mapNotNull { cat ->
             cat.categoryId?.let {
@@ -124,6 +199,7 @@ class SyncProviderUseCase @Inject constructor(
         categoryRepository.addCategories(categoryEntities)
         
         // Streams
+        collector.emit(SyncProgress.Progress("Lade Kanale...", 50))
         val liveStreams = api.getLiveStreams(apiUrl, username, password)
         val streamEntities = liveStreams.mapNotNull { stream ->
             stream.streamId?.let { streamId ->
@@ -140,9 +216,11 @@ class SyncProviderUseCase @Inject constructor(
             }
         }
         streamRepository.addStreams(streamEntities)
+        
+        collector.emit(SyncProgress.Progress("${liveStreams.size} Kanale geladen", 100))
     }
     
-    private suspend fun syncVod(
+    private suspend fun syncVOD(
         api: XtreamCodesApiDynamic,
         apiUrl: String,
         providerId: String,
@@ -164,7 +242,7 @@ class SyncProviderUseCase @Inject constructor(
         }
         categoryRepository.addCategories(vodCategoryEntities)
         
-        // Streams - with detailed info
+        // Streams - with detailed info (this can take a while)
         val vodStreams = api.getVodStreams(apiUrl, username, password)
         val vodEntities = mutableListOf<StreamEntity>()
         
@@ -172,7 +250,6 @@ class SyncProviderUseCase @Inject constructor(
             val streamId = stream.streamId ?: return@forEach
             val vodId = "${providerId}_vod_$streamId"
             
-            // Basic entity from list
             var vodEntity = StreamEntity(
                 id = vodId,
                 categoryId = stream.categoryId?.let { "${providerId}_vod_$it" } ?: "",
@@ -248,7 +325,6 @@ class SyncProviderUseCase @Inject constructor(
         seriesList.forEach { seriesDto ->
             val seriesId = seriesDto.seriesId?.toString() ?: return@forEach
             
-            // Create series entity from list item
             val seriesEntity = SeriesEntity(
                 id = "${providerId}_series_$seriesId",
                 providerId = providerId,
@@ -305,11 +381,7 @@ class SyncProviderUseCase @Inject constructor(
                             posterUrl = episodeDto.info?.movieImage,
                             durationSec = episodeDto.info?.durationSecs,
                             streamUrl = XtreamCodesService.buildSeriesUrl(
-                                baseUrl, 
-                                username, 
-                                password, 
-                                episodeId,
-                                episodeDto.containerExtension ?: "mp4"
+                                baseUrl, username, password, episodeId, episodeDto.containerExtension ?: "mp4"
                             ),
                             containerExtension = episodeDto.containerExtension,
                             added = episodeDto.added,
