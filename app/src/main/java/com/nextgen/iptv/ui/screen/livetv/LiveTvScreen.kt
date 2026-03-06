@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -40,9 +42,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.nextgen.iptv.data.local.entity.StreamEntity
 import com.nextgen.iptv.ui.viewmodel.LiveTvUiState
 import com.nextgen.iptv.ui.viewmodel.LiveTvViewModel
+import com.nextgen.iptv.ui.viewmodel.StreamWithFavorite
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,7 +75,8 @@ fun LiveTvScreen(
             uiState = uiState,
             onSearchQueryChange = viewModel::onSearchQueryChange,
             onCategorySelect = viewModel::selectCategory,
-            onStreamClick = { onNavigateToPlayer(it.streamUrl) },
+            onStreamClick = { onNavigateToPlayer(it.stream.streamUrl) },
+            onToggleFavorite = viewModel::toggleFavorite,
             modifier = Modifier.padding(paddingValues)
         )
     }
@@ -84,7 +87,8 @@ private fun LiveTvContent(
     uiState: LiveTvUiState,
     onSearchQueryChange: (String) -> Unit,
     onCategorySelect: (String?) -> Unit,
-    onStreamClick: (StreamEntity) -> Unit,
+    onStreamClick: (StreamWithFavorite) -> Unit,
+    onToggleFavorite: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -145,10 +149,11 @@ private fun LiveTvContent(
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        items(uiState.streams) { stream ->
+                        items(uiState.streams) { streamWithFavorite ->
                             StreamCard(
-                                stream = stream,
-                                onClick = { onStreamClick(stream) }
+                                streamWithFavorite = streamWithFavorite,
+                                onClick = { onStreamClick(streamWithFavorite) },
+                                onToggleFavorite = { onToggleFavorite(streamWithFavorite.stream.id) }
                             )
                         }
                     }
@@ -160,9 +165,12 @@ private fun LiveTvContent(
 
 @Composable
 private fun StreamCard(
-    stream: StreamEntity,
-    onClick: () -> Unit
+    streamWithFavorite: StreamWithFavorite,
+    onClick: () -> Unit,
+    onToggleFavorite: () -> Unit
 ) {
+    val stream = streamWithFavorite.stream
+    
     Card(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
@@ -204,6 +212,27 @@ private fun StreamCard(
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
+            }
+            
+            // Favorite button
+            IconButton(onClick = onToggleFavorite) {
+                Icon(
+                    imageVector = if (streamWithFavorite.isFavorite) {
+                        Icons.Default.Favorite
+                    } else {
+                        Icons.Default.FavoriteBorder
+                    },
+                    contentDescription = if (streamWithFavorite.isFavorite) {
+                        "Aus Favoriten entfernen"
+                    } else {
+                        "Zu Favoriten hinzufügen"
+                    },
+                    tint = if (streamWithFavorite.isFavorite) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    }
+                )
             }
         }
     }
