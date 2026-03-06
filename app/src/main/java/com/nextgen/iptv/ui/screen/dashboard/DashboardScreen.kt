@@ -11,13 +11,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.LiveTv
 import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material3.Card
@@ -27,6 +31,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,11 +42,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.nextgen.iptv.ui.viewmodel.DashboardUiState
 import com.nextgen.iptv.ui.viewmodel.DashboardViewModel
+import com.nextgen.iptv.ui.viewmodel.MovieWithProgress
 import com.nextgen.iptv.ui.viewmodel.ProviderStatus
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -53,8 +61,10 @@ fun DashboardScreen(
     onNavigateToLiveTv: () -> Unit,
     onNavigateToVod: () -> Unit,
     onNavigateToSeries: () -> Unit,
+    onNavigateToFavorites: () -> Unit,
     onNavigateToProviderSetup: () -> Unit,
     onNavigateToSettings: () -> Unit,
+    onNavigateToPlayer: (String) -> Unit,
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -86,6 +96,8 @@ fun DashboardScreen(
             onNavigateToLiveTv = onNavigateToLiveTv,
             onNavigateToVod = onNavigateToVod,
             onNavigateToSeries = onNavigateToSeries,
+            onNavigateToFavorites = onNavigateToFavorites,
+            onNavigateToPlayer = onNavigateToPlayer,
             modifier = Modifier.padding(paddingValues)
         )
     }
@@ -98,6 +110,8 @@ private fun DashboardContent(
     onNavigateToLiveTv: () -> Unit,
     onNavigateToVod: () -> Unit,
     onNavigateToSeries: () -> Unit,
+    onNavigateToFavorites: () -> Unit,
+    onNavigateToPlayer: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -105,6 +119,29 @@ private fun DashboardContent(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        // Continue Watching Section
+        if (uiState.continueWatching.isNotEmpty()) {
+            item {
+                Text(
+                    text = "Weiterschauen",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(end = 16.dp)
+                ) {
+                    items(uiState.continueWatching) { movieWithProgress ->
+                        ContinueWatchingCard(
+                            movieWithProgress = movieWithProgress,
+                            onClick = { onNavigateToPlayer(movieWithProgress.movie.streamUrl) }
+                        )
+                    }
+                }
+            }
+        }
+        
         // Main Menu Tiles
         item {
             Text(
@@ -115,7 +152,8 @@ private fun DashboardContent(
             MenuTiles(
                 onNavigateToLiveTv = onNavigateToLiveTv,
                 onNavigateToVod = onNavigateToVod,
-                onNavigateToSeries = onNavigateToSeries
+                onNavigateToSeries = onNavigateToSeries,
+                onNavigateToFavorites = onNavigateToFavorites
             )
         }
         
@@ -157,10 +195,85 @@ private fun DashboardContent(
 }
 
 @Composable
+private fun ContinueWatchingCard(
+    movieWithProgress: MovieWithProgress,
+    onClick: () -> Unit
+) {
+    val movie = movieWithProgress.movie
+    val progressPercent = movieWithProgress.progressPercent
+    
+    Card(
+        onClick = onClick,
+        modifier = Modifier.width(140.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column {
+            // Poster with progress overlay
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+            ) {
+                AsyncImage(
+                    model = movie.logoUrl,
+                    contentDescription = movie.name,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+                
+                // Play icon overlay
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = "Weiterschauen",
+                        modifier = Modifier.size(48.dp),
+                        tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
+                    )
+                }
+                
+                // Progress bar at bottom
+                if (progressPercent > 0) {
+                    LinearProgressIndicator(
+                        progress = { progressPercent / 100f },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(4.dp)
+                            .align(Alignment.BottomCenter),
+                        color = MaterialTheme.colorScheme.primary,
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                }
+            }
+            
+            // Info
+            Column(
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text(
+                    text = movie.name,
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 2,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                )
+                Text(
+                    text = "${progressPercent}% gesehen",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun MenuTiles(
     onNavigateToLiveTv: () -> Unit,
     onNavigateToVod: () -> Unit,
-    onNavigateToSeries: () -> Unit
+    onNavigateToSeries: () -> Unit,
+    onNavigateToFavorites: () -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -190,6 +303,12 @@ private fun MenuTiles(
                 title = "Serien",
                 icon = Icons.Default.VideoLibrary,
                 onClick = onNavigateToSeries,
+                modifier = Modifier.weight(1f)
+            )
+            MenuTile(
+                title = "Favoriten",
+                icon = Icons.Default.Favorite,
+                onClick = onNavigateToFavorites,
                 modifier = Modifier.weight(1f)
             )
         }
