@@ -59,7 +59,8 @@ class SyncProviderUseCase @Inject constructor(
     }
     
     /**
-     * Full sync - Live TV + VOD + Series (can take 5-30 minutes)
+     * Full sync - Live TV + VOD + Series (Light version, 2-5 minutes)
+     * Note: Details are loaded on-demand when opening movies/series
      */
     operator fun invoke(providerId: String): Flow<SyncProgress> = flow {
         emit(SyncProgress.Starting)
@@ -235,20 +236,22 @@ class SyncProviderUseCase @Inject constructor(
         collector.emit(SyncProgress.Progress("Synchronisiere Live TV...", 15))
         syncLiveTV(api, apiUrl, providerId, baseUrl, username, password, collector)
         
-        // VOD
-        collector.emit(SyncProgress.Progress("Synchronisiere VOD...", 40))
+        // VOD (Light - no individual detail requests)
+        collector.emit(SyncProgress.Progress("Synchronisiere Filme...", 40))
         try {
             syncVOD(api, apiUrl, providerId, baseUrl, username, password)
+            collector.emit(SyncProgress.Progress("Filme synchronisiert", 65))
         } catch (e: Exception) {
-            collector.emit(SyncProgress.Progress("VOD-Sync fehlgeschlagen: ${e.message}", 70))
+            collector.emit(SyncProgress.Progress("Film-Sync fehlgeschlagen: ${e.message}", 65))
         }
         
-        // Series
+        // Series (Light - no seasons/episodes yet)
         collector.emit(SyncProgress.Progress("Synchronisiere Serien...", 70))
         try {
-            syncSeries(api, apiUrl, providerId, baseUrl, username, password)
+            syncSeries(api, apiUrl, providerId, username, password)
+            collector.emit(SyncProgress.Progress("Serien synchronisiert", 90))
         } catch (e: Exception) {
-            collector.emit(SyncProgress.Progress("Serien-Sync fehlgeschlagen: ${e.message}", 95))
+            collector.emit(SyncProgress.Progress("Serien-Sync fehlgeschlagen: ${e.message}", 90))
         }
         
         collector.emit(SyncProgress.Progress("Synchronisation abgeschlossen!", 100))
@@ -322,52 +325,27 @@ class SyncProviderUseCase @Inject constructor(
         }
         categoryRepository.addCategories(vodCategoryEntities)
         
-        // Streams - with detailed info (this can take a while)
+        // Streams - LIGHT SYNC: Only basic info, no individual API calls for details
+        // Details (plot, cast, etc.) will be loaded on-demand when opening the movie
         val vodStreams = api.getVodStreams(apiUrl, username, password)
-        val vodEntities = mutableListOf<StreamEntity>()
-        
-        vodStreams.forEach { stream ->
-            val streamId = stream.streamId ?: return@forEach
-            val vodId = "${providerId}_vod_$streamId"
-            
-            var vodEntity = StreamEntity(
-                id = vodId,
-                categoryId = stream.categoryId?.let { "${providerId}_vod_$it" } ?: "",
-                providerId = providerId,
-                name = stream.name ?: "Unknown",
-                streamUrl = XtreamCodesService.buildVodUrl(baseUrl, username, password, streamId.toString(), stream.containerExtension ?: "mp4"),
-                logoUrl = stream.streamIcon,
-                epgChannelId = null,
-                type = "vod",
-                rating = stream.rating,
-                rating5Based = stream.rating5Based,
-                added = stream.added,
-                containerExtension = stream.containerExtension
-            )
-            
-            // Get detailed info for each VOD
-            try {
-                val vodInfo = api.getVodInfo(apiUrl, username, password, vodId = streamId.toString())
-                val info = vodInfo.info
-                
-                vodEntity = vodEntity.copy(
-                    plot = info?.plot ?: info?.description,
-                    cast = info?.cast ?: info?.actors,
-                    director = info?.director,
-                    genre = info?.genre,
-                    rating = info?.rating ?: vodEntity.rating,
-                    releaseDate = info?.releaseDate ?: info?.releaseDateAlt,
-                    durationSecs = info?.durationSecs,
-                    duration = info?.duration,
-                    backdropUrl = info?.backdropPath?.firstOrNull(),
-                    youtubeTrailer = info?.youtubeTrailer,
-                    logoUrl = info?.coverBig ?: info?.movieImage ?: vodEntity.logoUrl
+        val vodEntities = vodStreams.mapNotNull { stream ->
+            stream.streamId?.let { streamId ->
+                StreamEntity(
+                    id = "${providerId}_vod_$streamId",
+                    categoryId = stream.categoryId?.let { "${providerId}_vod_$it" } ?: "",
+                    providerId = providerId,
+                    name = stream.name ?: "Unknown",
+                    streamUrl = XtreamCodesService.buildVodUrl(baseUrl, username, password, streamId.toString(), stream.containerExtension ?: "mp4"),
+                    logoUrl = stream.streamIcon,
+                    epgChannelId = null,
+                    type = "vod",
+                    rating = stream.rating,
+                    rating5Based = stream.rating5Based,
+                    added = stream.added,
+                    containerExtension = stream.containerExtension
+                    // Note: plot, cast, director, etc. will be loaded on-demand
                 )
-            } catch (e: Exception) {
-                // Continue with basic info if detail fetch fails
             }
-            
-            vodEntities.add(vodEntity)
         }
         
         streamRepository.addStreams(vodEntities)
@@ -377,7 +355,6 @@ class SyncProviderUseCase @Inject constructor(
         api: XtreamCodesApiDynamic,
         apiUrl: String,
         providerId: String,
-        baseUrl: String,
         username: String,
         password: String
     ) {
@@ -395,106 +372,36 @@ class SyncProviderUseCase @Inject constructor(
         }
         categoryRepository.addCategories(seriesCatEntities)
         
-        // Series list
+        // Series list - LIGHT SYNC: Only basic info from list endpoint
+        // Full details (seasons, episodes) will be loaded on-demand when opening a series
         val seriesList = api.getSeries(apiUrl, username, password)
         
-        val seriesEntities = mutableListOf<SeriesEntity>()
-        val seasonEntities = mutableListOf<SeasonEntity>()
-        val episodeEntities = mutableListOf<EpisodeEntity>()
-        
-        seriesList.forEach { seriesDto ->
-            val seriesId = seriesDto.seriesId?.toString() ?: return@forEach
-            
-            val seriesEntity = SeriesEntity(
-                id = "${providerId}_series_$seriesId",
-                providerId = providerId,
-                categoryId = seriesDto.categoryId?.let { "${providerId}_series_$it" } ?: "",
-                name = seriesDto.name ?: "Unknown",
-                plot = seriesDto.plot,
-                posterUrl = seriesDto.cover,
-                backdropUrl = seriesDto.backdropPath?.firstOrNull(),
-                rating = seriesDto.rating5Based?.toString() ?: seriesDto.rating,
-                releaseDate = seriesDto.releaseDate,
-                genre = seriesDto.genre,
-                cast = seriesDto.cast,
-                director = seriesDto.director,
-                episodeRunTime = seriesDto.episodeRunTime,
-                totalSeasons = 0,
-                totalEpisodes = 0
-            )
-            seriesEntities.add(seriesEntity)
-            
-            // Get detailed series info for seasons and episodes
-            try {
-                val seriesInfo = api.getSeriesInfo(apiUrl, username, password, seriesId = seriesId)
-                
-                // Parse seasons
-                seriesInfo.seasons?.forEach { seasonDto ->
-                    val seasonId = "${providerId}_series_${seriesId}_season_${seasonDto.seasonNumber}"
-                    val seasonEntity = SeasonEntity(
-                        id = seasonId,
-                        seriesId = seriesEntity.id,
-                        seasonNumber = seasonDto.seasonNumber ?: 0,
-                        name = seasonDto.name ?: "Staffel ${seasonDto.seasonNumber}",
-                        episodeCount = seasonDto.episodeCount ?: 0,
-                        posterUrl = seasonDto.coverBig ?: seasonDto.cover
-                    )
-                    seasonEntities.add(seasonEntity)
-                }
-                
-                // Parse episodes
-                seriesInfo.episodes?.forEach { (seasonNumStr, episodes) ->
-                    val seasonNumber = seasonNumStr.toIntOrNull() ?: 0
-                    
-                    episodes.forEach { episodeDto ->
-                        val episodeId = episodeDto.id ?: UUID.randomUUID().toString()
-                        val seasonId = "${providerId}_series_${seriesId}_season_$seasonNumber"
-                        
-                        val episodeEntity = EpisodeEntity(
-                            id = "${providerId}_episode_$episodeId",
-                            seriesId = seriesEntity.id,
-                            seasonId = seasonId,
-                            episodeNumber = episodeDto.episodeNum ?: 0,
-                            seasonNumber = seasonNumber,
-                            name = episodeDto.title ?: episodeDto.info?.name ?: "Episode ${episodeDto.episodeNum}",
-                            plot = episodeDto.info?.plot,
-                            posterUrl = episodeDto.info?.movieImage,
-                            durationSec = episodeDto.info?.durationSecs,
-                            streamUrl = XtreamCodesService.buildSeriesUrl(
-                                baseUrl, username, password, episodeId, episodeDto.containerExtension ?: "mp4"
-                            ),
-                            containerExtension = episodeDto.containerExtension,
-                            added = episodeDto.added,
-                            rating = episodeDto.info?.rating
-                        )
-                        episodeEntities.add(episodeEntity)
-                    }
-                }
-                
-                // Update series with counts
-                val updatedSeries = seriesEntity.copy(
-                    totalSeasons = seriesInfo.seasons?.size ?: 0,
-                    totalEpisodes = episodeEntities.count { it.seriesId == seriesEntity.id }
+        val seriesEntities = seriesList.mapNotNull { seriesDto ->
+            seriesDto.seriesId?.toString()?.let { seriesId ->
+                SeriesEntity(
+                    id = "${providerId}_series_$seriesId",
+                    providerId = providerId,
+                    categoryId = seriesDto.categoryId?.let { "${providerId}_series_$it" } ?: "",
+                    name = seriesDto.name ?: "Unknown",
+                    plot = seriesDto.plot,
+                    posterUrl = seriesDto.cover,
+                    backdropUrl = seriesDto.backdropPath?.firstOrNull(),
+                    rating = seriesDto.rating5Based?.toString() ?: seriesDto.rating,
+                    releaseDate = seriesDto.releaseDate,
+                    genre = seriesDto.genre,
+                    cast = seriesDto.cast,
+                    director = seriesDto.director,
+                    episodeRunTime = seriesDto.episodeRunTime,
+                    totalSeasons = 0, // Will be loaded on-demand
+                    totalEpisodes = 0 // Will be loaded on-demand
+                    // Note: Seasons and episodes will be loaded on-demand when opening the series
                 )
-                val index = seriesEntities.indexOf(seriesEntity)
-                if (index != -1) {
-                    seriesEntities[index] = updatedSeries
-                }
-                
-            } catch (e: Exception) {
-                // Continue with next series if one fails
             }
         }
         
         // Save to database
         if (seriesEntities.isNotEmpty()) {
             seriesRepository.insertSeries(seriesEntities)
-        }
-        if (seasonEntities.isNotEmpty()) {
-            seriesRepository.insertSeasons(seasonEntities)
-        }
-        if (episodeEntities.isNotEmpty()) {
-            seriesRepository.insertEpisodes(episodeEntities)
         }
     }
 }
