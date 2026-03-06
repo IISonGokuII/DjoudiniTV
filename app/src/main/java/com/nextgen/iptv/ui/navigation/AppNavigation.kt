@@ -52,7 +52,10 @@ fun AppNavigation(
                 onNavigateToVod = { navController.navigate(NavRoutes.VOD) },
                 onNavigateToSeries = { navController.navigate(NavRoutes.SERIES) },
                 onNavigateToProviderSetup = { navController.navigate(NavRoutes.PROVIDER_SETUP) },
-                onNavigateToSettings = { navController.navigate(NavRoutes.SETTINGS) }
+                onNavigateToSettings = { navController.navigate(NavRoutes.SETTINGS) },
+                onNavigateToPlayer = { streamUrl ->
+                    navController.navigate(NavRoutes.playerRoute(streamUrl))
+                }
             )
         }
         
