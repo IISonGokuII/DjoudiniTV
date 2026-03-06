@@ -119,18 +119,14 @@ fun OnboardingScreen(
                         onServerUrlChange = viewModel::updateServerUrl,
                         onUsernameChange = viewModel::updateUsername,
                         onPasswordChange = viewModel::updatePassword,
-                        onConnect = {
-                            viewModel.connectProvider { /* onComplete callback - steps handled by ViewModel */ }
-                        }
+                        onConnect = { viewModel.connectProvider() }
                     )
                     is OnboardingStep.M3UUrl -> M3UUrlStep(
                         url = uiState.m3uUrl,
                         isLoading = uiState.isLoading,
                         error = uiState.error,
                         onUrlChange = viewModel::updateM3uUrl,
-                        onConnect = {
-                            viewModel.connectProvider { /* onComplete callback - steps handled by ViewModel */ }
-                        }
+                        onConnect = { viewModel.connectProvider() }
                     )
                     is OnboardingStep.Validating -> ValidatingStep(
                         message = uiState.validationMessage
@@ -139,8 +135,20 @@ fun OnboardingScreen(
                         message = uiState.syncMessage,
                         progress = uiState.syncProgress
                     )
-                    // Category selection steps removed for faster onboarding
-                    // Categories can be filtered in the main app
+                    is OnboardingStep.CategorySelection -> CategorySelectionStep(
+                        title = "Kategorien wahlen",
+                        subtitle = "Welche Live TV Kategorien mochtest du sehen?",
+                        icon = Icons.Default.LiveTv,
+                        categories = step.categories,
+                        selectedIds = uiState.selectedCategories,
+                        onToggle = viewModel::toggleCategory,
+                        onSelectAll = { viewModel.selectAllCategories(step.categories) },
+                        onDeselectAll = viewModel::deselectAllCategories,
+                        onContinue = {
+                            viewModel.saveOnboardingComplete()
+                            onComplete()
+                        }
+                    )
                     is OnboardingStep.Complete -> CompleteStep(
                         onFinish = onComplete
                     )
@@ -157,9 +165,9 @@ private fun calculateProgress(state: OnboardingUiState): Float {
         is OnboardingStep.XtreamLogin -> 0.3f
         is OnboardingStep.M3UUrl -> 0.3f
         is OnboardingStep.Validating -> 0.4f
-        is OnboardingStep.Syncing -> 0.4f + (state.syncProgress / 100f * 0.5f)
+        is OnboardingStep.Syncing -> 0.4f + (state.syncProgress / 100f * 0.4f)
+        is OnboardingStep.CategorySelection -> 0.9f
         is OnboardingStep.Complete -> 1f
-        else -> 0.5f
     }
 }
 

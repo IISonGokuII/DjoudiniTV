@@ -1,0 +1,819 @@
+-- Merging decision tree log ---
+provider#androidx.startup.InitializationProvider
+INJECTED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:46:9-54:20
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:29:9-37:20
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:29:9-37:20
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\586efd1e0a6afb519e8e30685c8f7d0b\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\586efd1e0a6afb519e8e30685c8f7d0b\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dcc7ae4f268c578b55c1b5c51eb649f8\transformed\lifecycle-process-2.8.0\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dcc7ae4f268c578b55c1b5c51eb649f8\transformed\lifecycle-process-2.8.0\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\51c71a710cb917f27de4120f210052b8\transformed\startup-runtime-1.1.1\AndroidManifest.xml:26:9-30:34
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\51c71a710cb917f27de4120f210052b8\transformed\startup-runtime-1.1.1\AndroidManifest.xml:26:9-30:34
+	tools:node
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:50:13-31
+	android:authorities
+		INJECTED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:48:13-68
+	android:exported
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:49:13-37
+	android:name
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:47:13-67
+manifest
+ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:2:1-58:12
+INJECTED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:2:1-58:12
+INJECTED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:2:1-58:12
+INJECTED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:2:1-58:12
+MERGED from [androidx.paging:paging-compose-android:3.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\25fd0f004db5c7e9cf5ebc29ab96439f\transformed\paging-compose-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.hilt:hilt-work:1.2.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d67adcf9cfe5011ca9a3311ae6477224\transformed\hilt-work-1.2.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.work:work-runtime-ktx:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\39ce4a2086eb910e7cd3e0fa24211ec9\transformed\work-runtime-ktx-2.9.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:17:1-145:12
+MERGED from [androidx.room:room-ktx:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\8752e117ca65af4e4a40dbee71bf34d8\transformed\room-ktx-2.6.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.room:room-runtime:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a9b0e86b2b14db9a2574d487973b80ab\transformed\room-runtime-2.6.1\AndroidManifest.xml:17:1-31:12
+MERGED from [androidx.room:room-paging:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\90ca251451ab81b722e3ec183f3fd098\transformed\room-paging-2.6.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.paging:paging-common-android:3.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\3c4070707666615403bf4e992e943885\transformed\paging-common-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.paging:paging-runtime:3.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\419a2f886adb64d312f75d3be6d8ceda\transformed\paging-runtime-3.3.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.window:window:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\17e7bfe0b896932ae601e9820bd6afde\transformed\window-1.3.0\AndroidManifest.xml:17:1-31:12
+MERGED from [androidx.leanback:leanback:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\f840fa50e4adae741ecbedaddc3cfd20\transformed\leanback-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-ui:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\346d6cb227d594661217025ea197e63e\transformed\media3-ui-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-session:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\7c13fa28ed40d4b65def8d1b68f72db7\transformed\media3-session-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-datasource-okhttp:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\db0c497b0cf9b8c5a206997cfdf83952\transformed\media3-datasource-okhttp-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-extractor:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4dd2e7af85bec0cfa6d9a99510d3964d\transformed\media3-extractor-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-container:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\46436c2f9729a9cbfcda5e533718cfd5\transformed\media3-container-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-datasource:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\5080c71e12aeeb45074370d41aea23fd\transformed\media3-datasource-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-decoder:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\f120107dd2aa26a9a7dcef120b43f7c4\transformed\media3-decoder-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-database:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9d319ce1c1d5af1897e3a5d82c78cbde\transformed\media3-database-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-common:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\011b80364c20b18f579f1823c157de47\transformed\media3-common-1.3.1\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.media3:media3-exoplayer-hls:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4a5e0778dfeb34bf369a25218dd7156e\transformed\media3-exoplayer-hls-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-exoplayer-dash:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\3704ff39950fa8546e1aa5473ef03f7e\transformed\media3-exoplayer-dash-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-exoplayer:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\485d64bca5d88225d2cbeb6bb11c262d\transformed\media3-exoplayer-1.3.1\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\1c6ed6d42927b7b4fc2ed87f8d777a49\transformed\legacy-support-core-ui-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media:media:1.7.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\b49bb6cb9a2780116f8f4c1d07e7657e\transformed\media-1.7.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.recyclerview:recyclerview:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4e74dc2812ba5faa3e60359d8357b38a\transformed\recyclerview-1.3.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.hilt:hilt-navigation-compose:1.2.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\aaa175f73398e5144bf1ddd307b4bca6\transformed\hilt-navigation-compose-1.2.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.hilt:hilt-navigation:1.2.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a86dc12323cee4dfd62582cb87e46568\transformed\hilt-navigation-1.2.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.navigation:navigation-common:2.7.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\bb09431e53aa62b3643ca04a5e97e739\transformed\navigation-common-2.7.7\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.navigation:navigation-runtime:2.7.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\6a74ed305d3cf3934c9ca2a28743e896\transformed\navigation-runtime-2.7.7\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.navigation:navigation-common-ktx:2.7.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\0dcc52fac9f7e07b61310166d25fbf57\transformed\navigation-common-ktx-2.7.7\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.navigation:navigation-runtime-ktx:2.7.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\8c45c004a85e454caf3bf0ff74a04fdc\transformed\navigation-runtime-ktx-2.7.7\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.navigation:navigation-compose:2.7.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9c08a28b3b3cbf43a9aab9e8947fbac8\transformed\navigation-compose-2.7.7\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material3:material3-android:1.2.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dadbb9f61ab80863131870d8597b4f4a\transformed\material3-release\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.tv:tv-material:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\6ad5b9d7050f05331625387f61d9068f\transformed\tv-material-1.0.0\AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.dagger:hilt-android:2.51] C:\Users\WhatsappBot\.gradle\caches\transforms-4\44838ca0b85d241fe7a1f19980da58f3\transformed\hilt-android-2.51\AndroidManifest.xml:16:1-19:12
+MERGED from [androidx.fragment:fragment:1.5.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\c00914a805e8743a581371d8ea62c707\transformed\fragment-1.5.1\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\688373f65fcc3d4ded4b482448188318\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9760a416f08fc0d20be4ccc8978c2390\transformed\loader-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [io.coil-kt:coil-compose:2.6.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\ef71dae1b8f01d3818962f52e83db92f\transformed\coil-compose-2.6.0\AndroidManifest.xml:2:1-7:12
+MERGED from [io.coil-kt:coil-compose-base:2.6.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\33e747deafbdbe34d57a5e4e60a4876c\transformed\coil-compose-base-2.6.0\AndroidManifest.xml:2:1-7:12
+MERGED from [io.coil-kt:coil:2.6.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\f4090ea99c24025b33ff0b0d8dfd51e9\transformed\coil-2.6.0\AndroidManifest.xml:2:1-7:12
+MERGED from [io.coil-kt:coil-base:2.6.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d96052d8254ff4cdb73187896a291a74\transformed\coil-base-2.6.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material:material-ripple-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\65ebd6075bc65ab6344658db0c7abcf1\transformed\material-ripple-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material:material-icons-extended-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\5b8d03d313842ff34e36536ab301f7e8\transformed\material-icons-extended-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material:material-icons-core-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\0f77584e0e576a70b34624a181a289ae\transformed\material-icons-core-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material:material-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\2e766e4b86ab8756e12c759afe37894f\transformed\material-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.animation:animation-core-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\c199cfb23b48a50b132cdf8074f43c04\transformed\animation-core-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.animation:animation-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\1bfbf1cf0aea16de6269e8aaa6f4d8e1\transformed\animation-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\3d6d4154c31619b00636ad6d14f64bed\transformed\foundation-layout-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.foundation:foundation-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\557a1f26c93482f4c577459f641a2f07\transformed\foundation-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-tooling-data-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\fbeaa0eb53d678a043bbd6d2519e38c8\transformed\ui-tooling-data-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-unit-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d96d633ea63931b88ae7987cf6dba473\transformed\ui-unit-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d2759705e13fb90d77f1d000379d22b4\transformed\ui-tooling-preview-release\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.compose.ui:ui-geometry-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\704795d2f805f3536736898ac8fa1769\transformed\ui-geometry-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-util-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\ccb03b12f93c884619cf851fcdac7c11\transformed\ui-util-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-graphics-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d17340be51007a90de77dc78bad1c099\transformed\ui-graphics-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-text-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\f26a5f393d9b0f1267769c6874350793\transformed\ui-text-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\586efd1e0a6afb519e8e30685c8f7d0b\transformed\emoji2-1.3.0\AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dcc7ae4f268c578b55c1b5c51eb649f8\transformed\lifecycle-process-2.8.0\AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d8607a8f99e65be616dfcdd963e78e08\transformed\lifecycle-viewmodel-2.8.0\AndroidManifest.xml:2:1-5:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9a185bcbe5d72b4a6a9516fce59c376f\transformed\lifecycle-viewmodel-release\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\08a741c73fb449e798666612bf95ea1a\transformed\lifecycle-livedata-core-ktx-2.8.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\1e62b8e64cee125a74a830b721770e82\transformed\savedstate-ktx-1.2.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.savedstate:savedstate:1.2.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\72f38ab2bf109dca000d79830589e7f3\transformed\savedstate-1.2.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e34ae99ae424953d2a8a30f6e4d24da0\transformed\lifecycle-runtime-release\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-service:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e58b77ee1fd2d97974d40f2bf1784620\transformed\lifecycle-service-2.8.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\06e999b0062f6ca36fb2e9d0c0699131\transformed\lifecycle-livedata-2.8.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\b5ea7aa1934c194257b2477eb34f5438\transformed\lifecycle-livedata-core-2.8.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dbfdf0f0487fd24a1e244efcd840a21e\transformed\lifecycle-viewmodel-savedstate-2.8.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\880a1014cc9b22dddc5d960fbd80513d\transformed\lifecycle-viewmodel-ktx-2.8.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-ktx:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\6bf5a68752def192eb52b217b560e564\transformed\lifecycle-livedata-ktx-2.8.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d01ef95920b37b9d00be4e9da9b602ab\transformed\lifecycle-runtime-ktx-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-compose-android:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a0c99679684985bf9ef497e5661b1901\transformed\lifecycle-viewmodel-compose-release\AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.accompanist:accompanist-drawablepainter:0.32.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\8ac553c954b3608d4849780608e0093f\transformed\accompanist-drawablepainter-0.32.0\AndroidManifest.xml:17:1-23:12
+MERGED from [androidx.compose.ui:ui-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\b89da6647080666bc0388750c9296134\transformed\ui-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\47ba746207fe2cf57dc445a7c34ae97e\transformed\ui-tooling-release\AndroidManifest.xml:17:1-28:12
+MERGED from [androidx.activity:activity-compose:1.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\761a0f782ff02a42297ec95cf4947f98\transformed\activity-compose-1.9.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.activity:activity-ktx:1.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\86fdae38a618fd05a4e1f3d1eb4e2188\transformed\activity-ktx-1.9.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.activity:activity:1.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9f7dd850757861e733e3f3ca6df70177\transformed\activity-1.9.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\accad1aa661c0b83860dff538f641f9f\transformed\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d309e61c7c0c49e4b162df639e01d816\transformed\coordinatorlayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\40d6dc41d72d2ceeb2e834ee0467e9fb\transformed\drawerlayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4ccab775f95b3915bb1c5f2899594ac6\transformed\slidingpanelayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\8c68451fab71e50eb8bb2858242d1ae9\transformed\customview-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\bb0624ec554de31d2ba96ad6c73c571f\transformed\swiperefreshlayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4c104afa76b5405e342fd502f30e0d81\transformed\asynclayoutinflater-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.autofill:autofill:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\b0757287621398adcc160072d4353ac3\transformed\autofill-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\50dd32a70f55142c93ecfdb8eb114be6\transformed\appcompat-resources-1.6.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\21af13e453aa7c2fc1f7f73d8f72aee0\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\2d88040b69c9645ba28762349ce53b30\transformed\vectordrawable-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:17:1-30:12
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\04ecc4501d7a316169f8ef1c71b9390f\transformed\customview-poolingcontainer-1.0.0\AndroidManifest.xml:17:1-23:12
+MERGED from [androidx.core:core-ktx:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9f9fc864eb637e0d856259b1729d857f\transformed\core-ktx-1.13.1\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.core:core-splashscreen:1.0.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\3edc1a5ebf6bdf024163c5eaf34913b6\transformed\core-splashscreen-1.0.1\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.window.extensions.core:core:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\7a48bf8e10571488d1394e7d780edbed\transformed\core-1.0.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.sqlite:sqlite-framework:2.4.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\c41d72260a1f7f523bf4727ae9ef2e9c\transformed\sqlite-framework-2.4.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.sqlite:sqlite:2.4.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\1cced381d4cc13f5564251297d45abea\transformed\sqlite-2.4.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.datastore:datastore-core-android:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\09b763c265d104589d3611d208985a32\transformed\datastore-core-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.datastore:datastore-android:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9e0d1dac04d4dd733367e605b841f217\transformed\datastore-release\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.datastore:datastore-preferences-android:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\7bb3eee4cd47ad88328a875049b200c2\transformed\datastore-preferences-release\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.annotation:annotation-experimental:1.4.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\3bf3e08cb5a86545885d076e0145c121\transformed\annotation-experimental-1.4.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:17:1-55:12
+MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\f4920ea7a46ca7dc413109367c99b8c5\transformed\core-runtime-2.2.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d88cd7284a5b27fd234feea4e1040e0f\transformed\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\415de916946b16f6a53ddf9b3c672249\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\5142190b41a652a424498563e72f3f65\transformed\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\51c71a710cb917f27de4120f210052b8\transformed\startup-runtime-1.1.1\AndroidManifest.xml:17:1-33:12
+MERGED from [androidx.tracing:tracing:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\82c7f73f2b1dbc8a27e031409ead293b\transformed\tracing-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d5a6e1b5beb094ee31b19872c85d7722\transformed\documentfile-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\bf3083620a3de863ff4f52d4ec3332b3\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.print:print:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a22afd5e1f1eb33704d976a0d296fe14\transformed\print-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.exifinterface:exifinterface:1.3.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\1e8118e1d63bae7db02a6b0fe926e848\transformed\exifinterface-1.3.7\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.compose.runtime:runtime-saveable-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\212a924f84aa677f39c501a9e696eae5\transformed\runtime-saveable-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.runtime:runtime-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\0a25ae5bea4a741242c07f6561c3bf17\transformed\runtime-release\AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.dagger:dagger-lint-aar:2.51] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4c9948a36b813504100b382e0e7a0a9a\transformed\dagger-lint-aar-2.51\AndroidManifest.xml:16:1-19:12
+	package
+		INJECTED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml
+	xmlns:tools
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:3:5-51
+	android:versionCode
+		INJECTED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.INTERNET
+ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:5:5-67
+	android:name
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:5:22-64
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:6:5-79
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:24:5-79
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:24:5-79
+MERGED from [androidx.media3:media3-common:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\011b80364c20b18f579f1823c157de47\transformed\media3-common-1.3.1\AndroidManifest.xml:22:5-79
+MERGED from [androidx.media3:media3-common:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\011b80364c20b18f579f1823c157de47\transformed\media3-common-1.3.1\AndroidManifest.xml:22:5-79
+MERGED from [androidx.media3:media3-exoplayer:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\485d64bca5d88225d2cbeb6bb11c262d\transformed\media3-exoplayer-1.3.1\AndroidManifest.xml:22:5-79
+MERGED from [androidx.media3:media3-exoplayer:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\485d64bca5d88225d2cbeb6bb11c262d\transformed\media3-exoplayer-1.3.1\AndroidManifest.xml:22:5-79
+	android:name
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:6:22-76
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:7:5-8:38
+	android:maxSdkVersion
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:8:9-35
+	android:name
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:7:22-77
+uses-feature#android.software.leanback
+ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:11:5-89
+	android:required
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:11:62-86
+	android:name
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:11:19-59
+uses-feature#android.hardware.touchscreen
+ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:12:5-90
+	android:required
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:12:63-87
+	android:name
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:12:19-62
+application
+ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:14:5-56:19
+INJECTED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:14:5-56:19
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:28:5-143:19
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:28:5-143:19
+MERGED from [androidx.room:room-runtime:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a9b0e86b2b14db9a2574d487973b80ab\transformed\room-runtime-2.6.1\AndroidManifest.xml:23:5-29:19
+MERGED from [androidx.room:room-runtime:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a9b0e86b2b14db9a2574d487973b80ab\transformed\room-runtime-2.6.1\AndroidManifest.xml:23:5-29:19
+MERGED from [androidx.window:window:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\17e7bfe0b896932ae601e9820bd6afde\transformed\window-1.3.0\AndroidManifest.xml:22:5-29:19
+MERGED from [androidx.window:window:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\17e7bfe0b896932ae601e9820bd6afde\transformed\window-1.3.0\AndroidManifest.xml:22:5-29:19
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\586efd1e0a6afb519e8e30685c8f7d0b\transformed\emoji2-1.3.0\AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\586efd1e0a6afb519e8e30685c8f7d0b\transformed\emoji2-1.3.0\AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dcc7ae4f268c578b55c1b5c51eb649f8\transformed\lifecycle-process-2.8.0\AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dcc7ae4f268c578b55c1b5c51eb649f8\transformed\lifecycle-process-2.8.0\AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\47ba746207fe2cf57dc445a7c34ae97e\transformed\ui-tooling-release\AndroidManifest.xml:22:5-26:19
+MERGED from [androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\47ba746207fe2cf57dc445a7c34ae97e\transformed\ui-tooling-release\AndroidManifest.xml:22:5-26:19
+MERGED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:28:5-89
+MERGED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:28:5-89
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\415de916946b16f6a53ddf9b3c672249\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\415de916946b16f6a53ddf9b3c672249\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\51c71a710cb917f27de4120f210052b8\transformed\startup-runtime-1.1.1\AndroidManifest.xml:25:5-31:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\51c71a710cb917f27de4120f210052b8\transformed\startup-runtime-1.1.1\AndroidManifest.xml:25:5-31:19
+	android:extractNativeLibs
+		INJECTED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
+	android:supportsRtl
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:22:9-35
+	android:label
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:20:9-41
+	android:roundIcon
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:18:9-54
+	android:icon
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:17:9-43
+	android:allowBackup
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:16:9-35
+	android:banner
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:19:9-45
+	android:theme
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:23:9-49
+	android:networkSecurityConfig
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:21:9-69
+	android:name
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:15:9-39
+activity#com.nextgen.iptv.MainActivity
+ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:25:9-43:20
+	android:windowSoftInputMode
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:29:13-55
+	android:exported
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:27:13-36
+	android:configChanges
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:28:13-91
+	android:name
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:26:13-41
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:32:13-35:29
+action#android.intent.action.MAIN
+ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:33:17-69
+	android:name
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:33:25-66
+category#android.intent.category.LAUNCHER
+ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:34:17-77
+	android:name
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:34:27-74
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LEANBACK_LAUNCHER
+ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:38:13-41:29
+category#android.intent.category.LEANBACK_LAUNCHER
+ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:40:17-86
+	android:name
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:40:27-83
+meta-data#androidx.work.WorkManagerInitializer
+ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:51:13-53:39
+REJECTED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:34:13-36:52
+	tools:node
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:53:17-36
+	android:name
+		ADDED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml:52:17-68
+uses-sdk
+INJECTED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml
+MERGED from [androidx.paging:paging-compose-android:3.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\25fd0f004db5c7e9cf5ebc29ab96439f\transformed\paging-compose-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.paging:paging-compose-android:3.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\25fd0f004db5c7e9cf5ebc29ab96439f\transformed\paging-compose-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.hilt:hilt-work:1.2.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d67adcf9cfe5011ca9a3311ae6477224\transformed\hilt-work-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.hilt:hilt-work:1.2.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d67adcf9cfe5011ca9a3311ae6477224\transformed\hilt-work-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.work:work-runtime-ktx:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\39ce4a2086eb910e7cd3e0fa24211ec9\transformed\work-runtime-ktx-2.9.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.work:work-runtime-ktx:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\39ce4a2086eb910e7cd3e0fa24211ec9\transformed\work-runtime-ktx-2.9.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.room:room-ktx:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\8752e117ca65af4e4a40dbee71bf34d8\transformed\room-ktx-2.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.room:room-ktx:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\8752e117ca65af4e4a40dbee71bf34d8\transformed\room-ktx-2.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.room:room-runtime:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a9b0e86b2b14db9a2574d487973b80ab\transformed\room-runtime-2.6.1\AndroidManifest.xml:21:5-44
+MERGED from [androidx.room:room-runtime:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a9b0e86b2b14db9a2574d487973b80ab\transformed\room-runtime-2.6.1\AndroidManifest.xml:21:5-44
+MERGED from [androidx.room:room-paging:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\90ca251451ab81b722e3ec183f3fd098\transformed\room-paging-2.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.room:room-paging:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\90ca251451ab81b722e3ec183f3fd098\transformed\room-paging-2.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.paging:paging-common-android:3.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\3c4070707666615403bf4e992e943885\transformed\paging-common-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.paging:paging-common-android:3.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\3c4070707666615403bf4e992e943885\transformed\paging-common-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.paging:paging-runtime:3.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\419a2f886adb64d312f75d3be6d8ceda\transformed\paging-runtime-3.3.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.paging:paging-runtime:3.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\419a2f886adb64d312f75d3be6d8ceda\transformed\paging-runtime-3.3.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.window:window:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\17e7bfe0b896932ae601e9820bd6afde\transformed\window-1.3.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.window:window:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\17e7bfe0b896932ae601e9820bd6afde\transformed\window-1.3.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.leanback:leanback:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\f840fa50e4adae741ecbedaddc3cfd20\transformed\leanback-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.leanback:leanback:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\f840fa50e4adae741ecbedaddc3cfd20\transformed\leanback-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-ui:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\346d6cb227d594661217025ea197e63e\transformed\media3-ui-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-ui:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\346d6cb227d594661217025ea197e63e\transformed\media3-ui-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-session:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\7c13fa28ed40d4b65def8d1b68f72db7\transformed\media3-session-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-session:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\7c13fa28ed40d4b65def8d1b68f72db7\transformed\media3-session-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-datasource-okhttp:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\db0c497b0cf9b8c5a206997cfdf83952\transformed\media3-datasource-okhttp-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-datasource-okhttp:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\db0c497b0cf9b8c5a206997cfdf83952\transformed\media3-datasource-okhttp-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-extractor:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4dd2e7af85bec0cfa6d9a99510d3964d\transformed\media3-extractor-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-extractor:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4dd2e7af85bec0cfa6d9a99510d3964d\transformed\media3-extractor-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-container:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\46436c2f9729a9cbfcda5e533718cfd5\transformed\media3-container-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-container:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\46436c2f9729a9cbfcda5e533718cfd5\transformed\media3-container-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-datasource:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\5080c71e12aeeb45074370d41aea23fd\transformed\media3-datasource-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-datasource:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\5080c71e12aeeb45074370d41aea23fd\transformed\media3-datasource-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-decoder:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\f120107dd2aa26a9a7dcef120b43f7c4\transformed\media3-decoder-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-decoder:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\f120107dd2aa26a9a7dcef120b43f7c4\transformed\media3-decoder-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-database:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9d319ce1c1d5af1897e3a5d82c78cbde\transformed\media3-database-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-database:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9d319ce1c1d5af1897e3a5d82c78cbde\transformed\media3-database-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-common:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\011b80364c20b18f579f1823c157de47\transformed\media3-common-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-common:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\011b80364c20b18f579f1823c157de47\transformed\media3-common-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-exoplayer-hls:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4a5e0778dfeb34bf369a25218dd7156e\transformed\media3-exoplayer-hls-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-exoplayer-hls:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4a5e0778dfeb34bf369a25218dd7156e\transformed\media3-exoplayer-hls-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-exoplayer-dash:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\3704ff39950fa8546e1aa5473ef03f7e\transformed\media3-exoplayer-dash-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-exoplayer-dash:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\3704ff39950fa8546e1aa5473ef03f7e\transformed\media3-exoplayer-dash-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-exoplayer:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\485d64bca5d88225d2cbeb6bb11c262d\transformed\media3-exoplayer-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-exoplayer:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\485d64bca5d88225d2cbeb6bb11c262d\transformed\media3-exoplayer-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\1c6ed6d42927b7b4fc2ed87f8d777a49\transformed\legacy-support-core-ui-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\1c6ed6d42927b7b4fc2ed87f8d777a49\transformed\legacy-support-core-ui-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media:media:1.7.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\b49bb6cb9a2780116f8f4c1d07e7657e\transformed\media-1.7.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.media:media:1.7.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\b49bb6cb9a2780116f8f4c1d07e7657e\transformed\media-1.7.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4e74dc2812ba5faa3e60359d8357b38a\transformed\recyclerview-1.3.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4e74dc2812ba5faa3e60359d8357b38a\transformed\recyclerview-1.3.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.hilt:hilt-navigation-compose:1.2.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\aaa175f73398e5144bf1ddd307b4bca6\transformed\hilt-navigation-compose-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.hilt:hilt-navigation-compose:1.2.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\aaa175f73398e5144bf1ddd307b4bca6\transformed\hilt-navigation-compose-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.hilt:hilt-navigation:1.2.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a86dc12323cee4dfd62582cb87e46568\transformed\hilt-navigation-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.hilt:hilt-navigation:1.2.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a86dc12323cee4dfd62582cb87e46568\transformed\hilt-navigation-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-common:2.7.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\bb09431e53aa62b3643ca04a5e97e739\transformed\navigation-common-2.7.7\AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-common:2.7.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\bb09431e53aa62b3643ca04a5e97e739\transformed\navigation-common-2.7.7\AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-runtime:2.7.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\6a74ed305d3cf3934c9ca2a28743e896\transformed\navigation-runtime-2.7.7\AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-runtime:2.7.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\6a74ed305d3cf3934c9ca2a28743e896\transformed\navigation-runtime-2.7.7\AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-common-ktx:2.7.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\0dcc52fac9f7e07b61310166d25fbf57\transformed\navigation-common-ktx-2.7.7\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-common-ktx:2.7.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\0dcc52fac9f7e07b61310166d25fbf57\transformed\navigation-common-ktx-2.7.7\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-runtime-ktx:2.7.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\8c45c004a85e454caf3bf0ff74a04fdc\transformed\navigation-runtime-ktx-2.7.7\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-runtime-ktx:2.7.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\8c45c004a85e454caf3bf0ff74a04fdc\transformed\navigation-runtime-ktx-2.7.7\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-compose:2.7.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9c08a28b3b3cbf43a9aab9e8947fbac8\transformed\navigation-compose-2.7.7\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-compose:2.7.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9c08a28b3b3cbf43a9aab9e8947fbac8\transformed\navigation-compose-2.7.7\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material3:material3-android:1.2.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dadbb9f61ab80863131870d8597b4f4a\transformed\material3-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.material3:material3-android:1.2.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dadbb9f61ab80863131870d8597b4f4a\transformed\material3-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.tv:tv-material:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\6ad5b9d7050f05331625387f61d9068f\transformed\tv-material-1.0.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.tv:tv-material:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\6ad5b9d7050f05331625387f61d9068f\transformed\tv-material-1.0.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.dagger:hilt-android:2.51] C:\Users\WhatsappBot\.gradle\caches\transforms-4\44838ca0b85d241fe7a1f19980da58f3\transformed\hilt-android-2.51\AndroidManifest.xml:18:3-42
+MERGED from [com.google.dagger:hilt-android:2.51] C:\Users\WhatsappBot\.gradle\caches\transforms-4\44838ca0b85d241fe7a1f19980da58f3\transformed\hilt-android-2.51\AndroidManifest.xml:18:3-42
+MERGED from [androidx.fragment:fragment:1.5.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\c00914a805e8743a581371d8ea62c707\transformed\fragment-1.5.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.5.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\c00914a805e8743a581371d8ea62c707\transformed\fragment-1.5.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\688373f65fcc3d4ded4b482448188318\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\688373f65fcc3d4ded4b482448188318\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9760a416f08fc0d20be4ccc8978c2390\transformed\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9760a416f08fc0d20be4ccc8978c2390\transformed\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [io.coil-kt:coil-compose:2.6.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\ef71dae1b8f01d3818962f52e83db92f\transformed\coil-compose-2.6.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-compose:2.6.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\ef71dae1b8f01d3818962f52e83db92f\transformed\coil-compose-2.6.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-compose-base:2.6.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\33e747deafbdbe34d57a5e4e60a4876c\transformed\coil-compose-base-2.6.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-compose-base:2.6.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\33e747deafbdbe34d57a5e4e60a4876c\transformed\coil-compose-base-2.6.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil:2.6.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\f4090ea99c24025b33ff0b0d8dfd51e9\transformed\coil-2.6.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil:2.6.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\f4090ea99c24025b33ff0b0d8dfd51e9\transformed\coil-2.6.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-base:2.6.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d96052d8254ff4cdb73187896a291a74\transformed\coil-base-2.6.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-base:2.6.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d96052d8254ff4cdb73187896a291a74\transformed\coil-base-2.6.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-ripple-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\65ebd6075bc65ab6344658db0c7abcf1\transformed\material-ripple-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-ripple-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\65ebd6075bc65ab6344658db0c7abcf1\transformed\material-ripple-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-icons-extended-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\5b8d03d313842ff34e36536ab301f7e8\transformed\material-icons-extended-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-icons-extended-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\5b8d03d313842ff34e36536ab301f7e8\transformed\material-icons-extended-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-icons-core-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\0f77584e0e576a70b34624a181a289ae\transformed\material-icons-core-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-icons-core-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\0f77584e0e576a70b34624a181a289ae\transformed\material-icons-core-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\2e766e4b86ab8756e12c759afe37894f\transformed\material-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\2e766e4b86ab8756e12c759afe37894f\transformed\material-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-core-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\c199cfb23b48a50b132cdf8074f43c04\transformed\animation-core-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-core-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\c199cfb23b48a50b132cdf8074f43c04\transformed\animation-core-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\1bfbf1cf0aea16de6269e8aaa6f4d8e1\transformed\animation-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\1bfbf1cf0aea16de6269e8aaa6f4d8e1\transformed\animation-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\3d6d4154c31619b00636ad6d14f64bed\transformed\foundation-layout-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\3d6d4154c31619b00636ad6d14f64bed\transformed\foundation-layout-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\557a1f26c93482f4c577459f641a2f07\transformed\foundation-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\557a1f26c93482f4c577459f641a2f07\transformed\foundation-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-tooling-data-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\fbeaa0eb53d678a043bbd6d2519e38c8\transformed\ui-tooling-data-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-tooling-data-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\fbeaa0eb53d678a043bbd6d2519e38c8\transformed\ui-tooling-data-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-unit-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d96d633ea63931b88ae7987cf6dba473\transformed\ui-unit-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-unit-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d96d633ea63931b88ae7987cf6dba473\transformed\ui-unit-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d2759705e13fb90d77f1d000379d22b4\transformed\ui-tooling-preview-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d2759705e13fb90d77f1d000379d22b4\transformed\ui-tooling-preview-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.ui:ui-geometry-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\704795d2f805f3536736898ac8fa1769\transformed\ui-geometry-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-geometry-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\704795d2f805f3536736898ac8fa1769\transformed\ui-geometry-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-util-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\ccb03b12f93c884619cf851fcdac7c11\transformed\ui-util-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-util-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\ccb03b12f93c884619cf851fcdac7c11\transformed\ui-util-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-graphics-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d17340be51007a90de77dc78bad1c099\transformed\ui-graphics-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-graphics-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d17340be51007a90de77dc78bad1c099\transformed\ui-graphics-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-text-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\f26a5f393d9b0f1267769c6874350793\transformed\ui-text-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-text-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\f26a5f393d9b0f1267769c6874350793\transformed\ui-text-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\586efd1e0a6afb519e8e30685c8f7d0b\transformed\emoji2-1.3.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\586efd1e0a6afb519e8e30685c8f7d0b\transformed\emoji2-1.3.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dcc7ae4f268c578b55c1b5c51eb649f8\transformed\lifecycle-process-2.8.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dcc7ae4f268c578b55c1b5c51eb649f8\transformed\lifecycle-process-2.8.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d8607a8f99e65be616dfcdd963e78e08\transformed\lifecycle-viewmodel-2.8.0\AndroidManifest.xml:4:5-43
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d8607a8f99e65be616dfcdd963e78e08\transformed\lifecycle-viewmodel-2.8.0\AndroidManifest.xml:4:5-43
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9a185bcbe5d72b4a6a9516fce59c376f\transformed\lifecycle-viewmodel-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9a185bcbe5d72b4a6a9516fce59c376f\transformed\lifecycle-viewmodel-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\08a741c73fb449e798666612bf95ea1a\transformed\lifecycle-livedata-core-ktx-2.8.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\08a741c73fb449e798666612bf95ea1a\transformed\lifecycle-livedata-core-ktx-2.8.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\1e62b8e64cee125a74a830b721770e82\transformed\savedstate-ktx-1.2.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\1e62b8e64cee125a74a830b721770e82\transformed\savedstate-ktx-1.2.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\72f38ab2bf109dca000d79830589e7f3\transformed\savedstate-1.2.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\72f38ab2bf109dca000d79830589e7f3\transformed\savedstate-1.2.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e34ae99ae424953d2a8a30f6e4d24da0\transformed\lifecycle-runtime-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e34ae99ae424953d2a8a30f6e4d24da0\transformed\lifecycle-runtime-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-service:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e58b77ee1fd2d97974d40f2bf1784620\transformed\lifecycle-service-2.8.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-service:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e58b77ee1fd2d97974d40f2bf1784620\transformed\lifecycle-service-2.8.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\06e999b0062f6ca36fb2e9d0c0699131\transformed\lifecycle-livedata-2.8.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\06e999b0062f6ca36fb2e9d0c0699131\transformed\lifecycle-livedata-2.8.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\b5ea7aa1934c194257b2477eb34f5438\transformed\lifecycle-livedata-core-2.8.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\b5ea7aa1934c194257b2477eb34f5438\transformed\lifecycle-livedata-core-2.8.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dbfdf0f0487fd24a1e244efcd840a21e\transformed\lifecycle-viewmodel-savedstate-2.8.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dbfdf0f0487fd24a1e244efcd840a21e\transformed\lifecycle-viewmodel-savedstate-2.8.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\880a1014cc9b22dddc5d960fbd80513d\transformed\lifecycle-viewmodel-ktx-2.8.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\880a1014cc9b22dddc5d960fbd80513d\transformed\lifecycle-viewmodel-ktx-2.8.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-ktx:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\6bf5a68752def192eb52b217b560e564\transformed\lifecycle-livedata-ktx-2.8.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-ktx:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\6bf5a68752def192eb52b217b560e564\transformed\lifecycle-livedata-ktx-2.8.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d01ef95920b37b9d00be4e9da9b602ab\transformed\lifecycle-runtime-ktx-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d01ef95920b37b9d00be4e9da9b602ab\transformed\lifecycle-runtime-ktx-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-compose-android:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a0c99679684985bf9ef497e5661b1901\transformed\lifecycle-viewmodel-compose-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-compose-android:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a0c99679684985bf9ef497e5661b1901\transformed\lifecycle-viewmodel-compose-release\AndroidManifest.xml:5:5-44
+MERGED from [com.google.accompanist:accompanist-drawablepainter:0.32.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\8ac553c954b3608d4849780608e0093f\transformed\accompanist-drawablepainter-0.32.0\AndroidManifest.xml:21:5-44
+MERGED from [com.google.accompanist:accompanist-drawablepainter:0.32.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\8ac553c954b3608d4849780608e0093f\transformed\accompanist-drawablepainter-0.32.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.compose.ui:ui-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\b89da6647080666bc0388750c9296134\transformed\ui-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\b89da6647080666bc0388750c9296134\transformed\ui-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\47ba746207fe2cf57dc445a7c34ae97e\transformed\ui-tooling-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\47ba746207fe2cf57dc445a7c34ae97e\transformed\ui-tooling-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity-compose:1.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\761a0f782ff02a42297ec95cf4947f98\transformed\activity-compose-1.9.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-compose:1.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\761a0f782ff02a42297ec95cf4947f98\transformed\activity-compose-1.9.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-ktx:1.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\86fdae38a618fd05a4e1f3d1eb4e2188\transformed\activity-ktx-1.9.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-ktx:1.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\86fdae38a618fd05a4e1f3d1eb4e2188\transformed\activity-ktx-1.9.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity:1.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9f7dd850757861e733e3f3ca6df70177\transformed\activity-1.9.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9f7dd850757861e733e3f3ca6df70177\transformed\activity-1.9.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\accad1aa661c0b83860dff538f641f9f\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\accad1aa661c0b83860dff538f641f9f\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d309e61c7c0c49e4b162df639e01d816\transformed\coordinatorlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d309e61c7c0c49e4b162df639e01d816\transformed\coordinatorlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\40d6dc41d72d2ceeb2e834ee0467e9fb\transformed\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\40d6dc41d72d2ceeb2e834ee0467e9fb\transformed\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4ccab775f95b3915bb1c5f2899594ac6\transformed\slidingpanelayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4ccab775f95b3915bb1c5f2899594ac6\transformed\slidingpanelayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\8c68451fab71e50eb8bb2858242d1ae9\transformed\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\8c68451fab71e50eb8bb2858242d1ae9\transformed\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\bb0624ec554de31d2ba96ad6c73c571f\transformed\swiperefreshlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\bb0624ec554de31d2ba96ad6c73c571f\transformed\swiperefreshlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4c104afa76b5405e342fd502f30e0d81\transformed\asynclayoutinflater-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4c104afa76b5405e342fd502f30e0d81\transformed\asynclayoutinflater-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.autofill:autofill:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\b0757287621398adcc160072d4353ac3\transformed\autofill-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.autofill:autofill:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\b0757287621398adcc160072d4353ac3\transformed\autofill-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\50dd32a70f55142c93ecfdb8eb114be6\transformed\appcompat-resources-1.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\50dd32a70f55142c93ecfdb8eb114be6\transformed\appcompat-resources-1.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\21af13e453aa7c2fc1f7f73d8f72aee0\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\21af13e453aa7c2fc1f7f73d8f72aee0\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\2d88040b69c9645ba28762349ce53b30\transformed\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\2d88040b69c9645ba28762349ce53b30\transformed\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\04ecc4501d7a316169f8ef1c71b9390f\transformed\customview-poolingcontainer-1.0.0\AndroidManifest.xml:20:5-21:38
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\04ecc4501d7a316169f8ef1c71b9390f\transformed\customview-poolingcontainer-1.0.0\AndroidManifest.xml:20:5-21:38
+MERGED from [androidx.core:core-ktx:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9f9fc864eb637e0d856259b1729d857f\transformed\core-ktx-1.13.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core-ktx:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9f9fc864eb637e0d856259b1729d857f\transformed\core-ktx-1.13.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core-splashscreen:1.0.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\3edc1a5ebf6bdf024163c5eaf34913b6\transformed\core-splashscreen-1.0.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core-splashscreen:1.0.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\3edc1a5ebf6bdf024163c5eaf34913b6\transformed\core-splashscreen-1.0.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.window.extensions.core:core:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\7a48bf8e10571488d1394e7d780edbed\transformed\core-1.0.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.window.extensions.core:core:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\7a48bf8e10571488d1394e7d780edbed\transformed\core-1.0.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.sqlite:sqlite-framework:2.4.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\c41d72260a1f7f523bf4727ae9ef2e9c\transformed\sqlite-framework-2.4.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite-framework:2.4.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\c41d72260a1f7f523bf4727ae9ef2e9c\transformed\sqlite-framework-2.4.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite:2.4.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\1cced381d4cc13f5564251297d45abea\transformed\sqlite-2.4.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite:2.4.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\1cced381d4cc13f5564251297d45abea\transformed\sqlite-2.4.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.datastore:datastore-core-android:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\09b763c265d104589d3611d208985a32\transformed\datastore-core-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.datastore:datastore-core-android:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\09b763c265d104589d3611d208985a32\transformed\datastore-core-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.datastore:datastore-android:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9e0d1dac04d4dd733367e605b841f217\transformed\datastore-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.datastore:datastore-android:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\9e0d1dac04d4dd733367e605b841f217\transformed\datastore-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.datastore:datastore-preferences-android:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\7bb3eee4cd47ad88328a875049b200c2\transformed\datastore-preferences-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.datastore:datastore-preferences-android:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\7bb3eee4cd47ad88328a875049b200c2\transformed\datastore-preferences-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.4.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\3bf3e08cb5a86545885d076e0145c121\transformed\annotation-experimental-1.4.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.4.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\3bf3e08cb5a86545885d076e0145c121\transformed\annotation-experimental-1.4.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:21:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:21:5-44
+MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\f4920ea7a46ca7dc413109367c99b8c5\transformed\core-runtime-2.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\f4920ea7a46ca7dc413109367c99b8c5\transformed\core-runtime-2.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d88cd7284a5b27fd234feea4e1040e0f\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d88cd7284a5b27fd234feea4e1040e0f\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\415de916946b16f6a53ddf9b3c672249\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\415de916946b16f6a53ddf9b3c672249\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\5142190b41a652a424498563e72f3f65\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\5142190b41a652a424498563e72f3f65\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\51c71a710cb917f27de4120f210052b8\transformed\startup-runtime-1.1.1\AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\51c71a710cb917f27de4120f210052b8\transformed\startup-runtime-1.1.1\AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.tracing:tracing:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\82c7f73f2b1dbc8a27e031409ead293b\transformed\tracing-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.tracing:tracing:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\82c7f73f2b1dbc8a27e031409ead293b\transformed\tracing-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d5a6e1b5beb094ee31b19872c85d7722\transformed\documentfile-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\d5a6e1b5beb094ee31b19872c85d7722\transformed\documentfile-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\bf3083620a3de863ff4f52d4ec3332b3\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\bf3083620a3de863ff4f52d4ec3332b3\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a22afd5e1f1eb33704d976a0d296fe14\transformed\print-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a22afd5e1f1eb33704d976a0d296fe14\transformed\print-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.exifinterface:exifinterface:1.3.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\1e8118e1d63bae7db02a6b0fe926e848\transformed\exifinterface-1.3.7\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.exifinterface:exifinterface:1.3.7] C:\Users\WhatsappBot\.gradle\caches\transforms-4\1e8118e1d63bae7db02a6b0fe926e848\transformed\exifinterface-1.3.7\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.compose.runtime:runtime-saveable-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\212a924f84aa677f39c501a9e696eae5\transformed\runtime-saveable-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-saveable-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\212a924f84aa677f39c501a9e696eae5\transformed\runtime-saveable-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\0a25ae5bea4a741242c07f6561c3bf17\transformed\runtime-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\0a25ae5bea4a741242c07f6561c3bf17\transformed\runtime-release\AndroidManifest.xml:5:5-44
+MERGED from [com.google.dagger:dagger-lint-aar:2.51] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4c9948a36b813504100b382e0e7a0a9a\transformed\dagger-lint-aar-2.51\AndroidManifest.xml:18:3-42
+MERGED from [com.google.dagger:dagger-lint-aar:2.51] C:\Users\WhatsappBot\.gradle\caches\transforms-4\4c9948a36b813504100b382e0e7a0a9a\transformed\dagger-lint-aar-2.51\AndroidManifest.xml:18:3-42
+	android:targetSdkVersion
+		INJECTED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Users\WhatsappBot\DjoudiniTV\app\src\main\AndroidManifest.xml
+uses-permission#android.permission.WAKE_LOCK
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:23:5-68
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:23:22-65
+uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:25:5-81
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:25:22-78
+uses-permission#android.permission.FOREGROUND_SERVICE
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:26:5-77
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:26:22-74
+service#androidx.work.impl.background.systemalarm.SystemAlarmService
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:39:9-45:35
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:42:13-72
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:43:13-37
+	tools:ignore
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:44:13-60
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:45:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:41:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:40:13-88
+service#androidx.work.impl.background.systemjob.SystemJobService
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:46:9-52:35
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:49:13-70
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:50:13-36
+	android:permission
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:51:13-69
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:52:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:48:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:47:13-84
+service#androidx.work.impl.foreground.SystemForegroundService
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:53:9-59:35
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:56:13-77
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:57:13-37
+	tools:ignore
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:58:13-60
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:59:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:55:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:54:13-81
+receiver#androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:61:9-66:35
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:64:13-35
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:65:13-37
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:66:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:63:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:62:13-88
+receiver#androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryChargingProxy
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:67:9-77:20
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:70:13-36
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:71:13-37
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:72:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:69:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:68:13-106
+intent-filter#action:name:android.intent.action.ACTION_POWER_CONNECTED+action:name:android.intent.action.ACTION_POWER_DISCONNECTED
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:73:13-76:29
+action#android.intent.action.ACTION_POWER_CONNECTED
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:74:17-87
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:74:25-84
+action#android.intent.action.ACTION_POWER_DISCONNECTED
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:75:17-90
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:75:25-87
+receiver#androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryNotLowProxy
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:78:9-88:20
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:81:13-36
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:82:13-37
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:83:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:80:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:79:13-104
+intent-filter#action:name:android.intent.action.BATTERY_LOW+action:name:android.intent.action.BATTERY_OKAY
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:84:13-87:29
+action#android.intent.action.BATTERY_OKAY
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:85:17-77
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:85:25-74
+action#android.intent.action.BATTERY_LOW
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:86:17-76
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:86:25-73
+receiver#androidx.work.impl.background.systemalarm.ConstraintProxy$StorageNotLowProxy
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:89:9-99:20
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:92:13-36
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:93:13-37
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:94:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:91:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:90:13-104
+intent-filter#action:name:android.intent.action.DEVICE_STORAGE_LOW+action:name:android.intent.action.DEVICE_STORAGE_OK
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:95:13-98:29
+action#android.intent.action.DEVICE_STORAGE_LOW
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:96:17-83
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:96:25-80
+action#android.intent.action.DEVICE_STORAGE_OK
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:97:17-82
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:97:25-79
+receiver#androidx.work.impl.background.systemalarm.ConstraintProxy$NetworkStateProxy
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:100:9-109:20
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:103:13-36
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:104:13-37
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:105:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:102:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:101:13-103
+intent-filter#action:name:android.net.conn.CONNECTIVITY_CHANGE
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:106:13-108:29
+action#android.net.conn.CONNECTIVITY_CHANGE
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:107:17-79
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:107:25-76
+receiver#androidx.work.impl.background.systemalarm.RescheduleReceiver
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:110:9-121:20
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:113:13-36
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:114:13-37
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:115:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:112:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:111:13-88
+intent-filter#action:name:android.intent.action.BOOT_COMPLETED+action:name:android.intent.action.TIMEZONE_CHANGED+action:name:android.intent.action.TIME_SET
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:116:13-120:29
+action#android.intent.action.BOOT_COMPLETED
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:117:17-79
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:117:25-76
+action#android.intent.action.TIME_SET
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:118:17-73
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:118:25-70
+action#android.intent.action.TIMEZONE_CHANGED
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:119:17-81
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:119:25-78
+receiver#androidx.work.impl.background.systemalarm.ConstraintProxyUpdateReceiver
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:122:9-131:20
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:125:13-72
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:126:13-37
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:127:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:124:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:123:13-99
+intent-filter#action:name:androidx.work.impl.background.systemalarm.UpdateProxies
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:128:13-130:29
+action#androidx.work.impl.background.systemalarm.UpdateProxies
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:129:17-98
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:129:25-95
+receiver#androidx.work.impl.diagnostics.DiagnosticsReceiver
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:132:9-142:20
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:135:13-35
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:136:13-36
+	android:permission
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:137:13-57
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:138:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:134:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:133:13-78
+intent-filter#action:name:androidx.work.diagnostics.REQUEST_DIAGNOSTICS
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:139:13-141:29
+action#androidx.work.diagnostics.REQUEST_DIAGNOSTICS
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:140:17-88
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e1c83445dd8d2909d2999df5739f63f7\transformed\work-runtime-2.9.0\AndroidManifest.xml:140:25-85
+service#androidx.room.MultiInstanceInvalidationService
+ADDED from [androidx.room:room-runtime:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a9b0e86b2b14db9a2574d487973b80ab\transformed\room-runtime-2.6.1\AndroidManifest.xml:24:9-28:63
+	android:exported
+		ADDED from [androidx.room:room-runtime:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a9b0e86b2b14db9a2574d487973b80ab\transformed\room-runtime-2.6.1\AndroidManifest.xml:27:13-37
+	tools:ignore
+		ADDED from [androidx.room:room-runtime:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a9b0e86b2b14db9a2574d487973b80ab\transformed\room-runtime-2.6.1\AndroidManifest.xml:28:13-60
+	android:directBootAware
+		ADDED from [androidx.room:room-runtime:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a9b0e86b2b14db9a2574d487973b80ab\transformed\room-runtime-2.6.1\AndroidManifest.xml:26:13-43
+	android:name
+		ADDED from [androidx.room:room-runtime:2.6.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\a9b0e86b2b14db9a2574d487973b80ab\transformed\room-runtime-2.6.1\AndroidManifest.xml:25:13-74
+uses-library#androidx.window.extensions
+ADDED from [androidx.window:window:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\17e7bfe0b896932ae601e9820bd6afde\transformed\window-1.3.0\AndroidManifest.xml:23:9-25:40
+	android:required
+		ADDED from [androidx.window:window:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\17e7bfe0b896932ae601e9820bd6afde\transformed\window-1.3.0\AndroidManifest.xml:25:13-37
+	android:name
+		ADDED from [androidx.window:window:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\17e7bfe0b896932ae601e9820bd6afde\transformed\window-1.3.0\AndroidManifest.xml:24:13-54
+uses-library#androidx.window.sidecar
+ADDED from [androidx.window:window:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\17e7bfe0b896932ae601e9820bd6afde\transformed\window-1.3.0\AndroidManifest.xml:26:9-28:40
+	android:required
+		ADDED from [androidx.window:window:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\17e7bfe0b896932ae601e9820bd6afde\transformed\window-1.3.0\AndroidManifest.xml:28:13-37
+	android:name
+		ADDED from [androidx.window:window:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\17e7bfe0b896932ae601e9820bd6afde\transformed\window-1.3.0\AndroidManifest.xml:27:13-51
+meta-data#androidx.emoji2.text.EmojiCompatInitializer
+ADDED from [androidx.emoji2:emoji2:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\586efd1e0a6afb519e8e30685c8f7d0b\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.emoji2:emoji2:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\586efd1e0a6afb519e8e30685c8f7d0b\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.3.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\586efd1e0a6afb519e8e30685c8f7d0b\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+meta-data#androidx.lifecycle.ProcessLifecycleInitializer
+ADDED from [androidx.lifecycle:lifecycle-process:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dcc7ae4f268c578b55c1b5c51eb649f8\transformed\lifecycle-process-2.8.0\AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.lifecycle:lifecycle-process:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dcc7ae4f268c578b55c1b5c51eb649f8\transformed\lifecycle-process-2.8.0\AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.lifecycle:lifecycle-process:2.8.0] C:\Users\WhatsappBot\.gradle\caches\transforms-4\dcc7ae4f268c578b55c1b5c51eb649f8\transformed\lifecycle-process-2.8.0\AndroidManifest.xml:30:17-78
+activity#androidx.compose.ui.tooling.PreviewActivity
+ADDED from [androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\47ba746207fe2cf57dc445a7c34ae97e\transformed\ui-tooling-release\AndroidManifest.xml:23:9-25:39
+	android:exported
+		ADDED from [androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\47ba746207fe2cf57dc445a7c34ae97e\transformed\ui-tooling-release\AndroidManifest.xml:25:13-36
+	android:name
+		ADDED from [androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\WhatsappBot\.gradle\caches\transforms-4\47ba746207fe2cf57dc445a7c34ae97e\transformed\ui-tooling-release\AndroidManifest.xml:24:13-71
+permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:23:9-81
+permission#com.nextgen.iptv.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:23:9-81
+uses-permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
+uses-permission#com.nextgen.iptv.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.13.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\e4d6ee8c8ca7b37d11f0315593f8afa7\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
+meta-data#androidx.profileinstaller.ProfileInstallerInitializer
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
+receiver#androidx.profileinstaller.ProfileInstallReceiver
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
+	android:enabled
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
+	android:exported
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
+	android:permission
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
+	android:directBootAware
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
+intent-filter#action:name:androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
+action#androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
+intent-filter#action:name:androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
+action#androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
+intent-filter#action:name:androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
+action#androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
+intent-filter#action:name:androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
+action#androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\WhatsappBot\.gradle\caches\transforms-4\20f98e06f9082575fe01728461a47777\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:25-92

@@ -9,10 +9,12 @@ import com.nextgen.iptv.domain.usecase.provider.SyncProgress
 import com.nextgen.iptv.domain.usecase.provider.SyncProviderUseCase
 import com.nextgen.iptv.domain.usecase.provider.ValidateProviderUseCase
 import com.nextgen.iptv.domain.usecase.provider.ValidationResult
+import com.nextgen.iptv.domain.repository.CategoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,8 +24,9 @@ sealed class OnboardingStep {
     data object ProviderType : OnboardingStep()
     data object XtreamLogin : OnboardingStep()
     data object M3UUrl : OnboardingStep()
-    data object Validating : OnboardingStep()  // New: Show validation progress
-    data object Syncing : OnboardingStep()      // New: Show sync progress
+    data object Validating : OnboardingStep()
+    data object Syncing : OnboardingStep()
+    data class CategorySelection(val categories: List<CategoryEntity>) : OnboardingStep()
     data object Complete : OnboardingStep()
 }
 
@@ -34,6 +37,7 @@ data class OnboardingUiState(
     val username: String = "",
     val password: String = "",
     val m3uUrl: String = "",
+    val selectedCategories: Set<String> = emptySet(),
     val isLoading: Boolean = false,
     val error: String? = null,
     val providerId: String? = null,
@@ -50,7 +54,8 @@ enum class ProviderTypeSelection {
 class OnboardingViewModel @Inject constructor(
     private val addProviderUseCase: AddProviderUseCase,
     private val syncProviderUseCase: SyncProviderUseCase,
-    private val validateProviderUseCase: ValidateProviderUseCase
+    private val validateProviderUseCase: ValidateProviderUseCase,
+    private val categoryRepository: CategoryRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(OnboardingUiState())
@@ -80,7 +85,7 @@ class OnboardingViewModel @Inject constructor(
         _uiState.update { it.copy(m3uUrl = url, error = null) }
     }
 
-    fun connectProvider(onComplete: () -> Unit) {
+    fun connectProvider() {
         val state = _uiState.value
         
         val providerType = when (state.providerType) {
@@ -151,15 +156,8 @@ class OnboardingViewModel @Inject constructor(
                                         }
                                     }
                                     is SyncProgress.Success -> {
-                                        _uiState.update { 
-                                            it.copy(
-                                                isLoading = false,
-                                                currentStep = OnboardingStep.Complete,
-                                                syncProgress = 100,
-                                                syncMessage = "Fertig!"
-                                            ) 
-                                        }
-                                        onComplete()
+                                        // Step 4: Load categories for selection
+                                        loadCategoriesAndShowSelection(providerId)
                                     }
                                     is SyncProgress.Error -> {
                                         _uiState.update { 
@@ -195,10 +193,56 @@ class OnboardingViewModel @Inject constructor(
             }
         }
     }
+    
+    private fun loadCategoriesAndShowSelection(providerId: String) {
+        viewModelScope.launch {
+            try {
+                val categories = categoryRepository.getCategoriesByProvider(providerId).first()
+                _uiState.update { 
+                    it.copy(
+                        isLoading = false,
+                        currentStep = OnboardingStep.CategorySelection(categories),
+                        // Select all by default
+                        selectedCategories = categories.map { cat -> cat.id }.toSet()
+                    ) 
+                }
+            } catch (e: Exception) {
+                // If loading categories fails, just go to complete
+                _uiState.update { 
+                    it.copy(
+                        isLoading = false,
+                        currentStep = OnboardingStep.Complete
+                    ) 
+                }
+            }
+        }
+    }
+
+    fun toggleCategory(categoryId: String) {
+        _uiState.update { state ->
+            val current = state.selectedCategories
+            val updated = if (current.contains(categoryId)) {
+                current - categoryId
+            } else {
+                current + categoryId
+            }
+            state.copy(selectedCategories = updated)
+        }
+    }
+
+    fun selectAllCategories(categories: List<CategoryEntity>) {
+        _uiState.update { 
+            it.copy(selectedCategories = categories.map { cat -> cat.id }.toSet()) 
+        }
+    }
+
+    fun deselectAllCategories() {
+        _uiState.update { it.copy(selectedCategories = emptySet()) }
+    }
 
     fun saveOnboardingComplete() {
         // Save to preferences that onboarding is complete
-        // VOD and Series can be synced later from settings
+        // Selected categories are stored for filtering
     }
 
     private fun normalizeUrl(url: String): String {
