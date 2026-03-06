@@ -4,18 +4,22 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.LiveTv
+import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Tv
+import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -46,8 +50,10 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
-    onNavigateToProviderSetup: () -> Unit,
     onNavigateToLiveTv: () -> Unit,
+    onNavigateToVod: () -> Unit,
+    onNavigateToSeries: () -> Unit,
+    onNavigateToProviderSetup: () -> Unit,
     onNavigateToSettings: () -> Unit,
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
@@ -78,6 +84,8 @@ fun DashboardScreen(
             uiState = uiState,
             onDeleteProvider = { viewModel.deleteProvider(it) },
             onNavigateToLiveTv = onNavigateToLiveTv,
+            onNavigateToVod = onNavigateToVod,
+            onNavigateToSeries = onNavigateToSeries,
             modifier = Modifier.padding(paddingValues)
         )
     }
@@ -88,75 +96,176 @@ private fun DashboardContent(
     uiState: DashboardUiState,
     onDeleteProvider: (String) -> Unit,
     onNavigateToLiveTv: () -> Unit,
+    onNavigateToVod: () -> Unit,
+    onNavigateToSeries: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(
+    LazyColumn(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        // Main Menu Tiles
+        item {
+            Text(
+                text = "Menü",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            MenuTiles(
+                onNavigateToLiveTv = onNavigateToLiveTv,
+                onNavigateToVod = onNavigateToVod,
+                onNavigateToSeries = onNavigateToSeries
+            )
+        }
+        
+        // Providers Section
+        item {
+            Text(
+                text = "Provider",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+            )
+        }
+        
         when {
             uiState.isLoading -> {
-                CircularProgressIndicator()
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
             }
             uiState.providers.isEmpty() -> {
-                EmptyState(onNavigateToLiveTv)
+                item {
+                    EmptyProviderState()
+                }
             }
             else -> {
-                ProviderList(
-                    providers = uiState.providers,
-                    onDeleteProvider = onDeleteProvider,
-                    onNavigateToLiveTv = onNavigateToLiveTv
-                )
+                items(uiState.providers) { provider ->
+                    ProviderCard(
+                        provider = provider,
+                        onDelete = { onDeleteProvider(provider.id) }
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun EmptyState(onNavigateToLiveTv: () -> Unit) {
+private fun MenuTiles(
+    onNavigateToLiveTv: () -> Unit,
+    onNavigateToVod: () -> Unit,
+    onNavigateToSeries: () -> Unit
+) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(32.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.Tv,
-            contentDescription = null,
-            modifier = Modifier.height(64.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Willkommen bei DjoudiniTV",
-            style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Fügen Sie einen IPTV-Provider hinzu, um zu beginnen",
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            MenuTile(
+                title = "Live TV",
+                icon = Icons.Default.LiveTv,
+                onClick = onNavigateToLiveTv,
+                modifier = Modifier.weight(1f)
+            )
+            MenuTile(
+                title = "Filme",
+                icon = Icons.Default.Movie,
+                onClick = onNavigateToVod,
+                modifier = Modifier.weight(1f)
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            MenuTile(
+                title = "Serien",
+                icon = Icons.Default.VideoLibrary,
+                onClick = onNavigateToSeries,
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }
 
 @Composable
-private fun ProviderList(
-    providers: List<ProviderStatus>,
-    onDeleteProvider: (String) -> Unit,
-    onNavigateToLiveTv: () -> Unit
+private fun MenuTile(
+    title: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier.fillMaxSize()
+    Card(
+        onClick = onClick,
+        modifier = modifier.height(100.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        )
     ) {
-        items(providers) { provider ->
-            ProviderCard(
-                provider = provider,
-                onDelete = { onDeleteProvider(provider.id) },
-                onClick = onNavigateToLiveTv
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size(40.dp),
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
+    }
+}
+
+@Composable
+private fun EmptyProviderState() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = null,
+                modifier = Modifier.size(48.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Keine Provider vorhanden",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Fügen Sie einen Provider hinzu, um Inhalte zu sehen",
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -165,15 +274,13 @@ private fun ProviderList(
 @Composable
 private fun ProviderCard(
     provider: ProviderStatus,
-    onDelete: () -> Unit,
-    onClick: () -> Unit
+    onDelete: () -> Unit
 ) {
     Card(
-        onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = if (provider.isConnected) 
-                MaterialTheme.colorScheme.primaryContainer 
+                MaterialTheme.colorScheme.secondaryContainer 
             else 
                 MaterialTheme.colorScheme.surfaceVariant
         )
@@ -185,7 +292,8 @@ private fun ProviderCard(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(

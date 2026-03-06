@@ -73,7 +73,7 @@ fun LiveTvScreen(
             uiState = uiState,
             onSearchQueryChange = viewModel::onSearchQueryChange,
             onCategorySelect = viewModel::selectCategory,
-            onStreamClick = { onNavigateToPlayer(it.id) },
+            onStreamClick = { onNavigateToPlayer(it.streamUrl) },
             modifier = Modifier.padding(paddingValues)
         )
     }

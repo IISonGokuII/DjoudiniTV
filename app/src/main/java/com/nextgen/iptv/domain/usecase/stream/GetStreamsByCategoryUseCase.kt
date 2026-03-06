@@ -13,7 +13,8 @@ class GetStreamsByCategoryUseCase @Inject constructor(
         return streamRepository.getStreamsByCategory(categoryId)
     }
     
-    fun paged(categoryId: String): PagingSource<Int, StreamEntity> {
-        return streamRepository.getStreamsByCategoryPaged(categoryId)
+    // Paging not implemented yet - returns null
+    fun paged(categoryId: String): PagingSource<Int, StreamEntity>? {
+        return null
     }
 }

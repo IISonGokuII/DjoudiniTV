@@ -11,22 +11,22 @@ class ProviderRepositoryImpl @Inject constructor(
 ) : ProviderRepository {
     
     override fun getAllProviders(): Flow<List<ProviderEntity>> {
-        return providerDao.getAllProviders()
+        return providerDao.getAll()
     }
     
     override suspend fun getProviderById(id: String): ProviderEntity? {
-        return providerDao.getProviderById(id)
+        return providerDao.getById(id)
     }
     
     override suspend fun insertProvider(provider: ProviderEntity) {
-        providerDao.insertProvider(provider)
+        providerDao.insert(provider)
     }
     
     override suspend fun updateProvider(provider: ProviderEntity) {
-        providerDao.updateProvider(provider)
+        providerDao.update(provider)
     }
     
     override suspend fun deleteProvider(id: String) {
-        providerDao.deleteProviderById(id)
+        providerDao.deleteById(id)
     }
 }

@@ -1,6 +1,7 @@
 package com.nextgen.iptv.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -9,103 +10,120 @@ import androidx.navigation.navArgument
 import com.nextgen.iptv.ui.screen.dashboard.DashboardScreen
 import com.nextgen.iptv.ui.screen.livetv.LiveTvScreen
 import com.nextgen.iptv.ui.screen.player.PlayerScreen
+import com.nextgen.iptv.ui.screen.series.SeriesDetailScreen
+import com.nextgen.iptv.ui.screen.series.SeriesListScreen
 import com.nextgen.iptv.ui.screen.settings.SettingsScreen
 import com.nextgen.iptv.ui.screen.setup.ProviderSetupScreen
 import com.nextgen.iptv.ui.screen.vod.VodScreen
-import com.nextgen.iptv.ui.screen.favorites.FavoritesScreen
 
-sealed class Screen(val route: String) {
-    data object Dashboard : Screen("dashboard")
-    data object ProviderSetup : Screen("provider_setup")
-    data object LiveTv : Screen("live_tv")
-    data object Vod : Screen("vod")
-    data object Series : Screen("series")
-    data object Player : Screen("player/{streamId}") {
-        fun createRoute(streamId: String) = "player/$streamId"
+object NavRoutes {
+    const val DASHBOARD = "dashboard"
+    const val LIVE_TV = "live_tv"
+    const val VOD = "vod"
+    const val SERIES = "series"
+    const val SERIES_DETAIL = "series_detail/{seriesId}"
+    const val SETTINGS = "settings"
+    const val PLAYER = "player/{streamUrl}"
+    const val PROVIDER_SETUP = "provider_setup"
+    
+    fun playerRoute(streamUrl: String): String {
+        return "player/${java.net.URLEncoder.encode(streamUrl, "UTF-8")}"
     }
-    data object Settings : Screen("settings")
-    data object Favorites : Screen("favorites")
+    
+    fun seriesDetailRoute(seriesId: String): String {
+        return "series_detail/$seriesId"
+    }
 }
 
 @Composable
-fun AppNavigation(navController: NavHostController) {
+fun AppNavigation(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    isTv: Boolean = false
+) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Dashboard.route
+        startDestination = NavRoutes.DASHBOARD,
+        modifier = modifier
     ) {
-        composable(Screen.Dashboard.route) {
+        composable(NavRoutes.DASHBOARD) {
             DashboardScreen(
-                onNavigateToProviderSetup = {
-                    navController.navigate(Screen.ProviderSetup.route)
-                },
-                onNavigateToLiveTv = {
-                    navController.navigate(Screen.LiveTv.route)
-                },
-                onNavigateToSettings = {
-                    navController.navigate(Screen.Settings.route)
-                }
+                onNavigateToLiveTv = { navController.navigate(NavRoutes.LIVE_TV) },
+                onNavigateToVod = { navController.navigate(NavRoutes.VOD) },
+                onNavigateToSeries = { navController.navigate(NavRoutes.SERIES) },
+                onNavigateToProviderSetup = { navController.navigate(NavRoutes.PROVIDER_SETUP) },
+                onNavigateToSettings = { navController.navigate(NavRoutes.SETTINGS) }
             )
         }
-
-        composable(Screen.ProviderSetup.route) {
-            ProviderSetupScreen(
-                onNavigateBack = {
-                    navController.popBackStack()
-                }
-            )
-        }
-
-        composable(Screen.LiveTv.route) {
+        
+        composable(NavRoutes.LIVE_TV) {
             LiveTvScreen(
-                onNavigateToPlayer = { streamId ->
-                    navController.navigate(Screen.Player.createRoute(streamId))
+                onNavigateToPlayer = { streamUrl ->
+                    navController.navigate(NavRoutes.playerRoute(streamUrl))
                 },
-                onNavigateBack = {
-                    navController.popBackStack()
-                }
+                onNavigateBack = { navController.popBackStack() }
             )
         }
-
-        composable(Screen.Vod.route) {
+        
+        composable(NavRoutes.VOD) {
             VodScreen(
-                onNavigateToPlayer = { streamId ->
-                    navController.navigate(Screen.Player.createRoute(streamId))
+                onNavigateToPlayer = { streamUrl ->
+                    navController.navigate(NavRoutes.playerRoute(streamUrl))
                 },
-                onNavigateBack = {
-                    navController.popBackStack()
-                }
+                onNavigateBack = { navController.popBackStack() }
             )
         }
-
-        composable(
-            route = Screen.Player.route,
-            arguments = listOf(
-                navArgument("streamId") { type = NavType.StringType }
-            )
-        ) {
-            PlayerScreen(
-                onNavigateBack = {
-                    navController.popBackStack()
-                }
-            )
-        }
-
-        composable(Screen.Settings.route) {
+        
+        composable(NavRoutes.SETTINGS) {
             SettingsScreen(
-                onNavigateBack = {
-                    navController.popBackStack()
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        
+        composable(
+            route = NavRoutes.PLAYER,
+            arguments = listOf(
+                navArgument("streamUrl") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val encodedUrl = backStackEntry.arguments?.getString("streamUrl") ?: ""
+            val streamUrl = java.net.URLDecoder.decode(encodedUrl, "UTF-8")
+            PlayerScreen(
+                streamUrl = streamUrl,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        
+        composable(NavRoutes.SERIES) {
+            SeriesListScreen(
+                onNavigateToSeriesDetail = { seriesId ->
+                    navController.navigate(NavRoutes.seriesDetailRoute(seriesId))
+                },
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        
+        composable(
+            route = NavRoutes.SERIES_DETAIL,
+            arguments = listOf(
+                navArgument("seriesId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val seriesId = backStackEntry.arguments?.getString("seriesId") ?: ""
+            SeriesDetailScreen(
+                seriesId = seriesId,
+                onNavigateBack = { navController.popBackStack() },
+                onPlayEpisode = { streamUrl ->
+                    if (streamUrl.isNotEmpty()) {
+                        navController.navigate(NavRoutes.playerRoute(streamUrl))
+                    }
                 }
             )
         }
-
-        composable(Screen.Favorites.route) {
-            FavoritesScreen(
-                onNavigateToPlayer = { streamId ->
-                    navController.navigate(Screen.Player.createRoute(streamId))
-                },
-                onNavigateBack = {
-                    navController.popBackStack()
-                }
+        
+        composable(NavRoutes.PROVIDER_SETUP) {
+            ProviderSetupScreen(
+                onNavigateBack = { navController.popBackStack() }
             )
         }
     }

@@ -8,7 +8,7 @@ class DeleteProviderUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(id: String): Result<Unit> {
         return try {
-            providerRepository.deleteProviderById(id)
+            providerRepository.deleteProvider(id)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

@@ -5,6 +5,7 @@ import com.nextgen.iptv.data.remote.dto.XtreamCategory
 import com.nextgen.iptv.data.remote.dto.XtreamLiveStream
 import com.nextgen.iptv.data.remote.dto.XtreamSeries
 import com.nextgen.iptv.data.remote.dto.XtreamSeriesInfo
+import com.nextgen.iptv.data.remote.dto.XtreamVodInfo
 import com.nextgen.iptv.data.remote.dto.XtreamVodStream
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -84,6 +85,15 @@ interface XtreamCodesApiDynamic {
         @Query("action") action: String = "get_series_info",
         @Query("series_id") seriesId: String
     ): XtreamSeriesInfo
+    
+    @GET
+    suspend fun getVodInfo(
+        @Url url: String,
+        @Query("username") username: String,
+        @Query("password") password: String,
+        @Query("action") action: String = "get_vod_info",
+        @Query("vod_id") vodId: String
+    ): XtreamVodInfo
 }
 
 /**

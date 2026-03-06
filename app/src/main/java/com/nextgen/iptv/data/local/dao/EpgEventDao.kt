@@ -26,6 +26,9 @@ interface EpgEventDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(events: List<EpgEventEntity>)
     
+    // Alias for insertAll used by some components
+    suspend fun addEvents(events: List<EpgEventEntity>) = insertAll(events)
+    
     @Update
     suspend fun update(event: EpgEventEntity)
     

@@ -4,6 +4,7 @@ import com.nextgen.iptv.data.local.dao.CategoryDao
 import com.nextgen.iptv.data.local.entity.CategoryEntity
 import com.nextgen.iptv.domain.repository.CategoryRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CategoryRepositoryImpl @Inject constructor(
@@ -11,42 +12,45 @@ class CategoryRepositoryImpl @Inject constructor(
 ) : CategoryRepository {
     
     override fun getAllCategories(): Flow<List<CategoryEntity>> {
-        return categoryDao.getAllCategories()
+        return categoryDao.getAll()
     }
     
     override fun getCategoriesByProvider(providerId: String): Flow<List<CategoryEntity>> {
-        return categoryDao.getCategoriesByProvider(providerId)
+        return categoryDao.getByProviderId(providerId)
     }
     
     override fun getCategoriesByType(type: String): Flow<List<CategoryEntity>> {
-        return categoryDao.getCategoriesByType(type)
+        return categoryDao.getAll().map { categories ->
+            categories.filter { it.type == type }
+        }
     }
     
     override fun getCategoriesByProviderAndType(providerId: String, type: String): Flow<List<CategoryEntity>> {
-        return categoryDao.getCategoriesByProviderAndType(providerId, type)
+        return categoryDao.getByProviderAndType(providerId, type)
     }
     
     override suspend fun getCategoryById(id: String): CategoryEntity? {
-        return categoryDao.getCategoryById(id)
+        return categoryDao.getById(id)
     }
     
     override suspend fun insertCategory(category: CategoryEntity) {
-        categoryDao.insertCategory(category)
+        categoryDao.insert(category)
     }
     
     override suspend fun addCategories(categories: List<CategoryEntity>) {
-        categoryDao.insertCategories(categories)
+        categoryDao.insertAll(categories)
     }
     
     override suspend fun updateCategory(category: CategoryEntity) {
-        categoryDao.updateCategory(category)
+        categoryDao.update(category)
     }
     
     override suspend fun deleteCategory(id: String) {
-        categoryDao.deleteCategoryById(id)
+        val category = categoryDao.getById(id)
+        category?.let { categoryDao.delete(it) }
     }
     
     override suspend fun deleteCategoriesByProvider(providerId: String) {
-        categoryDao.deleteCategoriesByProvider(providerId)
+        categoryDao.deleteByProviderId(providerId)
     }
 }
