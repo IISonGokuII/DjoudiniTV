@@ -26,6 +26,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -46,7 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.nextgen.iptv.data.local.entity.CategoryEntity
-import com.nextgen.iptv.data.local.entity.StreamEntity
+import com.nextgen.iptv.ui.viewmodel.MovieWithProgress
 import com.nextgen.iptv.ui.viewmodel.VodViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -120,7 +121,7 @@ fun VodScreen(
                             modifier = Modifier.align(Alignment.Center)
                         )
                     }
-                    uiState.movies.isEmpty() -> {
+                    uiState.movies.isEmpty() && uiState.continueWatching.isEmpty() -> {
                         Text(
                             text = "Keine Filme gefunden",
                             modifier = Modifier.align(Alignment.Center),
@@ -133,13 +134,44 @@ fun VodScreen(
                             contentPadding = PaddingValues(16.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
+                            // Continue Watching Section
+                            if (uiState.continueWatching.isNotEmpty() && searchQuery.isBlank() && uiState.selectedCategory.isBlank()) {
+                                item {
+                                    Text(
+                                        text = "Weiterschauen",
+                                        style = MaterialTheme.typography.titleLarge,
+                                        modifier = Modifier.padding(bottom = 8.dp)
+                                    )
+                                }
+                                
+                                items(
+                                    items = uiState.continueWatching,
+                                    key = { it.movie.id }
+                                ) { movieWithProgress ->
+                                    MovieCard(
+                                        movieWithProgress = movieWithProgress,
+                                        onClick = { onNavigateToPlayer(movieWithProgress.movie.streamUrl) }
+                                    )
+                                }
+                                
+                                item {
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    Text(
+                                        text = "Alle Filme",
+                                        style = MaterialTheme.typography.titleLarge,
+                                        modifier = Modifier.padding(bottom = 8.dp)
+                                    )
+                                }
+                            }
+                            
+                            // All Movies
                             items(
                                 items = uiState.movies,
-                                key = { it.id }
-                            ) { movie ->
+                                key = { it.movie.id }
+                            ) { movieWithProgress ->
                                 MovieCard(
-                                    movie = movie,
-                                    onClick = { onNavigateToPlayer(movie.streamUrl) }
+                                    movieWithProgress = movieWithProgress,
+                                    onClick = { onNavigateToPlayer(movieWithProgress.movie.streamUrl) }
                                 )
                             }
                         }
@@ -152,109 +184,154 @@ fun VodScreen(
 
 @Composable
 private fun MovieCard(
-    movie: StreamEntity,
+    movieWithProgress: MovieWithProgress,
     onClick: () -> Unit
 ) {
+    val movie = movieWithProgress.movie
+    val progressPercent = movieWithProgress.progressPercent
+    
     Card(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            // Poster
-            AsyncImage(
-                model = movie.logoUrl,
-                contentDescription = movie.name,
+        Column {
+            Row(
                 modifier = Modifier
-                    .width(100.dp)
-                    .height(150.dp),
-                contentScale = ContentScale.Crop
-            )
-            
-            // Info
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Text(
-                    text = movie.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                
-                if (!movie.rating.isNullOrBlank()) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = null,
-                            modifier = Modifier.height(16.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = movie.rating,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                // Poster
+                Box {
+                    AsyncImage(
+                        model = movie.logoUrl,
+                        contentDescription = movie.name,
+                        modifier = Modifier
+                            .width(100.dp)
+                            .height(150.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                    
+                    // Progress overlay on poster
+                    if (progressPercent > 0) {
+                        Box(
+                            modifier = Modifier
+                                .width(100.dp)
+                                .height(4.dp)
+                                .align(Alignment.BottomCenter)
+                        ) {
+                            LinearProgressIndicator(
+                                progress = { progressPercent / 100f },
+                                modifier = Modifier.fillMaxSize(),
+                                color = MaterialTheme.colorScheme.primary,
+                                trackColor = MaterialTheme.colorScheme.surfaceVariant
+                            )
+                        }
                     }
                 }
                 
-                if (!movie.releaseDate.isNullOrBlank()) {
-                    Text(
-                        text = "Jahr: ${movie.releaseDate}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                
-                if (!movie.genre.isNullOrBlank()) {
-                    Text(
-                        text = "Genre: ${movie.genre}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-                
-                if (!movie.plot.isNullOrBlank()) {
-                    Text(
-                        text = movie.plot,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-                
-                if (movie.durationSecs != null) {
-                    Text(
-                        text = formatDuration(movie.durationSecs),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                
-                Spacer(modifier = Modifier.weight(1f))
-                
-                // Play button
-                IconButton(
-                    onClick = onClick,
-                    modifier = Modifier.align(Alignment.End)
+                // Info
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "Abspielen",
-                        tint = MaterialTheme.colorScheme.primary
+                    Text(
+                        text = movie.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                     )
+                    
+                    if (!movie.rating.isNullOrBlank()) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Star,
+                                contentDescription = null,
+                                modifier = Modifier.height(16.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = movie.rating,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                    
+                    if (!movie.releaseDate.isNullOrBlank()) {
+                        Text(
+                            text = "Jahr: ${movie.releaseDate}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    
+                    if (!movie.genre.isNullOrBlank()) {
+                        Text(
+                            text = "Genre: ${movie.genre}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    
+                    if (!movie.plot.isNullOrBlank()) {
+                        Text(
+                            text = movie.plot,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 3,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    
+                    if (movie.durationSecs != null) {
+                        Text(
+                            text = formatDuration(movie.durationSecs),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    
+                    // Show progress text if watching
+                    if (progressPercent in 5..95) {
+                        Text(
+                            text = "${progressPercent}% gesehen",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.weight(1f))
+                    
+                    // Play button
+                    IconButton(
+                        onClick = onClick,
+                        modifier = Modifier.align(Alignment.End)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = if (progressPercent > 0) "Weiterschauen" else "Abspielen",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
+            }
+            
+            // Progress bar at bottom of card (full width)
+            if (progressPercent > 0) {
+                LinearProgressIndicator(
+                    progress = { progressPercent / 100f },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(4.dp),
+                    color = MaterialTheme.colorScheme.primary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant
+                )
             }
         }
     }
