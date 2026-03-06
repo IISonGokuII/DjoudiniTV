@@ -67,7 +67,7 @@ fun OnboardingScreen(
                 actions = {
                     // Progress indicator
                     LinearProgressIndicator(
-                        progress = { calculateProgress(uiState.currentStep) },
+                        progress = { calculateProgress(uiState) },
                         modifier = Modifier
                             .width(100.dp)
                             .padding(end = 16.dp)
@@ -120,9 +120,7 @@ fun OnboardingScreen(
                         onUsernameChange = viewModel::updateUsername,
                         onPasswordChange = viewModel::updatePassword,
                         onConnect = {
-                            viewModel.connectProvider {
-                                viewModel.goToStep(OnboardingStep.Loading)
-                            }
+                            viewModel.connectProvider { /* onComplete callback - steps handled by ViewModel */ }
                         }
                     )
                     is OnboardingStep.M3UUrl -> M3UUrlStep(
@@ -131,53 +129,18 @@ fun OnboardingScreen(
                         error = uiState.error,
                         onUrlChange = viewModel::updateM3uUrl,
                         onConnect = {
-                            viewModel.connectProvider {
-                                viewModel.goToStep(OnboardingStep.Loading)
-                            }
+                            viewModel.connectProvider { /* onComplete callback - steps handled by ViewModel */ }
                         }
                     )
-                    is OnboardingStep.Loading -> LoadingStep()
-                    is OnboardingStep.LiveTvCategories -> CategorySelectionStep(
-                        title = "Live TV Kategorien",
-                        subtitle = "Wählen Sie die Kategorien aus, die Sie im Live TV-Bereich sehen möchten",
-                        icon = Icons.Default.LiveTv,
-                        categories = step.categories,
-                        selectedIds = uiState.selectedLiveCategories,
-                        onToggle = viewModel::toggleLiveCategory,
-                        onSelectAll = { viewModel.selectAllLiveCategories(step.categories) },
-                        onDeselectAll = viewModel::deselectAllLiveCategories,
-                        onContinue = {
-                            // Go to series categories if available
-                            onComplete()
-                        }
+                    is OnboardingStep.Validating -> ValidatingStep(
+                        message = uiState.validationMessage
                     )
-                    is OnboardingStep.SeriesCategories -> CategorySelectionStep(
-                        title = "Serien Kategorien",
-                        subtitle = "Wählen Sie die Kategorien aus, die Sie im Serien-Bereich sehen möchten",
-                        icon = Icons.Default.Tv,
-                        categories = step.categories,
-                        selectedIds = uiState.selectedSeriesCategories,
-                        onToggle = viewModel::toggleSeriesCategory,
-                        onSelectAll = { viewModel.selectAllSeriesCategories(step.categories) },
-                        onDeselectAll = viewModel::deselectAllSeriesCategories,
-                        onContinue = {
-                            // Go to VOD categories
-                        }
+                    is OnboardingStep.Syncing -> SyncingStep(
+                        message = uiState.syncMessage,
+                        progress = uiState.syncProgress
                     )
-                    is OnboardingStep.VodCategories -> CategorySelectionStep(
-                        title = "Film Kategorien",
-                        subtitle = "Wählen Sie die Kategorien aus, die Sie im VOD-Bereich sehen möchten",
-                        icon = Icons.Default.Movie,
-                        categories = step.categories,
-                        selectedIds = uiState.selectedVodCategories,
-                        onToggle = viewModel::toggleVodCategory,
-                        onSelectAll = { viewModel.selectAllVodCategories(step.categories) },
-                        onDeselectAll = viewModel::deselectAllVodCategories,
-                        onContinue = {
-                            viewModel.saveOnboardingComplete()
-                            onComplete()
-                        }
-                    )
+                    // Category selection steps removed for faster onboarding
+                    // Categories can be filtered in the main app
                     is OnboardingStep.Complete -> CompleteStep(
                         onFinish = onComplete
                     )
@@ -187,17 +150,16 @@ fun OnboardingScreen(
     }
 }
 
-private fun calculateProgress(step: OnboardingStep): Float {
-    return when (step) {
+private fun calculateProgress(state: OnboardingUiState): Float {
+    return when (state.currentStep) {
         is OnboardingStep.Welcome -> 0.1f
         is OnboardingStep.ProviderType -> 0.2f
         is OnboardingStep.XtreamLogin -> 0.3f
         is OnboardingStep.M3UUrl -> 0.3f
-        is OnboardingStep.Loading -> 0.5f
-        is OnboardingStep.LiveTvCategories -> 0.6f
-        is OnboardingStep.SeriesCategories -> 0.75f
-        is OnboardingStep.VodCategories -> 0.9f
+        is OnboardingStep.Validating -> 0.4f
+        is OnboardingStep.Syncing -> 0.4f + (state.syncProgress / 100f * 0.5f)
         is OnboardingStep.Complete -> 1f
+        else -> 0.5f
     }
 }
 
@@ -562,6 +524,98 @@ private fun LoadingStep() {
             text = "Ihre Inhalte werden geladen",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun ValidatingStep(
+    message: String?
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(64.dp)
+        )
+        
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        Text(
+            text = "Verbindung wird geprüft...",
+            style = MaterialTheme.typography.headlineSmall
+        )
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        Text(
+            text = "Max. 30 Sekunden",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        
+        message?.let {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = it,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+}
+
+@Composable
+private fun SyncingStep(
+    message: String,
+    progress: Int
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        // Progress circle with percentage
+        Box(
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(120.dp),
+                strokeWidth = 8.dp
+            )
+            Text(
+                text = "$progress%",
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+        
+        Spacer(modifier = Modifier.height(32.dp))
+        
+        Text(
+            text = message,
+            style = MaterialTheme.typography.headlineSmall,
+            textAlign = TextAlign.Center
+        )
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        Text(
+            text = "Nur Live TV wird synchronisiert (schnell)",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        LinearProgressIndicator(
+            progress = { progress / 100f },
+            modifier = Modifier
+                .fillMaxWidth(0.7f)
+                .height(8.dp)
         )
     }
 }

@@ -7,6 +7,8 @@ import com.nextgen.iptv.domain.model.ProviderType
 import com.nextgen.iptv.domain.usecase.provider.AddProviderUseCase
 import com.nextgen.iptv.domain.usecase.provider.SyncProgress
 import com.nextgen.iptv.domain.usecase.provider.SyncProviderUseCase
+import com.nextgen.iptv.domain.usecase.provider.ValidateProviderUseCase
+import com.nextgen.iptv.domain.usecase.provider.ValidationResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,10 +22,8 @@ sealed class OnboardingStep {
     data object ProviderType : OnboardingStep()
     data object XtreamLogin : OnboardingStep()
     data object M3UUrl : OnboardingStep()
-    data object Loading : OnboardingStep()
-    data class LiveTvCategories(val categories: List<CategoryEntity>) : OnboardingStep()
-    data class SeriesCategories(val categories: List<CategoryEntity>) : OnboardingStep()
-    data class VodCategories(val categories: List<CategoryEntity>) : OnboardingStep()
+    data object Validating : OnboardingStep()  // New: Show validation progress
+    data object Syncing : OnboardingStep()      // New: Show sync progress
     data object Complete : OnboardingStep()
 }
 
@@ -34,12 +34,12 @@ data class OnboardingUiState(
     val username: String = "",
     val password: String = "",
     val m3uUrl: String = "",
-    val selectedLiveCategories: Set<String> = emptySet(),
-    val selectedSeriesCategories: Set<String> = emptySet(),
-    val selectedVodCategories: Set<String> = emptySet(),
     val isLoading: Boolean = false,
     val error: String? = null,
-    val providerId: String? = null
+    val providerId: String? = null,
+    val validationMessage: String? = null,
+    val syncMessage: String = "",
+    val syncProgress: Int = 0
 )
 
 enum class ProviderTypeSelection {
@@ -49,7 +49,8 @@ enum class ProviderTypeSelection {
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
     private val addProviderUseCase: AddProviderUseCase,
-    private val syncProviderUseCase: SyncProviderUseCase
+    private val syncProviderUseCase: SyncProviderUseCase,
+    private val validateProviderUseCase: ValidateProviderUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(OnboardingUiState())
@@ -79,13 +80,13 @@ class OnboardingViewModel @Inject constructor(
         _uiState.update { it.copy(m3uUrl = url, error = null) }
     }
 
-    fun connectProvider(onSuccess: () -> Unit) {
+    fun connectProvider(onComplete: () -> Unit) {
         val state = _uiState.value
         
         val providerType = when (state.providerType) {
             ProviderTypeSelection.XTREAM -> {
                 if (state.serverUrl.isBlank() || state.username.isBlank() || state.password.isBlank()) {
-                    _uiState.update { it.copy(error = "Bitte alle Felder ausfüllen") }
+                    _uiState.update { it.copy(error = "Bitte alle Felder ausfullen") }
                     return
                 }
                 ProviderType.XtreamCodes(
@@ -104,106 +105,100 @@ class OnboardingViewModel @Inject constructor(
             else -> return
         }
 
-        _uiState.update { it.copy(isLoading = true, error = null) }
+        _uiState.update { it.copy(isLoading = true, error = null, currentStep = OnboardingStep.Validating) }
 
         viewModelScope.launch {
-            addProviderUseCase("Mein Provider", providerType)
-                .onSuccess { providerId ->
-                    _uiState.update { it.copy(providerId = providerId) }
+            // Step 1: Validate connection first (with timeout)
+            when (val result = validateProviderUseCase(providerType)) {
+                is ValidationResult.Success -> {
+                    _uiState.update { 
+                        it.copy(
+                            validationMessage = result.info,
+                            currentStep = OnboardingStep.Syncing,
+                            syncMessage = "Provider wird gespeichert...",
+                            syncProgress = 5
+                        ) 
+                    }
                     
-                    // Start sync
-                    syncProviderUseCase(providerId).collect { progress ->
-                        when (progress) {
-                            is SyncProgress.Success -> {
-                                _uiState.update { it.copy(isLoading = false) }
-                                onSuccess()
+                    // Step 2: Add provider
+                    addProviderUseCase("Mein Provider", providerType)
+                        .onSuccess { providerId ->
+                            _uiState.update { 
+                                it.copy(
+                                    providerId = providerId,
+                                    syncMessage = "Synchronisiere Live TV...",
+                                    syncProgress = 10
+                                ) 
                             }
-                            is SyncProgress.Error -> {
-                                _uiState.update { 
-                                    it.copy(isLoading = false, error = progress.message) 
+                            
+                            // Step 3: Quick sync ONLY Live TV (fast!)
+                            syncProviderUseCase.syncQuick(providerId).collect { progress ->
+                                when (progress) {
+                                    is SyncProgress.Starting -> {
+                                        _uiState.update { 
+                                            it.copy(
+                                                syncMessage = "Starte Synchronisation...",
+                                                syncProgress = 10
+                                            )
+                                        }
+                                    }
+                                    is SyncProgress.Progress -> {
+                                        _uiState.update { 
+                                            it.copy(
+                                                syncMessage = progress.message,
+                                                syncProgress = progress.percent
+                                            )
+                                        }
+                                    }
+                                    is SyncProgress.Success -> {
+                                        _uiState.update { 
+                                            it.copy(
+                                                isLoading = false,
+                                                currentStep = OnboardingStep.Complete,
+                                                syncProgress = 100,
+                                                syncMessage = "Fertig!"
+                                            ) 
+                                        }
+                                        onComplete()
+                                    }
+                                    is SyncProgress.Error -> {
+                                        _uiState.update { 
+                                            it.copy(
+                                                isLoading = false,
+                                                error = progress.message,
+                                                currentStep = OnboardingStep.XtreamLogin
+                                            ) 
+                                        }
+                                    }
                                 }
                             }
-                            else -> {}
                         }
-                    }
+                        .onFailure { error ->
+                            _uiState.update { 
+                                it.copy(
+                                    isLoading = false,
+                                    error = "Provider konnte nicht gespeichert werden: ${error.message}",
+                                    currentStep = OnboardingStep.XtreamLogin
+                                ) 
+                            }
+                        }
                 }
-                .onFailure { error ->
+                is ValidationResult.Error -> {
                     _uiState.update { 
-                        it.copy(isLoading = false, error = error.message) 
+                        it.copy(
+                            isLoading = false,
+                            error = result.message,
+                            currentStep = OnboardingStep.XtreamLogin
+                        ) 
                     }
                 }
-        }
-    }
-
-    fun toggleLiveCategory(categoryId: String) {
-        _uiState.update { state ->
-            val current = state.selectedLiveCategories
-            val updated = if (current.contains(categoryId)) {
-                current - categoryId
-            } else {
-                current + categoryId
             }
-            state.copy(selectedLiveCategories = updated)
         }
-    }
-
-    fun toggleSeriesCategory(categoryId: String) {
-        _uiState.update { state ->
-            val current = state.selectedSeriesCategories
-            val updated = if (current.contains(categoryId)) {
-                current - categoryId
-            } else {
-                current + categoryId
-            }
-            state.copy(selectedSeriesCategories = updated)
-        }
-    }
-
-    fun toggleVodCategory(categoryId: String) {
-        _uiState.update { state ->
-            val current = state.selectedVodCategories
-            val updated = if (current.contains(categoryId)) {
-                current - categoryId
-            } else {
-                current + categoryId
-            }
-            state.copy(selectedVodCategories = updated)
-        }
-    }
-
-    fun selectAllLiveCategories(categories: List<CategoryEntity>) {
-        _uiState.update { 
-            it.copy(selectedLiveCategories = categories.map { cat -> cat.id }.toSet()) 
-        }
-    }
-
-    fun deselectAllLiveCategories() {
-        _uiState.update { it.copy(selectedLiveCategories = emptySet()) }
-    }
-
-    fun selectAllSeriesCategories(categories: List<CategoryEntity>) {
-        _uiState.update { 
-            it.copy(selectedSeriesCategories = categories.map { cat -> cat.id }.toSet()) 
-        }
-    }
-
-    fun deselectAllSeriesCategories() {
-        _uiState.update { it.copy(selectedSeriesCategories = emptySet()) }
-    }
-
-    fun selectAllVodCategories(categories: List<CategoryEntity>) {
-        _uiState.update { 
-            it.copy(selectedVodCategories = categories.map { cat -> cat.id }.toSet()) 
-        }
-    }
-
-    fun deselectAllVodCategories() {
-        _uiState.update { it.copy(selectedVodCategories = emptySet()) }
     }
 
     fun saveOnboardingComplete() {
         // Save to preferences that onboarding is complete
-        // Also save selected categories for filtering
+        // VOD and Series can be synced later from settings
     }
 
     private fun normalizeUrl(url: String): String {
