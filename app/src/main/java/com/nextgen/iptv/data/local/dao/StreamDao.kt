@@ -18,11 +18,17 @@ interface StreamDao {
     @Query("SELECT * FROM streams WHERE categoryId = :categoryId ORDER BY name ASC")
     fun getByCategoryId(categoryId: String): Flow<List<StreamEntity>>
     
+    @Query("SELECT * FROM streams WHERE categoryId IN (:categoryIds) ORDER BY name ASC")
+    fun getByCategoryIds(categoryIds: List<String>): Flow<List<StreamEntity>>
+    
     @Query("SELECT * FROM streams WHERE providerId = :providerId ORDER BY name ASC")
     fun getByProviderId(providerId: String): Flow<List<StreamEntity>>
     
     @Query("SELECT * FROM streams WHERE type = :type ORDER BY name ASC")
     fun getByType(type: String): Flow<List<StreamEntity>>
+    
+    @Query("SELECT * FROM streams WHERE type = :type AND categoryId IN (:categoryIds) ORDER BY name ASC")
+    fun getByTypeAndCategories(type: String, categoryIds: List<String>): Flow<List<StreamEntity>>
     
     @Query("SELECT * FROM streams WHERE id = :id")
     suspend fun getById(id: String): StreamEntity?

@@ -1,6 +1,8 @@
 package com.nextgen.iptv.ui.viewmodel;
 
 import com.nextgen.iptv.domain.repository.CategoryRepository;
+import com.nextgen.iptv.domain.repository.ProviderRepository;
+import com.nextgen.iptv.domain.repository.SettingsRepository;
 import com.nextgen.iptv.domain.repository.StreamRepository;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
@@ -28,24 +30,35 @@ public final class VodViewModel_Factory implements Factory<VodViewModel> {
 
   private final Provider<CategoryRepository> categoryRepositoryProvider;
 
+  private final Provider<SettingsRepository> settingsRepositoryProvider;
+
+  private final Provider<ProviderRepository> providerRepositoryProvider;
+
   public VodViewModel_Factory(Provider<StreamRepository> streamRepositoryProvider,
-      Provider<CategoryRepository> categoryRepositoryProvider) {
+      Provider<CategoryRepository> categoryRepositoryProvider,
+      Provider<SettingsRepository> settingsRepositoryProvider,
+      Provider<ProviderRepository> providerRepositoryProvider) {
     this.streamRepositoryProvider = streamRepositoryProvider;
     this.categoryRepositoryProvider = categoryRepositoryProvider;
+    this.settingsRepositoryProvider = settingsRepositoryProvider;
+    this.providerRepositoryProvider = providerRepositoryProvider;
   }
 
   @Override
   public VodViewModel get() {
-    return newInstance(streamRepositoryProvider.get(), categoryRepositoryProvider.get());
+    return newInstance(streamRepositoryProvider.get(), categoryRepositoryProvider.get(), settingsRepositoryProvider.get(), providerRepositoryProvider.get());
   }
 
   public static VodViewModel_Factory create(Provider<StreamRepository> streamRepositoryProvider,
-      Provider<CategoryRepository> categoryRepositoryProvider) {
-    return new VodViewModel_Factory(streamRepositoryProvider, categoryRepositoryProvider);
+      Provider<CategoryRepository> categoryRepositoryProvider,
+      Provider<SettingsRepository> settingsRepositoryProvider,
+      Provider<ProviderRepository> providerRepositoryProvider) {
+    return new VodViewModel_Factory(streamRepositoryProvider, categoryRepositoryProvider, settingsRepositoryProvider, providerRepositoryProvider);
   }
 
   public static VodViewModel newInstance(StreamRepository streamRepository,
-      CategoryRepository categoryRepository) {
-    return new VodViewModel(streamRepository, categoryRepository);
+      CategoryRepository categoryRepository, SettingsRepository settingsRepository,
+      ProviderRepository providerRepository) {
+    return new VodViewModel(streamRepository, categoryRepository, settingsRepository, providerRepository);
   }
 }

@@ -19,6 +19,8 @@ class SeriesRepositoryImpl @Inject constructor(
     override suspend fun getSeriesById(seriesId: String): SeriesEntity? = seriesDao.getSeriesById(seriesId)
     override fun getAllSeries(): Flow<List<SeriesEntity>> = seriesDao.getAllSeries()
     override fun getSeriesByCategory(categoryId: String): Flow<List<SeriesEntity>> = seriesDao.getSeriesByCategory(categoryId)
+    override fun getSeriesByCategories(categoryIds: List<String>): Flow<List<SeriesEntity>> = 
+        if (categoryIds.isEmpty()) seriesDao.getAllSeries() else seriesDao.getSeriesByCategoryIds(categoryIds)
     override fun getSeriesByProvider(providerId: String): Flow<List<SeriesEntity>> = seriesDao.getSeriesByProvider(providerId)
     override fun searchSeries(query: String): Flow<List<SeriesEntity>> = seriesDao.searchSeries(query)
     override suspend fun deleteSeriesByProvider(providerId: String) = seriesDao.deleteSeriesByProvider(providerId)

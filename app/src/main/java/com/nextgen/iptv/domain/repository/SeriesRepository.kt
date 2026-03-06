@@ -11,6 +11,7 @@ interface SeriesRepository {
     suspend fun getSeriesById(seriesId: String): SeriesEntity?
     fun getAllSeries(): Flow<List<SeriesEntity>>
     fun getSeriesByCategory(categoryId: String): Flow<List<SeriesEntity>>
+    fun getSeriesByCategories(categoryIds: List<String>): Flow<List<SeriesEntity>>
     fun getSeriesByProvider(providerId: String): Flow<List<SeriesEntity>>
     fun searchSeries(query: String): Flow<List<SeriesEntity>>
     suspend fun deleteSeriesByProvider(providerId: String)

@@ -4,6 +4,7 @@ import com.nextgen.iptv.data.local.dao.StreamDao
 import com.nextgen.iptv.data.local.entity.StreamEntity
 import com.nextgen.iptv.domain.repository.StreamRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -23,8 +24,24 @@ class StreamRepositoryImpl @Inject constructor(
         return streamDao.getByCategoryId(categoryId)
     }
     
+    override fun getStreamsByCategories(categoryIds: List<String>): Flow<List<StreamEntity>> {
+        return if (categoryIds.isEmpty()) {
+            streamDao.getAll()
+        } else {
+            streamDao.getByCategoryIds(categoryIds)
+        }
+    }
+    
     override fun getStreamsByType(type: String): Flow<List<StreamEntity>> {
         return streamDao.getByType(type)
+    }
+    
+    override fun getStreamsByTypeAndCategories(type: String, categoryIds: List<String>): Flow<List<StreamEntity>> {
+        return if (categoryIds.isEmpty()) {
+            streamDao.getByType(type)
+        } else {
+            streamDao.getByTypeAndCategories(type, categoryIds)
+        }
     }
     
     override fun searchStreams(query: String): Flow<List<StreamEntity>> {

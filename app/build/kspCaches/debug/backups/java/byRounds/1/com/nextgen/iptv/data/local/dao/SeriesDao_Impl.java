@@ -11,6 +11,7 @@ import androidx.room.RoomSQLiteQuery;
 import androidx.room.SharedSQLiteStatement;
 import androidx.room.util.CursorUtil;
 import androidx.room.util.DBUtil;
+import androidx.room.util.StringUtil;
 import androidx.sqlite.db.SupportSQLiteStatement;
 import com.nextgen.iptv.data.local.entity.EpisodeEntity;
 import com.nextgen.iptv.data.local.entity.SeasonEntity;
@@ -21,6 +22,7 @@ import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.lang.StringBuilder;
 import java.lang.SuppressWarnings;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -682,6 +684,127 @@ public final class SeriesDao_Impl implements SeriesDao {
             _tmpTotalEpisodes = _cursor.getInt(_cursorIndexOfTotalEpisodes);
             _item = new SeriesEntity(_tmpId,_tmpProviderId,_tmpCategoryId,_tmpName,_tmpPlot,_tmpPosterUrl,_tmpBackdropUrl,_tmpRating,_tmpReleaseDate,_tmpGenre,_tmpCast,_tmpDirector,_tmpEpisodeRunTime,_tmpTotalSeasons,_tmpTotalEpisodes);
             _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Flow<List<SeriesEntity>> getSeriesByCategoryIds(final List<String> categoryIds) {
+    final StringBuilder _stringBuilder = StringUtil.newStringBuilder();
+    _stringBuilder.append("SELECT * FROM series WHERE categoryId IN (");
+    final int _inputSize = categoryIds.size();
+    StringUtil.appendPlaceholders(_stringBuilder, _inputSize);
+    _stringBuilder.append(")");
+    final String _sql = _stringBuilder.toString();
+    final int _argCount = 0 + _inputSize;
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, _argCount);
+    int _argIndex = 1;
+    for (String _item : categoryIds) {
+      _statement.bindString(_argIndex, _item);
+      _argIndex++;
+    }
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"series"}, new Callable<List<SeriesEntity>>() {
+      @Override
+      @NonNull
+      public List<SeriesEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfProviderId = CursorUtil.getColumnIndexOrThrow(_cursor, "providerId");
+          final int _cursorIndexOfCategoryId = CursorUtil.getColumnIndexOrThrow(_cursor, "categoryId");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfPlot = CursorUtil.getColumnIndexOrThrow(_cursor, "plot");
+          final int _cursorIndexOfPosterUrl = CursorUtil.getColumnIndexOrThrow(_cursor, "posterUrl");
+          final int _cursorIndexOfBackdropUrl = CursorUtil.getColumnIndexOrThrow(_cursor, "backdropUrl");
+          final int _cursorIndexOfRating = CursorUtil.getColumnIndexOrThrow(_cursor, "rating");
+          final int _cursorIndexOfReleaseDate = CursorUtil.getColumnIndexOrThrow(_cursor, "releaseDate");
+          final int _cursorIndexOfGenre = CursorUtil.getColumnIndexOrThrow(_cursor, "genre");
+          final int _cursorIndexOfCast = CursorUtil.getColumnIndexOrThrow(_cursor, "cast");
+          final int _cursorIndexOfDirector = CursorUtil.getColumnIndexOrThrow(_cursor, "director");
+          final int _cursorIndexOfEpisodeRunTime = CursorUtil.getColumnIndexOrThrow(_cursor, "episodeRunTime");
+          final int _cursorIndexOfTotalSeasons = CursorUtil.getColumnIndexOrThrow(_cursor, "totalSeasons");
+          final int _cursorIndexOfTotalEpisodes = CursorUtil.getColumnIndexOrThrow(_cursor, "totalEpisodes");
+          final List<SeriesEntity> _result = new ArrayList<SeriesEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final SeriesEntity _item_1;
+            final String _tmpId;
+            _tmpId = _cursor.getString(_cursorIndexOfId);
+            final String _tmpProviderId;
+            _tmpProviderId = _cursor.getString(_cursorIndexOfProviderId);
+            final String _tmpCategoryId;
+            _tmpCategoryId = _cursor.getString(_cursorIndexOfCategoryId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpPlot;
+            if (_cursor.isNull(_cursorIndexOfPlot)) {
+              _tmpPlot = null;
+            } else {
+              _tmpPlot = _cursor.getString(_cursorIndexOfPlot);
+            }
+            final String _tmpPosterUrl;
+            if (_cursor.isNull(_cursorIndexOfPosterUrl)) {
+              _tmpPosterUrl = null;
+            } else {
+              _tmpPosterUrl = _cursor.getString(_cursorIndexOfPosterUrl);
+            }
+            final String _tmpBackdropUrl;
+            if (_cursor.isNull(_cursorIndexOfBackdropUrl)) {
+              _tmpBackdropUrl = null;
+            } else {
+              _tmpBackdropUrl = _cursor.getString(_cursorIndexOfBackdropUrl);
+            }
+            final String _tmpRating;
+            if (_cursor.isNull(_cursorIndexOfRating)) {
+              _tmpRating = null;
+            } else {
+              _tmpRating = _cursor.getString(_cursorIndexOfRating);
+            }
+            final String _tmpReleaseDate;
+            if (_cursor.isNull(_cursorIndexOfReleaseDate)) {
+              _tmpReleaseDate = null;
+            } else {
+              _tmpReleaseDate = _cursor.getString(_cursorIndexOfReleaseDate);
+            }
+            final String _tmpGenre;
+            if (_cursor.isNull(_cursorIndexOfGenre)) {
+              _tmpGenre = null;
+            } else {
+              _tmpGenre = _cursor.getString(_cursorIndexOfGenre);
+            }
+            final String _tmpCast;
+            if (_cursor.isNull(_cursorIndexOfCast)) {
+              _tmpCast = null;
+            } else {
+              _tmpCast = _cursor.getString(_cursorIndexOfCast);
+            }
+            final String _tmpDirector;
+            if (_cursor.isNull(_cursorIndexOfDirector)) {
+              _tmpDirector = null;
+            } else {
+              _tmpDirector = _cursor.getString(_cursorIndexOfDirector);
+            }
+            final String _tmpEpisodeRunTime;
+            if (_cursor.isNull(_cursorIndexOfEpisodeRunTime)) {
+              _tmpEpisodeRunTime = null;
+            } else {
+              _tmpEpisodeRunTime = _cursor.getString(_cursorIndexOfEpisodeRunTime);
+            }
+            final int _tmpTotalSeasons;
+            _tmpTotalSeasons = _cursor.getInt(_cursorIndexOfTotalSeasons);
+            final int _tmpTotalEpisodes;
+            _tmpTotalEpisodes = _cursor.getInt(_cursorIndexOfTotalEpisodes);
+            _item_1 = new SeriesEntity(_tmpId,_tmpProviderId,_tmpCategoryId,_tmpName,_tmpPlot,_tmpPosterUrl,_tmpBackdropUrl,_tmpRating,_tmpReleaseDate,_tmpGenre,_tmpCast,_tmpDirector,_tmpEpisodeRunTime,_tmpTotalSeasons,_tmpTotalEpisodes);
+            _result.add(_item_1);
           }
           return _result;
         } finally {

@@ -14,6 +14,7 @@ import androidx.room.SharedSQLiteStatement;
 import androidx.room.paging.LimitOffsetPagingSource;
 import androidx.room.util.CursorUtil;
 import androidx.room.util.DBUtil;
+import androidx.room.util.StringUtil;
 import androidx.sqlite.db.SupportSQLiteStatement;
 import com.nextgen.iptv.data.local.entity.StreamEntity;
 import java.lang.Class;
@@ -23,6 +24,7 @@ import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import java.lang.StringBuilder;
 import java.lang.SuppressWarnings;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -733,6 +735,169 @@ public final class StreamDao_Impl implements StreamDao {
   }
 
   @Override
+  public Flow<List<StreamEntity>> getByCategoryIds(final List<String> categoryIds) {
+    final StringBuilder _stringBuilder = StringUtil.newStringBuilder();
+    _stringBuilder.append("SELECT * FROM streams WHERE categoryId IN (");
+    final int _inputSize = categoryIds.size();
+    StringUtil.appendPlaceholders(_stringBuilder, _inputSize);
+    _stringBuilder.append(") ORDER BY name ASC");
+    final String _sql = _stringBuilder.toString();
+    final int _argCount = 0 + _inputSize;
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, _argCount);
+    int _argIndex = 1;
+    for (String _item : categoryIds) {
+      _statement.bindString(_argIndex, _item);
+      _argIndex++;
+    }
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"streams"}, new Callable<List<StreamEntity>>() {
+      @Override
+      @NonNull
+      public List<StreamEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfCategoryId = CursorUtil.getColumnIndexOrThrow(_cursor, "categoryId");
+          final int _cursorIndexOfProviderId = CursorUtil.getColumnIndexOrThrow(_cursor, "providerId");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfStreamUrl = CursorUtil.getColumnIndexOrThrow(_cursor, "streamUrl");
+          final int _cursorIndexOfLogoUrl = CursorUtil.getColumnIndexOrThrow(_cursor, "logoUrl");
+          final int _cursorIndexOfEpgChannelId = CursorUtil.getColumnIndexOrThrow(_cursor, "epgChannelId");
+          final int _cursorIndexOfType = CursorUtil.getColumnIndexOrThrow(_cursor, "type");
+          final int _cursorIndexOfPlot = CursorUtil.getColumnIndexOrThrow(_cursor, "plot");
+          final int _cursorIndexOfCast = CursorUtil.getColumnIndexOrThrow(_cursor, "cast");
+          final int _cursorIndexOfDirector = CursorUtil.getColumnIndexOrThrow(_cursor, "director");
+          final int _cursorIndexOfGenre = CursorUtil.getColumnIndexOrThrow(_cursor, "genre");
+          final int _cursorIndexOfRating = CursorUtil.getColumnIndexOrThrow(_cursor, "rating");
+          final int _cursorIndexOfRating5Based = CursorUtil.getColumnIndexOrThrow(_cursor, "rating5Based");
+          final int _cursorIndexOfReleaseDate = CursorUtil.getColumnIndexOrThrow(_cursor, "releaseDate");
+          final int _cursorIndexOfDurationSecs = CursorUtil.getColumnIndexOrThrow(_cursor, "durationSecs");
+          final int _cursorIndexOfDuration = CursorUtil.getColumnIndexOrThrow(_cursor, "duration");
+          final int _cursorIndexOfBackdropUrl = CursorUtil.getColumnIndexOrThrow(_cursor, "backdropUrl");
+          final int _cursorIndexOfYoutubeTrailer = CursorUtil.getColumnIndexOrThrow(_cursor, "youtubeTrailer");
+          final int _cursorIndexOfAdded = CursorUtil.getColumnIndexOrThrow(_cursor, "added");
+          final int _cursorIndexOfContainerExtension = CursorUtil.getColumnIndexOrThrow(_cursor, "containerExtension");
+          final List<StreamEntity> _result = new ArrayList<StreamEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final StreamEntity _item_1;
+            final String _tmpId;
+            _tmpId = _cursor.getString(_cursorIndexOfId);
+            final String _tmpCategoryId;
+            _tmpCategoryId = _cursor.getString(_cursorIndexOfCategoryId);
+            final String _tmpProviderId;
+            _tmpProviderId = _cursor.getString(_cursorIndexOfProviderId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpStreamUrl;
+            _tmpStreamUrl = _cursor.getString(_cursorIndexOfStreamUrl);
+            final String _tmpLogoUrl;
+            if (_cursor.isNull(_cursorIndexOfLogoUrl)) {
+              _tmpLogoUrl = null;
+            } else {
+              _tmpLogoUrl = _cursor.getString(_cursorIndexOfLogoUrl);
+            }
+            final String _tmpEpgChannelId;
+            if (_cursor.isNull(_cursorIndexOfEpgChannelId)) {
+              _tmpEpgChannelId = null;
+            } else {
+              _tmpEpgChannelId = _cursor.getString(_cursorIndexOfEpgChannelId);
+            }
+            final String _tmpType;
+            _tmpType = _cursor.getString(_cursorIndexOfType);
+            final String _tmpPlot;
+            if (_cursor.isNull(_cursorIndexOfPlot)) {
+              _tmpPlot = null;
+            } else {
+              _tmpPlot = _cursor.getString(_cursorIndexOfPlot);
+            }
+            final String _tmpCast;
+            if (_cursor.isNull(_cursorIndexOfCast)) {
+              _tmpCast = null;
+            } else {
+              _tmpCast = _cursor.getString(_cursorIndexOfCast);
+            }
+            final String _tmpDirector;
+            if (_cursor.isNull(_cursorIndexOfDirector)) {
+              _tmpDirector = null;
+            } else {
+              _tmpDirector = _cursor.getString(_cursorIndexOfDirector);
+            }
+            final String _tmpGenre;
+            if (_cursor.isNull(_cursorIndexOfGenre)) {
+              _tmpGenre = null;
+            } else {
+              _tmpGenre = _cursor.getString(_cursorIndexOfGenre);
+            }
+            final String _tmpRating;
+            if (_cursor.isNull(_cursorIndexOfRating)) {
+              _tmpRating = null;
+            } else {
+              _tmpRating = _cursor.getString(_cursorIndexOfRating);
+            }
+            final Double _tmpRating5Based;
+            if (_cursor.isNull(_cursorIndexOfRating5Based)) {
+              _tmpRating5Based = null;
+            } else {
+              _tmpRating5Based = _cursor.getDouble(_cursorIndexOfRating5Based);
+            }
+            final String _tmpReleaseDate;
+            if (_cursor.isNull(_cursorIndexOfReleaseDate)) {
+              _tmpReleaseDate = null;
+            } else {
+              _tmpReleaseDate = _cursor.getString(_cursorIndexOfReleaseDate);
+            }
+            final Integer _tmpDurationSecs;
+            if (_cursor.isNull(_cursorIndexOfDurationSecs)) {
+              _tmpDurationSecs = null;
+            } else {
+              _tmpDurationSecs = _cursor.getInt(_cursorIndexOfDurationSecs);
+            }
+            final String _tmpDuration;
+            if (_cursor.isNull(_cursorIndexOfDuration)) {
+              _tmpDuration = null;
+            } else {
+              _tmpDuration = _cursor.getString(_cursorIndexOfDuration);
+            }
+            final String _tmpBackdropUrl;
+            if (_cursor.isNull(_cursorIndexOfBackdropUrl)) {
+              _tmpBackdropUrl = null;
+            } else {
+              _tmpBackdropUrl = _cursor.getString(_cursorIndexOfBackdropUrl);
+            }
+            final String _tmpYoutubeTrailer;
+            if (_cursor.isNull(_cursorIndexOfYoutubeTrailer)) {
+              _tmpYoutubeTrailer = null;
+            } else {
+              _tmpYoutubeTrailer = _cursor.getString(_cursorIndexOfYoutubeTrailer);
+            }
+            final String _tmpAdded;
+            if (_cursor.isNull(_cursorIndexOfAdded)) {
+              _tmpAdded = null;
+            } else {
+              _tmpAdded = _cursor.getString(_cursorIndexOfAdded);
+            }
+            final String _tmpContainerExtension;
+            if (_cursor.isNull(_cursorIndexOfContainerExtension)) {
+              _tmpContainerExtension = null;
+            } else {
+              _tmpContainerExtension = _cursor.getString(_cursorIndexOfContainerExtension);
+            }
+            _item_1 = new StreamEntity(_tmpId,_tmpCategoryId,_tmpProviderId,_tmpName,_tmpStreamUrl,_tmpLogoUrl,_tmpEpgChannelId,_tmpType,_tmpPlot,_tmpCast,_tmpDirector,_tmpGenre,_tmpRating,_tmpRating5Based,_tmpReleaseDate,_tmpDurationSecs,_tmpDuration,_tmpBackdropUrl,_tmpYoutubeTrailer,_tmpAdded,_tmpContainerExtension);
+            _result.add(_item_1);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
   public Flow<List<StreamEntity>> getByProviderId(final String providerId) {
     final String _sql = "SELECT * FROM streams WHERE providerId = ? ORDER BY name ASC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
@@ -1026,6 +1191,174 @@ public final class StreamDao_Impl implements StreamDao {
             }
             _item = new StreamEntity(_tmpId,_tmpCategoryId,_tmpProviderId,_tmpName,_tmpStreamUrl,_tmpLogoUrl,_tmpEpgChannelId,_tmpType,_tmpPlot,_tmpCast,_tmpDirector,_tmpGenre,_tmpRating,_tmpRating5Based,_tmpReleaseDate,_tmpDurationSecs,_tmpDuration,_tmpBackdropUrl,_tmpYoutubeTrailer,_tmpAdded,_tmpContainerExtension);
             _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Flow<List<StreamEntity>> getByTypeAndCategories(final String type,
+      final List<String> categoryIds) {
+    final StringBuilder _stringBuilder = StringUtil.newStringBuilder();
+    _stringBuilder.append("SELECT * FROM streams WHERE type = ");
+    _stringBuilder.append("?");
+    _stringBuilder.append(" AND categoryId IN (");
+    final int _inputSize = categoryIds.size();
+    StringUtil.appendPlaceholders(_stringBuilder, _inputSize);
+    _stringBuilder.append(") ORDER BY name ASC");
+    final String _sql = _stringBuilder.toString();
+    final int _argCount = 1 + _inputSize;
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, _argCount);
+    int _argIndex = 1;
+    _statement.bindString(_argIndex, type);
+    _argIndex = 2;
+    for (String _item : categoryIds) {
+      _statement.bindString(_argIndex, _item);
+      _argIndex++;
+    }
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"streams"}, new Callable<List<StreamEntity>>() {
+      @Override
+      @NonNull
+      public List<StreamEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfCategoryId = CursorUtil.getColumnIndexOrThrow(_cursor, "categoryId");
+          final int _cursorIndexOfProviderId = CursorUtil.getColumnIndexOrThrow(_cursor, "providerId");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfStreamUrl = CursorUtil.getColumnIndexOrThrow(_cursor, "streamUrl");
+          final int _cursorIndexOfLogoUrl = CursorUtil.getColumnIndexOrThrow(_cursor, "logoUrl");
+          final int _cursorIndexOfEpgChannelId = CursorUtil.getColumnIndexOrThrow(_cursor, "epgChannelId");
+          final int _cursorIndexOfType = CursorUtil.getColumnIndexOrThrow(_cursor, "type");
+          final int _cursorIndexOfPlot = CursorUtil.getColumnIndexOrThrow(_cursor, "plot");
+          final int _cursorIndexOfCast = CursorUtil.getColumnIndexOrThrow(_cursor, "cast");
+          final int _cursorIndexOfDirector = CursorUtil.getColumnIndexOrThrow(_cursor, "director");
+          final int _cursorIndexOfGenre = CursorUtil.getColumnIndexOrThrow(_cursor, "genre");
+          final int _cursorIndexOfRating = CursorUtil.getColumnIndexOrThrow(_cursor, "rating");
+          final int _cursorIndexOfRating5Based = CursorUtil.getColumnIndexOrThrow(_cursor, "rating5Based");
+          final int _cursorIndexOfReleaseDate = CursorUtil.getColumnIndexOrThrow(_cursor, "releaseDate");
+          final int _cursorIndexOfDurationSecs = CursorUtil.getColumnIndexOrThrow(_cursor, "durationSecs");
+          final int _cursorIndexOfDuration = CursorUtil.getColumnIndexOrThrow(_cursor, "duration");
+          final int _cursorIndexOfBackdropUrl = CursorUtil.getColumnIndexOrThrow(_cursor, "backdropUrl");
+          final int _cursorIndexOfYoutubeTrailer = CursorUtil.getColumnIndexOrThrow(_cursor, "youtubeTrailer");
+          final int _cursorIndexOfAdded = CursorUtil.getColumnIndexOrThrow(_cursor, "added");
+          final int _cursorIndexOfContainerExtension = CursorUtil.getColumnIndexOrThrow(_cursor, "containerExtension");
+          final List<StreamEntity> _result = new ArrayList<StreamEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final StreamEntity _item_1;
+            final String _tmpId;
+            _tmpId = _cursor.getString(_cursorIndexOfId);
+            final String _tmpCategoryId;
+            _tmpCategoryId = _cursor.getString(_cursorIndexOfCategoryId);
+            final String _tmpProviderId;
+            _tmpProviderId = _cursor.getString(_cursorIndexOfProviderId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpStreamUrl;
+            _tmpStreamUrl = _cursor.getString(_cursorIndexOfStreamUrl);
+            final String _tmpLogoUrl;
+            if (_cursor.isNull(_cursorIndexOfLogoUrl)) {
+              _tmpLogoUrl = null;
+            } else {
+              _tmpLogoUrl = _cursor.getString(_cursorIndexOfLogoUrl);
+            }
+            final String _tmpEpgChannelId;
+            if (_cursor.isNull(_cursorIndexOfEpgChannelId)) {
+              _tmpEpgChannelId = null;
+            } else {
+              _tmpEpgChannelId = _cursor.getString(_cursorIndexOfEpgChannelId);
+            }
+            final String _tmpType;
+            _tmpType = _cursor.getString(_cursorIndexOfType);
+            final String _tmpPlot;
+            if (_cursor.isNull(_cursorIndexOfPlot)) {
+              _tmpPlot = null;
+            } else {
+              _tmpPlot = _cursor.getString(_cursorIndexOfPlot);
+            }
+            final String _tmpCast;
+            if (_cursor.isNull(_cursorIndexOfCast)) {
+              _tmpCast = null;
+            } else {
+              _tmpCast = _cursor.getString(_cursorIndexOfCast);
+            }
+            final String _tmpDirector;
+            if (_cursor.isNull(_cursorIndexOfDirector)) {
+              _tmpDirector = null;
+            } else {
+              _tmpDirector = _cursor.getString(_cursorIndexOfDirector);
+            }
+            final String _tmpGenre;
+            if (_cursor.isNull(_cursorIndexOfGenre)) {
+              _tmpGenre = null;
+            } else {
+              _tmpGenre = _cursor.getString(_cursorIndexOfGenre);
+            }
+            final String _tmpRating;
+            if (_cursor.isNull(_cursorIndexOfRating)) {
+              _tmpRating = null;
+            } else {
+              _tmpRating = _cursor.getString(_cursorIndexOfRating);
+            }
+            final Double _tmpRating5Based;
+            if (_cursor.isNull(_cursorIndexOfRating5Based)) {
+              _tmpRating5Based = null;
+            } else {
+              _tmpRating5Based = _cursor.getDouble(_cursorIndexOfRating5Based);
+            }
+            final String _tmpReleaseDate;
+            if (_cursor.isNull(_cursorIndexOfReleaseDate)) {
+              _tmpReleaseDate = null;
+            } else {
+              _tmpReleaseDate = _cursor.getString(_cursorIndexOfReleaseDate);
+            }
+            final Integer _tmpDurationSecs;
+            if (_cursor.isNull(_cursorIndexOfDurationSecs)) {
+              _tmpDurationSecs = null;
+            } else {
+              _tmpDurationSecs = _cursor.getInt(_cursorIndexOfDurationSecs);
+            }
+            final String _tmpDuration;
+            if (_cursor.isNull(_cursorIndexOfDuration)) {
+              _tmpDuration = null;
+            } else {
+              _tmpDuration = _cursor.getString(_cursorIndexOfDuration);
+            }
+            final String _tmpBackdropUrl;
+            if (_cursor.isNull(_cursorIndexOfBackdropUrl)) {
+              _tmpBackdropUrl = null;
+            } else {
+              _tmpBackdropUrl = _cursor.getString(_cursorIndexOfBackdropUrl);
+            }
+            final String _tmpYoutubeTrailer;
+            if (_cursor.isNull(_cursorIndexOfYoutubeTrailer)) {
+              _tmpYoutubeTrailer = null;
+            } else {
+              _tmpYoutubeTrailer = _cursor.getString(_cursorIndexOfYoutubeTrailer);
+            }
+            final String _tmpAdded;
+            if (_cursor.isNull(_cursorIndexOfAdded)) {
+              _tmpAdded = null;
+            } else {
+              _tmpAdded = _cursor.getString(_cursorIndexOfAdded);
+            }
+            final String _tmpContainerExtension;
+            if (_cursor.isNull(_cursorIndexOfContainerExtension)) {
+              _tmpContainerExtension = null;
+            } else {
+              _tmpContainerExtension = _cursor.getString(_cursorIndexOfContainerExtension);
+            }
+            _item_1 = new StreamEntity(_tmpId,_tmpCategoryId,_tmpProviderId,_tmpName,_tmpStreamUrl,_tmpLogoUrl,_tmpEpgChannelId,_tmpType,_tmpPlot,_tmpCast,_tmpDirector,_tmpGenre,_tmpRating,_tmpRating5Based,_tmpReleaseDate,_tmpDurationSecs,_tmpDuration,_tmpBackdropUrl,_tmpYoutubeTrailer,_tmpAdded,_tmpContainerExtension);
+            _result.add(_item_1);
           }
           return _result;
         } finally {

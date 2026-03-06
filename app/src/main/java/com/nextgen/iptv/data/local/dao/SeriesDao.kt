@@ -28,6 +28,9 @@ interface SeriesDao {
     @Query("SELECT * FROM series WHERE categoryId = :categoryId")
     fun getSeriesByCategory(categoryId: String): Flow<List<SeriesEntity>>
     
+    @Query("SELECT * FROM series WHERE categoryId IN (:categoryIds)")
+    fun getSeriesByCategoryIds(categoryIds: List<String>): Flow<List<SeriesEntity>>
+    
     @Query("SELECT * FROM series WHERE providerId = :providerId")
     fun getSeriesByProvider(providerId: String): Flow<List<SeriesEntity>>
     

@@ -7,7 +7,9 @@ interface StreamRepository {
     fun getAllStreams(): Flow<List<StreamEntity>>
     fun getStreamsByProvider(providerId: String): Flow<List<StreamEntity>>
     fun getStreamsByCategory(categoryId: String): Flow<List<StreamEntity>>
+    fun getStreamsByCategories(categoryIds: List<String>): Flow<List<StreamEntity>>
     fun getStreamsByType(type: String): Flow<List<StreamEntity>>
+    fun getStreamsByTypeAndCategories(type: String, categoryIds: List<String>): Flow<List<StreamEntity>>
     fun searchStreams(query: String): Flow<List<StreamEntity>>
     fun getFavoriteStreams(): Flow<List<StreamEntity>>
     suspend fun getStreamById(id: String): StreamEntity?

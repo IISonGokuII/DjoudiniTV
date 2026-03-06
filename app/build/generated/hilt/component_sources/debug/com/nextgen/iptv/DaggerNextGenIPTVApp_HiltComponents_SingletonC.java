@@ -444,50 +444,50 @@ public final class DaggerNextGenIPTVApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_nextgen_iptv_ui_viewmodel_PlayerViewModel = "com.nextgen.iptv.ui.viewmodel.PlayerViewModel";
+      static String com_nextgen_iptv_ui_viewmodel_SeriesListViewModel = "com.nextgen.iptv.ui.viewmodel.SeriesListViewModel";
+
+      static String com_nextgen_iptv_ui_viewmodel_LiveTvViewModel = "com.nextgen.iptv.ui.viewmodel.LiveTvViewModel";
 
       static String com_nextgen_iptv_ui_viewmodel_SeriesDetailViewModel = "com.nextgen.iptv.ui.viewmodel.SeriesDetailViewModel";
 
-      static String com_nextgen_iptv_ui_viewmodel_SeriesListViewModel = "com.nextgen.iptv.ui.viewmodel.SeriesListViewModel";
+      static String com_nextgen_iptv_ui_viewmodel_VodViewModel = "com.nextgen.iptv.ui.viewmodel.VodViewModel";
 
       static String com_nextgen_iptv_ui_viewmodel_ProviderSetupViewModel = "com.nextgen.iptv.ui.viewmodel.ProviderSetupViewModel";
+
+      static String com_nextgen_iptv_ui_viewmodel_DashboardViewModel = "com.nextgen.iptv.ui.viewmodel.DashboardViewModel";
+
+      static String com_nextgen_iptv_ui_viewmodel_PlayerViewModel = "com.nextgen.iptv.ui.viewmodel.PlayerViewModel";
 
       static String com_nextgen_iptv_ui_viewmodel_SettingsViewModel = "com.nextgen.iptv.ui.viewmodel.SettingsViewModel";
 
       static String com_nextgen_iptv_presentation_onboarding_OnboardingViewModel = "com.nextgen.iptv.presentation.onboarding.OnboardingViewModel";
 
-      static String com_nextgen_iptv_ui_viewmodel_LiveTvViewModel = "com.nextgen.iptv.ui.viewmodel.LiveTvViewModel";
-
-      static String com_nextgen_iptv_ui_viewmodel_VodViewModel = "com.nextgen.iptv.ui.viewmodel.VodViewModel";
-
-      static String com_nextgen_iptv_ui_viewmodel_DashboardViewModel = "com.nextgen.iptv.ui.viewmodel.DashboardViewModel";
+      @KeepFieldType
+      SeriesListViewModel com_nextgen_iptv_ui_viewmodel_SeriesListViewModel2;
 
       @KeepFieldType
-      PlayerViewModel com_nextgen_iptv_ui_viewmodel_PlayerViewModel2;
+      LiveTvViewModel com_nextgen_iptv_ui_viewmodel_LiveTvViewModel2;
 
       @KeepFieldType
       SeriesDetailViewModel com_nextgen_iptv_ui_viewmodel_SeriesDetailViewModel2;
 
       @KeepFieldType
-      SeriesListViewModel com_nextgen_iptv_ui_viewmodel_SeriesListViewModel2;
+      VodViewModel com_nextgen_iptv_ui_viewmodel_VodViewModel2;
 
       @KeepFieldType
       ProviderSetupViewModel com_nextgen_iptv_ui_viewmodel_ProviderSetupViewModel2;
+
+      @KeepFieldType
+      DashboardViewModel com_nextgen_iptv_ui_viewmodel_DashboardViewModel2;
+
+      @KeepFieldType
+      PlayerViewModel com_nextgen_iptv_ui_viewmodel_PlayerViewModel2;
 
       @KeepFieldType
       SettingsViewModel com_nextgen_iptv_ui_viewmodel_SettingsViewModel2;
 
       @KeepFieldType
       OnboardingViewModel com_nextgen_iptv_presentation_onboarding_OnboardingViewModel2;
-
-      @KeepFieldType
-      LiveTvViewModel com_nextgen_iptv_ui_viewmodel_LiveTvViewModel2;
-
-      @KeepFieldType
-      VodViewModel com_nextgen_iptv_ui_viewmodel_VodViewModel2;
-
-      @KeepFieldType
-      DashboardViewModel com_nextgen_iptv_ui_viewmodel_DashboardViewModel2;
     }
   }
 
@@ -578,50 +578,50 @@ public final class DaggerNextGenIPTVApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_nextgen_iptv_ui_viewmodel_SeriesDetailViewModel = "com.nextgen.iptv.ui.viewmodel.SeriesDetailViewModel";
-
-      static String com_nextgen_iptv_ui_viewmodel_LiveTvViewModel = "com.nextgen.iptv.ui.viewmodel.LiveTvViewModel";
-
       static String com_nextgen_iptv_ui_viewmodel_ProviderSetupViewModel = "com.nextgen.iptv.ui.viewmodel.ProviderSetupViewModel";
-
-      static String com_nextgen_iptv_ui_viewmodel_DashboardViewModel = "com.nextgen.iptv.ui.viewmodel.DashboardViewModel";
-
-      static String com_nextgen_iptv_ui_viewmodel_SettingsViewModel = "com.nextgen.iptv.ui.viewmodel.SettingsViewModel";
 
       static String com_nextgen_iptv_ui_viewmodel_VodViewModel = "com.nextgen.iptv.ui.viewmodel.VodViewModel";
 
-      static String com_nextgen_iptv_ui_viewmodel_PlayerViewModel = "com.nextgen.iptv.ui.viewmodel.PlayerViewModel";
+      static String com_nextgen_iptv_ui_viewmodel_SeriesDetailViewModel = "com.nextgen.iptv.ui.viewmodel.SeriesDetailViewModel";
 
       static String com_nextgen_iptv_presentation_onboarding_OnboardingViewModel = "com.nextgen.iptv.presentation.onboarding.OnboardingViewModel";
 
+      static String com_nextgen_iptv_ui_viewmodel_PlayerViewModel = "com.nextgen.iptv.ui.viewmodel.PlayerViewModel";
+
       static String com_nextgen_iptv_ui_viewmodel_SeriesListViewModel = "com.nextgen.iptv.ui.viewmodel.SeriesListViewModel";
 
-      @KeepFieldType
-      SeriesDetailViewModel com_nextgen_iptv_ui_viewmodel_SeriesDetailViewModel2;
+      static String com_nextgen_iptv_ui_viewmodel_SettingsViewModel = "com.nextgen.iptv.ui.viewmodel.SettingsViewModel";
 
-      @KeepFieldType
-      LiveTvViewModel com_nextgen_iptv_ui_viewmodel_LiveTvViewModel2;
+      static String com_nextgen_iptv_ui_viewmodel_DashboardViewModel = "com.nextgen.iptv.ui.viewmodel.DashboardViewModel";
+
+      static String com_nextgen_iptv_ui_viewmodel_LiveTvViewModel = "com.nextgen.iptv.ui.viewmodel.LiveTvViewModel";
 
       @KeepFieldType
       ProviderSetupViewModel com_nextgen_iptv_ui_viewmodel_ProviderSetupViewModel2;
 
       @KeepFieldType
-      DashboardViewModel com_nextgen_iptv_ui_viewmodel_DashboardViewModel2;
-
-      @KeepFieldType
-      SettingsViewModel com_nextgen_iptv_ui_viewmodel_SettingsViewModel2;
-
-      @KeepFieldType
       VodViewModel com_nextgen_iptv_ui_viewmodel_VodViewModel2;
 
       @KeepFieldType
-      PlayerViewModel com_nextgen_iptv_ui_viewmodel_PlayerViewModel2;
+      SeriesDetailViewModel com_nextgen_iptv_ui_viewmodel_SeriesDetailViewModel2;
 
       @KeepFieldType
       OnboardingViewModel com_nextgen_iptv_presentation_onboarding_OnboardingViewModel2;
 
       @KeepFieldType
+      PlayerViewModel com_nextgen_iptv_ui_viewmodel_PlayerViewModel2;
+
+      @KeepFieldType
       SeriesListViewModel com_nextgen_iptv_ui_viewmodel_SeriesListViewModel2;
+
+      @KeepFieldType
+      SettingsViewModel com_nextgen_iptv_ui_viewmodel_SettingsViewModel2;
+
+      @KeepFieldType
+      DashboardViewModel com_nextgen_iptv_ui_viewmodel_DashboardViewModel2;
+
+      @KeepFieldType
+      LiveTvViewModel com_nextgen_iptv_ui_viewmodel_LiveTvViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -649,7 +649,7 @@ public final class DaggerNextGenIPTVApp_HiltComponents_SingletonC {
           return (T) new DashboardViewModel(singletonCImpl.providerRepositoryImpl(), viewModelCImpl.getProvidersWithStatusUseCase());
 
           case 1: // com.nextgen.iptv.ui.viewmodel.LiveTvViewModel 
-          return (T) new LiveTvViewModel(singletonCImpl.categoryRepositoryImpl(), singletonCImpl.streamRepositoryImpl());
+          return (T) new LiveTvViewModel(singletonCImpl.categoryRepositoryImpl(), singletonCImpl.streamRepositoryImpl(), singletonCImpl.settingsRepositoryImplProvider.get(), singletonCImpl.providerRepositoryImpl());
 
           case 2: // com.nextgen.iptv.presentation.onboarding.OnboardingViewModel 
           return (T) new OnboardingViewModel(viewModelCImpl.addProviderUseCase(), viewModelCImpl.syncProviderUseCase(), viewModelCImpl.validateProviderUseCase(), singletonCImpl.categoryRepositoryImpl(), singletonCImpl.settingsRepositoryImplProvider.get());
@@ -664,13 +664,13 @@ public final class DaggerNextGenIPTVApp_HiltComponents_SingletonC {
           return (T) new SeriesDetailViewModel(viewModelCImpl.savedStateHandle, singletonCImpl.seriesRepositoryImplProvider.get());
 
           case 6: // com.nextgen.iptv.ui.viewmodel.SeriesListViewModel 
-          return (T) new SeriesListViewModel(singletonCImpl.seriesRepositoryImplProvider.get(), singletonCImpl.categoryRepositoryImpl());
+          return (T) new SeriesListViewModel(singletonCImpl.seriesRepositoryImplProvider.get(), singletonCImpl.categoryRepositoryImpl(), singletonCImpl.settingsRepositoryImplProvider.get(), singletonCImpl.providerRepositoryImpl());
 
           case 7: // com.nextgen.iptv.ui.viewmodel.SettingsViewModel 
           return (T) new SettingsViewModel(viewModelCImpl.getSettingsUseCase(), viewModelCImpl.updateSettingsUseCase(), singletonCImpl.providerRepositoryImpl(), singletonCImpl.settingsRepositoryImplProvider.get(), viewModelCImpl.syncProviderUseCase());
 
           case 8: // com.nextgen.iptv.ui.viewmodel.VodViewModel 
-          return (T) new VodViewModel(singletonCImpl.streamRepositoryImpl(), singletonCImpl.categoryRepositoryImpl());
+          return (T) new VodViewModel(singletonCImpl.streamRepositoryImpl(), singletonCImpl.categoryRepositoryImpl(), singletonCImpl.settingsRepositoryImplProvider.get(), singletonCImpl.providerRepositoryImpl());
 
           default: throw new AssertionError(id);
         }
@@ -758,6 +758,8 @@ public final class DaggerNextGenIPTVApp_HiltComponents_SingletonC {
 
     private Provider<EpgSyncWorker_AssistedFactory> epgSyncWorker_AssistedFactoryProvider;
 
+    private Provider<SettingsRepositoryImpl> settingsRepositoryImplProvider;
+
     private Provider<SeriesRepositoryImpl> seriesRepositoryImplProvider;
 
     private Provider<OkHttpClient> provideOkHttpClientProvider;
@@ -765,8 +767,6 @@ public final class DaggerNextGenIPTVApp_HiltComponents_SingletonC {
     private Provider<Json> provideJsonProvider;
 
     private Provider<XtreamCodesService> provideXtreamCodesServiceProvider;
-
-    private Provider<SettingsRepositoryImpl> settingsRepositoryImplProvider;
 
     private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
       this.applicationContextModule = applicationContextModuleParam;
@@ -824,11 +824,11 @@ public final class DaggerNextGenIPTVApp_HiltComponents_SingletonC {
       this.xmlTvParserProvider = DoubleCheck.provider(new SwitchingProvider<XmlTvParser>(singletonCImpl, 1));
       this.provideAppDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 2));
       this.epgSyncWorker_AssistedFactoryProvider = SingleCheck.provider(new SwitchingProvider<EpgSyncWorker_AssistedFactory>(singletonCImpl, 0));
-      this.seriesRepositoryImplProvider = DoubleCheck.provider(new SwitchingProvider<SeriesRepositoryImpl>(singletonCImpl, 3));
-      this.provideOkHttpClientProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 5));
-      this.provideJsonProvider = DoubleCheck.provider(new SwitchingProvider<Json>(singletonCImpl, 6));
-      this.provideXtreamCodesServiceProvider = DoubleCheck.provider(new SwitchingProvider<XtreamCodesService>(singletonCImpl, 4));
-      this.settingsRepositoryImplProvider = DoubleCheck.provider(new SwitchingProvider<SettingsRepositoryImpl>(singletonCImpl, 7));
+      this.settingsRepositoryImplProvider = DoubleCheck.provider(new SwitchingProvider<SettingsRepositoryImpl>(singletonCImpl, 3));
+      this.seriesRepositoryImplProvider = DoubleCheck.provider(new SwitchingProvider<SeriesRepositoryImpl>(singletonCImpl, 4));
+      this.provideOkHttpClientProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 6));
+      this.provideJsonProvider = DoubleCheck.provider(new SwitchingProvider<Json>(singletonCImpl, 7));
+      this.provideXtreamCodesServiceProvider = DoubleCheck.provider(new SwitchingProvider<XtreamCodesService>(singletonCImpl, 5));
     }
 
     @Override
@@ -884,20 +884,20 @@ public final class DaggerNextGenIPTVApp_HiltComponents_SingletonC {
           case 2: // com.nextgen.iptv.data.local.AppDatabase 
           return (T) DatabaseModule_ProvideAppDatabaseFactory.provideAppDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 3: // com.nextgen.iptv.data.repository.SeriesRepositoryImpl 
+          case 3: // com.nextgen.iptv.data.repository.SettingsRepositoryImpl 
+          return (T) new SettingsRepositoryImpl(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 4: // com.nextgen.iptv.data.repository.SeriesRepositoryImpl 
           return (T) new SeriesRepositoryImpl(singletonCImpl.seriesDao());
 
-          case 4: // com.nextgen.iptv.data.remote.api.XtreamCodesService 
+          case 5: // com.nextgen.iptv.data.remote.api.XtreamCodesService 
           return (T) NetworkModule_ProvideXtreamCodesServiceFactory.provideXtreamCodesService(singletonCImpl.provideOkHttpClientProvider.get(), singletonCImpl.provideJsonProvider.get());
 
-          case 5: // okhttp3.OkHttpClient 
+          case 6: // okhttp3.OkHttpClient 
           return (T) NetworkModule_ProvideOkHttpClientFactory.provideOkHttpClient();
 
-          case 6: // kotlinx.serialization.json.Json 
+          case 7: // kotlinx.serialization.json.Json 
           return (T) NetworkModule_ProvideJsonFactory.provideJson();
-
-          case 7: // com.nextgen.iptv.data.repository.SettingsRepositoryImpl 
-          return (T) new SettingsRepositoryImpl(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
           default: throw new AssertionError(id);
         }
