@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.nextgen.iptv.data.local.entity.CategoryEntity
 import com.nextgen.iptv.data.local.entity.StreamEntity
 import com.nextgen.iptv.domain.repository.CategoryRepository
+import com.nextgen.iptv.domain.repository.FavoriteRepository
 import com.nextgen.iptv.domain.repository.ProviderRepository
 import com.nextgen.iptv.domain.repository.SettingsRepository
 import com.nextgen.iptv.domain.repository.StreamRepository
 import com.nextgen.iptv.domain.usecase.favorite.ToggleFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,7 +39,8 @@ class LiveTvViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository,
     private val settingsRepository: SettingsRepository,
     private val providerRepository: ProviderRepository,
-    private val toggleFavoriteUseCase: ToggleFavoriteUseCase
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
+    private val favoriteRepository: FavoriteRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LiveTvUiState())
@@ -67,24 +68,22 @@ class LiveTvViewModel @Inject constructor(
                 val categories = categoryRepository.getCategoriesByType("live").first()
                 
                 // Load streams and combine with favorites
-                val streamsFlow = if (allSelectedCategoryIds.isEmpty()) {
-                    streamRepository.getStreamsByType("live")
-                } else {
-                    streamRepository.getStreamsByCategories(allSelectedCategoryIds.toList())
-                        .combine(com.nextgen.iptv.di.AppModule.provideFavoriteRepository(kotlinx.coroutines.runBlocking { 
-                            com.nextgen.iptv.di.AppModule.provideFavoriteDao(com.nextgen.iptv.di.AppModule.provideDatabase(android.app.Application()).appDatabase()) 
-                        }).getAllFavorites()) { streams, favorites ->
-                            streams.filter { it.type == "live" }
-                                .map { stream ->
-                                    StreamWithFavorite(
-                                        stream = stream,
-                                        isFavorite = favorites.any { it.streamId == stream.id }
-                                    )
-                                }
+                combine(
+                    if (allSelectedCategoryIds.isEmpty()) {
+                        streamRepository.getStreamsByType("live")
+                    } else {
+                        streamRepository.getStreamsByCategories(allSelectedCategoryIds.toList())
+                    },
+                    favoriteRepository.getAllFavorites()
+                ) { streams, favorites ->
+                    streams.filter { it.type == "live" }
+                        .map { stream ->
+                            StreamWithFavorite(
+                                stream = stream,
+                                isFavorite = favorites.any { it.streamId == stream.id }
+                            )
                         }
-                }
-                
-                streamsFlow.collect { streams ->
+                }.collect { streams ->
                     _uiState.update { state ->
                         state.copy(
                             categories = categories,
@@ -104,16 +103,13 @@ class LiveTvViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                val streamsFlow = if (categoryId == null) {
-                    streamRepository.getStreamsByType("live")
-                } else {
-                    streamRepository.getStreamsByCategory(categoryId)
-                }
-                
-                streamsFlow.combine(
-                    com.nextgen.iptv.di.AppModule.provideFavoriteRepository(kotlinx.coroutines.runBlocking { 
-                        com.nextgen.iptv.di.AppModule.provideFavoriteDao(com.nextgen.iptv.di.AppModule.provideDatabase(android.app.Application()).appDatabase()) 
-                    }).getAllFavorites()
+                combine(
+                    if (categoryId == null) {
+                        streamRepository.getStreamsByType("live")
+                    } else {
+                        streamRepository.getStreamsByCategory(categoryId)
+                    },
+                    favoriteRepository.getAllFavorites()
                 ) { streams, favorites ->
                     streams.filter { it.type == "live" }
                         .map { stream ->
@@ -167,27 +163,25 @@ class LiveTvViewModel @Inject constructor(
                 loadStreams()
             } else {
                 try {
-                    streamRepository.searchStreams(query)
-                        .combine(
-                            com.nextgen.iptv.di.AppModule.provideFavoriteRepository(kotlinx.coroutines.runBlocking { 
-                                com.nextgen.iptv.di.AppModule.provideFavoriteDao(com.nextgen.iptv.di.AppModule.provideDatabase(android.app.Application()).appDatabase()) 
-                            }).getAllFavorites()
-                        ) { streams, favorites ->
-                            streams.filter { it.type == "live" }
-                                .map { stream ->
-                                    StreamWithFavorite(
-                                        stream = stream,
-                                        isFavorite = favorites.any { it.streamId == stream.id }
-                                    )
-                                }
-                        }.collect { streams ->
-                            _uiState.update { 
-                                it.copy(
-                                    streams = streams,
-                                    isLoading = false
+                    combine(
+                        streamRepository.searchStreams(query),
+                        favoriteRepository.getAllFavorites()
+                    ) { streams, favorites ->
+                        streams.filter { it.type == "live" }
+                            .map { stream ->
+                                StreamWithFavorite(
+                                    stream = stream,
+                                    isFavorite = favorites.any { it.streamId == stream.id }
                                 )
                             }
+                    }.collect { streams ->
+                        _uiState.update { 
+                            it.copy(
+                                streams = streams,
+                                isLoading = false
+                            )
                         }
+                    }
                 } catch (e: Exception) {
                     _uiState.update { it.copy(isLoading = false) }
                 }
